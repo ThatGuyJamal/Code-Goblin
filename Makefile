@@ -6,7 +6,12 @@ cbr:
 	@rm -rf ./dist
 	@yarn format
 	@yarn build
-	@yarn start
+
+# Make the config file in the src/config folder named config.ts
+ccf:
+	@echo "Creating config file..."
+	@cp ./dist/config/example.config.ts ./dist/config/config.ts
+	@echo Done!
 
 # Run the project
 run:

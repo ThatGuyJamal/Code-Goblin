@@ -6,6 +6,11 @@ import { client, db_obj } from './client.js';
 import type { Command, CommandDataProp } from './command.js';
 import config from './config/config.js';
 import constants from './constants.js';
+import mongoose from 'mongoose';
+import { TagCommandPlugin } from './plugins/tag.js';
+import { WelcomeCommandPlugin } from './plugins/welcome.js';
+import { Utils } from './utils.js';
+import { GoodbyeCommandPlugin } from './plugins/goodbye.js';
 
 export default class Main {
 	public DiscordClient: DiscordClientType = client;
@@ -26,12 +31,21 @@ export default class Main {
 			/** Used to store all commands */
 			commandStoreMap: new Collection<string, Command>(),
 			/** An array of all commands as Json Data for the discord api application commands */
-			commandStoreArrayJson: [] as CreateApplicationCommandOptions[]
+			commandStoreArrayJsonGuild: [] as CreateApplicationCommandOptions[],
+			commandStoreArrayJsonGlobal: [] as CreateApplicationCommandOptions[],
+			plugins: {
+				tags: new TagCommandPlugin(this),
+				welcome: new WelcomeCommandPlugin(this),
+				goodbye: new GoodbyeCommandPlugin(this)
+			}
 		}
 	};
 
+	public utils = new Utils(this);
+
 	/** Starts the core functionally of the bot. */
 	public async init(): Promise<void> {
+		await this.connectToDatabase();
 		await this.DiscordClient.connect();
 		console.log(`[INFO] Connecting to Discord API Gateway...`);
 		await this.runEvents();
@@ -39,10 +53,13 @@ export default class Main {
 
 	/** Loads and runs event modules for the bot */
 	public async runEvents(): Promise<void> {
-		this.DiscordClient.once('ready', (await import('./events/event_ready.js')).default.bind(null, client))
+		this.DiscordClient.once('ready', (await import('./events/event_ready.js')).default.bind(null, this.DiscordClient))
 			.on('interactionCreate', (await import('./events/event_interactionCreate.js')).default.bind(this))
-			.on('guildCreate', (await import('./events/event_guildcreate.js')).default.bind(client))
-			.on('guildDelete', (await import('./events/event_guildleave.js')).default.bind(client) as any)
+			.on('guildCreate', (await import('./events/event_guildcreate.js')).default.bind(this.DiscordClient))
+			.on('guildDelete', (await import('./events/event_guildleave.js')).default.bind(this.DiscordClient) as any)
+			.on('guildMemberAdd', (await import('./events/event_welcome.js')).default.bind(this))
+			.on('guildMemberRemove', (await import('./events/event_goodbye.js')).default.bind(this) as any)
+			.on('messageCreate', (await import('./events/event_messageCreate.js')).default.bind(this))
 			.on('error', (err) => {
 				console.error(`[ERROR] Somethings broken...`, err);
 			});
@@ -72,7 +89,16 @@ export default class Main {
 			// Filter out any commands that are disabled from being added to the application commands
 			if (!command.props.disabled) {
 				this.collections.commands.commandStoreMap.set(command.props.trigger, command.props);
-				this.collections.commands.commandStoreArrayJson.push(command.toJson());
+
+				if (command.props.register === 'global') {
+					this.collections.commands.commandStoreArrayJsonGlobal.push(command.toJson());
+				} else if (command.props.register === 'guild') {
+					this.collections.commands.commandStoreArrayJsonGuild.push(command.toJson());
+				} else if (command.props.register === 'both') {
+					this.collections.commands.commandStoreArrayJsonGlobal.push(command.toJson());
+					this.collections.commands.commandStoreArrayJsonGuild.push(command.toJson());
+				}
+
 				console.log(`[COMMAND] Loaded ${command.props.trigger} into memory.`);
 			} else {
 				console.log(`[COMMAND] ${command.props.trigger} was not loaded into memory because it is disabled.`);
@@ -110,6 +136,17 @@ export default class Main {
 		await (command
 			? command.run.call(this, this, interaction)
 			: interaction.createMessage({ content: "I couldn't figure out how to execute that command.", flags: MessageFlags.EPHEMERAL }));
+	}
+
+	public async connectToDatabase() {
+		await mongoose
+			.connect(config.MongoDbUri)
+			.then(() => {
+				console.log(`[INFO] Connected to MongoDB`);
+			})
+			.catch((err) => {
+				console.error(`[ERROR] Failed to connect to MongoDB`, err);
+			});
 	}
 }
 

@@ -8,6 +8,8 @@ export interface CommandDataProp {
 	toJson: () => CreateApplicationCommandOptions;
 }
 
+export type CommandRegisterType = 'global' | 'guild' | 'both';
+
 /**
  * The type structure for a command
  */
@@ -17,11 +19,8 @@ export interface Command {
 	description: string;
 	type: ApplicationCommandTypes;
 	options?: (opts: ApplicationCommandBuilder) => void;
-	run: (instance: typeof MainInstance, interaction: CommandInteraction) => Promise<void> | void;
-	register: {
-		global: boolean;
-		guild: boolean;
-	};
+	run: (instance: typeof MainInstance, interaction: CommandInteraction) => Promise<any> | any;
+	register: CommandRegisterType;
 	defaultMemberPermissions?: bigint | string | Permission | Array<PermissionName>;
 	descriptionLocalizations?: Record<string, string>;
 	dmPermission?: boolean;
@@ -86,7 +85,7 @@ export default CreateCommand({
  */
 export async function CreateGuildCommands(client: Client) {
 	try {
-		const commandsArray = MainInstance.collections.commands.commandStoreArrayJson;
+		const commandsArray = MainInstance.collections.commands.commandStoreArrayJsonGuild;
 
 		for (const guilds of config.DevelopmentServerId) {
 			await client.application.bulkEditGuildCommands(guilds, commandsArray);
@@ -96,6 +95,10 @@ export async function CreateGuildCommands(client: Client) {
 		console.log(`[INFO] Successfully created ${commandsArray.length} commands in all guilds`);
 	} catch (err) {
 		console.error(`[ERROR] Failed to create guild commands`, err);
+
+		await MainInstance.utils.sendToLogChannel('error', {
+			content: `Failed to create guild commands!\n ${err}`
+		});
 	}
 
 	console.log('[INFO] Created Guild Commands');
@@ -106,7 +109,23 @@ export async function CreateGuildCommands(client: Client) {
  * @param client The Discord Client
  */
 export async function CreateGlobalCommands(client: Client) {
-	throw new Error('Not Implemented');
+	try {
+		const commandsArray = MainInstance.collections.commands.commandStoreArrayJsonGlobal;
+
+		await client.application.bulkEditGlobalCommands(commandsArray);
+
+		console.log(`[INFO] Successfully created ${commandsArray.length} commands globally`);
+
+		await MainInstance.utils.sendToLogChannel('api', {
+			content: `Successfully created ${commandsArray.length} commands globally!`
+		});
+	} catch (err) {
+		console.error(`[ERROR] Failed to create global commands`, err);
+
+		await MainInstance.utils.sendToLogChannel('error', {
+			content: `Failed to create global commands!\n ${err}`
+		});
+	}
 }
 
 /**
@@ -116,8 +135,15 @@ export async function CreateGlobalCommands(client: Client) {
 export async function deleteGuildCommands(client: Client) {
 	// Delete Commands from the API
 	for (const guild of config.DevelopmentServerId) {
-		await client.application.getGuildCommands(guild).catch((err) => {
+		await client.application.bulkEditGuildCommands(guild, []).catch((err) => {
 			console.log(err);
+			MainInstance.utils.sendToLogChannel('error', {
+				content: `Failed to delete commands in guild ${guild}!\n ${err}`
+			});
+		});
+
+		await MainInstance.utils.sendToLogChannel('api', {
+			content: `Successfully deleted all commands in guild ${guild}!`
 		});
 	}
 }
@@ -130,5 +156,12 @@ export async function deleteGlobalCommands(client: Client) {
 	// Delete Commands from the API
 	await client.application.bulkEditGlobalCommands([]).catch((err) => {
 		console.log(err);
+		MainInstance.utils.sendToLogChannel('error', {
+			content: `Failed to delete commands globally!\n ${err}`
+		});
+	});
+
+	await MainInstance.utils.sendToLogChannel('api', {
+		content: `Successfully deleted all commands globally!`
 	});
 }

@@ -1,5 +1,6 @@
 import { AnyInteractionGateway, InteractionTypes } from 'oceanic.js';
 import config from '../config/config.js';
+import { GlobalStatsModel } from '../database/schemas/statistics.js';
 import type { MainInstance } from '../main.js';
 
 export default async function (this: typeof MainInstance, interaction: AnyInteractionGateway) {
@@ -8,10 +9,15 @@ export default async function (this: typeof MainInstance, interaction: AnyIntera
 			if (config.IsInDevelopmentMode) {
 				console.log(`[${new Date().toISOString()}][command/${interaction.data.name}]: ${interaction.user.tag} (${interaction.user.id})`);
 			}
-			await this.processCommandInteraction(interaction).catch((err) => {
-				console.error(`[ERROR] Error while processing command interaction:`, err);
-				interaction.createMessage({ content: 'An error occurred while processing your command.', flags: 64 });
-			});
+			await GlobalStatsModel.findOneAndUpdate(
+				{ find_id: 'global' },
+				{ $inc: { commands_executed: 1 } },
+				{
+					upsert: true,
+					new: true
+				}
+			);
+			await this.processCommandInteraction(interaction);
 		} catch (error) {
 			console.error(error);
 			await interaction
@@ -19,6 +25,15 @@ export default async function (this: typeof MainInstance, interaction: AnyIntera
 					content: `An error occurred while running \`/${interaction.data.name}\` command.`
 				})
 				.catch(() => {});
+
+			await GlobalStatsModel.findOneAndUpdate(
+				{ find_id: 'global' },
+				{ $inc: { commands_failed: 1 } },
+				{
+					new: true,
+					upsert: true
+				}
+			);
 		}
 	}
 }

@@ -1,6 +1,12 @@
+import config from './config/config.js';
 import { MainInstance } from './main.js';
 
 async function bootstrap() {
+
+	if(config.IsInDevelopmentMode && !config.register_commands.create.guild) {
+		console.log('[WARNING] Guild only commands are disabled and we are not in production mode.');
+	}
+
 	await MainInstance.init();
 }
 

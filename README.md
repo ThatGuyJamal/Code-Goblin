@@ -18,16 +18,20 @@ The bot is open source and free to use and self-host. Simply follow the [license
 
 ## Features
 
-- [ ] Custom Server Tag System
-    - [ ] - List all tags for a server
-    - [ ] - Create a tag <name> <response>
-    - [ ] - Delete a tag <name> (requires Manage Server permission)
-    - [ ] - Edit a tag <name> <response> (requires Manage Server permission)
-- [ ] Custom Server Prefix System
-    - [ ] - Set a custom prefix for the server
-    - [ ] - Reset the prefix to the default
-- [ ] Custom Server Welcome Message System
-    - [ ] - Set a custom welcome message for the server
-    - [ ] - Disable the welcome system
-
+- [x] Custom Server Tag System
+    - [x] - List all tags for a server
+    - [x] - Create a tag <name> <response>
+    - [x] - Delete a tag <name> (requires Manage Server permission)
+    - [x] - Edit a tag <name> <response> (requires Manage Server permission)
+- [x] Custom Server Welcome Message System
+    - [x] - Set a custom welcome message for the server
+    - [x] - Disable the welcome system
+    - [ ] - Supports custom embed messages
+- [x] Custom Server Leave Message System
+    - [x] - Set a custom leave message for the server
+    - [x] - Disable the leave system
+    - [ ] - Supports custom embed messages
+- [ ] Developer Commands
+    - [ ] - test commands
+    - [ ] - Source bin create commands
 - [x] Other misc commands (ping, help, etc.)

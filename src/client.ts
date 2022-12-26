@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 import { ActivityTypes, Client } from 'oceanic.js';
 import config from './config/config.js';
+import { GoodbyeModel } from './database/schemas/goodbye.js';
+import { TagModel } from './database/schemas/tags.js';
+import { WelcomeModel } from './database/schemas/welcome.js';
 
 /**
  * The Client Object for the bot by Oceanic.js
@@ -12,15 +15,15 @@ import config from './config/config.js';
 export const client = new Client({
 	auth: `Bot ${config.BotToken}`,
 	collectionLimits: {
-		members: 1_000,
+		members: 20_000,
 		messages: 10_000,
-		users: 2_000
+		users: 1_000
 	},
 	allowedMentions: {
 		everyone: false,
 		repliedUser: true,
-		roles: false,
-		users: false
+		roles: true,
+		users: true
 	},
 	defaultImageFormat: 'png',
 	defaultImageSize: 4096,
@@ -36,7 +39,7 @@ export const client = new Client({
 		firstShardID: 0,
 		getAllUsers: false,
 		guildCreateTimeout: 2000,
-		intents: ['GUILDS', 'GUILD_MEMBERS'],
+		intents: ['GUILDS', 'GUILD_MEMBERS', 'MESSAGE_CONTENT', 'GUILD_MESSAGES'],
 		largeThreshold: 250,
 		maxReconnectAttempts: Infinity,
 		maxResumeAttempts: 10,
@@ -52,7 +55,11 @@ export const client = new Client({
 /** The data for the MainInstance DB object. */
 export const db_obj = {
 	network_status: () => fetchDBStatus(),
-	managers: {}
+	managers: {
+		tag: TagModel,
+		welcome: WelcomeModel,
+		goodbye: GoodbyeModel
+	}
 };
 
 export function fetchDBStatus(): boolean {

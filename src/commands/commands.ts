@@ -4,12 +4,9 @@ import config from '../config/config.js';
 
 export default CreateCommand({
 	trigger: 'commands',
-	description: 'Helpful bot information on the modules and functions.',
+	description: 'Lists all commands',
 	type: ApplicationCommandTypes.CHAT_INPUT,
-	register: {
-		guild: true,
-		global: false
-	},
+	register: 'global',
 	run: async (instance, interaction) => {
 		const commands = instance.collections.commands.commandStoreMap.map((command) => {
 			return {
@@ -21,7 +18,7 @@ export default CreateCommand({
 		await interaction.createMessage({
 			embeds: [
 				{
-					title: 'All Modules',
+					title: 'Commands',
 					description: `${commands.map((cmd) => `\`/${cmd.name}\``).join(', ')}`
 				}
 			],

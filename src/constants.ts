@@ -10,24 +10,19 @@ export default {
 			}
 		},
 		commands: {
-			statistics: {
-				embed_title_1: `Company Information`,
-				embed_description_1: ``,
-				embed_field_1_1: `Network Status`,
-				embed_field_1_2: `Servers Managed`,
-				embed_field_1_3: `Users Managed`,
-				embed_title_2: `Bot Statistics`,
-				embed_description_2: `The current bot information is shown below.`,
-				embed_field_2_1: `Shards`,
-				embed_field_2_2: `Guilds`,
-				embed_field_2_3: `Users`,
-				embed_field_2_5: `Commands`,
-				embed_field_2_6: `Uptime`,
-				embed_field_2_7: `Memory Usage`,
-				embed_field_2_8: `CPU Usage`,
-				embed_field_2_9: `Node Version`,
-				embed_field_2_10: `Library Version`
+			info: {
+				company: {
+					bio: 'A place for people to talk about anything they want, without being judged. Users are anonymous, and can only see the messages of other users. The messages are deleted after a certain amount of time, so you can talk about anything you want, without worrying about it being seen by anyone else.'
+				}
 			}
+		}
+	},
+	numbers: {
+		// Used in embeds
+		colors: {
+			primary: 0x8b4513,
+			secondary: 0xa0522d,
+			tertiary: 0xd2691e
 		}
 	}
 };
