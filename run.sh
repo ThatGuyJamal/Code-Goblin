@@ -1,3 +1,3 @@
 #!/bin/bash
 
-forever start ./dist/index.js
+pm2 start ecosystem.config.cjs
