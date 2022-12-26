@@ -1,4 +1,4 @@
-import { isCanary } from '../index.js';
+export const isCanary = false;
 
 export default {
 	MongoDbUri: isCanary ? '' : '',
