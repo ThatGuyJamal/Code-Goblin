@@ -8,7 +8,7 @@ export class GoodbyeCommandPlugin {
 	// Cache of all tags mapped by guildId
 	public cache: Collection<string, Goodbye>;
 
-	private query;
+	public query;
 
 	public constructor(i: Main) {
 		this.instance = i;

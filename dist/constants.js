@@ -6,7 +6,10 @@ export default {
                 premiumOnly: `This command can only be used by premium users.`,
                 helpersOnly: `This command can only be used by helper users.`,
                 superUsersOnly: `This command can only be used by super users.`,
-                commandDisabled: `This command is currently disabled.`
+                commandDisabled: `This command is currently disabled.`,
+                botPermissions: `I do not have the required permissions to run this command.`,
+                userPermissions: `You do not have the required permissions to run this command.`,
+                isOnCooldown: `You are currently on cooldown for this command.`
             }
         },
         commands: {
@@ -26,4 +29,4 @@ export default {
         }
     }
 };
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY29uc3RhbnRzLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vc3JjL2NvbnN0YW50cy50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxlQUFlO0lBQ2QsT0FBTyxFQUFFO1FBQ1IsZUFBZSxFQUFFLHVDQUF1QztRQUN4RCxNQUFNLEVBQUU7WUFDUCxrQkFBa0IsRUFBRTtnQkFDbkIsV0FBVyxFQUFFLGlEQUFpRDtnQkFDOUQsV0FBVyxFQUFFLGdEQUFnRDtnQkFDN0QsY0FBYyxFQUFFLCtDQUErQztnQkFDL0QsZUFBZSxFQUFFLHFDQUFxQzthQUN0RDtTQUNEO1FBQ0QsUUFBUSxFQUFFO1lBQ1QsSUFBSSxFQUFFO2dCQUNMLE9BQU8sRUFBRTtvQkFDUixHQUFHLEVBQUUsc1NBQXNTO2lCQUMzUzthQUNEO1NBQ0Q7S0FDRDtJQUNELE9BQU8sRUFBRTtRQUNSLGlCQUFpQjtRQUNqQixNQUFNLEVBQUU7WUFDUCxPQUFPLEVBQUUsUUFBUTtZQUNqQixTQUFTLEVBQUUsUUFBUTtZQUNuQixRQUFRLEVBQUUsUUFBUTtTQUNsQjtLQUNEO0NBQ0QsQ0FBQyJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY29uc3RhbnRzLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vc3JjL2NvbnN0YW50cy50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxlQUFlO0lBQ2QsT0FBTyxFQUFFO1FBQ1IsZUFBZSxFQUFFLHVDQUF1QztRQUN4RCxNQUFNLEVBQUU7WUFDUCxrQkFBa0IsRUFBRTtnQkFDbkIsV0FBVyxFQUFFLGlEQUFpRDtnQkFDOUQsV0FBVyxFQUFFLGdEQUFnRDtnQkFDN0QsY0FBYyxFQUFFLCtDQUErQztnQkFDL0QsZUFBZSxFQUFFLHFDQUFxQztnQkFDdEQsY0FBYyxFQUFFLDZEQUE2RDtnQkFDN0UsZUFBZSxFQUFFLCtEQUErRDtnQkFDaEYsWUFBWSxFQUFFLGlEQUFpRDthQUMvRDtTQUNEO1FBQ0QsUUFBUSxFQUFFO1lBQ1QsSUFBSSxFQUFFO2dCQUNMLE9BQU8sRUFBRTtvQkFDUixHQUFHLEVBQUUsc1NBQXNTO2lCQUMzUzthQUNEO1NBQ0Q7S0FDRDtJQUNELE9BQU8sRUFBRTtRQUNSLGlCQUFpQjtRQUNqQixNQUFNLEVBQUU7WUFDUCxPQUFPLEVBQUUsUUFBUTtZQUNqQixTQUFTLEVBQUUsUUFBUTtZQUNuQixRQUFRLEVBQUUsUUFBUTtTQUNsQjtLQUNEO0NBQ0QsQ0FBQyJ9

@@ -7,6 +7,8 @@ export default CreateCommand({
 	description: 'Lists all commands',
 	type: ApplicationCommandTypes.CHAT_INPUT,
 	register: 'global',
+	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'USE_EXTERNAL_EMOJIS'],
+	requiredUserPermissions: ['SEND_MESSAGES'],
 	run: async (instance, interaction) => {
 		const commands = instance.collections.commands.commandStoreMap.map((command) => {
 			return {

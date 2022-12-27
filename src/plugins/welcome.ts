@@ -7,7 +7,7 @@ export class WelcomeCommandPlugin {
 	// Cache of all tags mapped by guildId
 	public cache: Collection<string, Welcome>;
 
-	private query;
+	public query;
 
 	public constructor(i: Main) {
 		this.instance = i;

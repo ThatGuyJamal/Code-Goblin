@@ -1,5 +1,5 @@
 // todo
-import { Schema, Model, model } from 'mongoose';
+import { Schema, type Model, model } from 'mongoose';
 import type { ContentType } from './welcome.js';
 
 export interface Goodbye {

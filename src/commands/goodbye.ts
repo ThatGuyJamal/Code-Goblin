@@ -1,11 +1,14 @@
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ChannelTypes } from 'oceanic.js';
 import { CreateCommand } from '../command.js';
+import constants from '../constants.js';
 
 export default CreateCommand({
 	trigger: 'goodbye',
 	description: 'Goodbye plugin',
 	type: ApplicationCommandTypes.CHAT_INPUT,
 	register: 'global',
+	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'USE_EXTERNAL_EMOJIS'],
+	requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
 	options: (opt) => {
 		opt
 			.addOption('goodbye', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
@@ -83,7 +86,15 @@ export default CreateCommand({
 				embeds: [
 					{
 						title: 'Goodbye Plugin Current Config',
-						description: data.content
+						description: data.content,
+						fields: [
+							{
+								name: 'raw view',
+								value: `\`\`\`${data.content}\`\`\``,
+								inline: false
+							}
+						],
+						color: constants.numbers.colors.secondary
 					}
 				]
 			});

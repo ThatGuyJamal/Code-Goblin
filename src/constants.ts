@@ -6,7 +6,10 @@ export default {
 				premiumOnly: `This command can only be used by premium users.`,
 				helpersOnly: `This command can only be used by helper users.`,
 				superUsersOnly: `This command can only be used by super users.`,
-				commandDisabled: `This command is currently disabled.`
+				commandDisabled: `This command is currently disabled.`,
+				botPermissions: `I do not have the required permissions to run this command.`,
+				userPermissions: `You do not have the required permissions to run this command.`,
+				isOnCooldown: `You are currently on cooldown for this command.`
 			}
 		},
 		commands: {

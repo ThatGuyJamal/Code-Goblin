@@ -34,4 +34,8 @@ The bot is open source and free to use and self-host. Simply follow the [license
 - [ ] Developer Commands
     - [ ] - test commands
     - [ ] - Source bin create commands
+- Cache
+    - [ ] Tag Plugin
+    - [ ] Welcome Plugin
+    - [ ] Goodbye Plugin
 - [x] Other misc commands (ping, help, etc.)

@@ -7,6 +7,8 @@ export default CreateCommand({
 	description: 'Tags plugin',
 	type: ApplicationCommandTypes.CHAT_INPUT,
 	register: 'global',
+	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'USE_EXTERNAL_EMOJIS'],
+	requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
 	options: (opt) => {
 		opt
 			.addOption('tag', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
@@ -21,7 +23,7 @@ export default CreateCommand({
 					});
 			})
 			.setDMPermission(false)
-			.setDefaultMemberPermissions(['MANAGE_GUILD']),
+			.setDefaultMemberPermissions(['MANAGE_MESSAGES']),
 			opt
 				.addOption('tag', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 					option
@@ -32,7 +34,7 @@ export default CreateCommand({
 						});
 				})
 				.setDMPermission(false)
-				.setDefaultMemberPermissions(['MANAGE_GUILD']),
+				.setDefaultMemberPermissions(['MANAGE_MESSAGES']),
 			opt
 				.addOption('tag', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 					option
@@ -46,7 +48,7 @@ export default CreateCommand({
 						});
 				})
 				.setDMPermission(false)
-				.setDefaultMemberPermissions(['MANAGE_GUILD']),
+				.setDefaultMemberPermissions(['MANAGE_MESSAGES']),
 			opt
 				.addOption('tag', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 					option.setName('list').setDescription('List all tags in this server');

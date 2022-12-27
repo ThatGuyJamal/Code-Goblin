@@ -4,13 +4,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { client, db_obj } from './client.js';
 import type { Command, CommandDataProp } from './command.js';
-import config from './config/config.js';
+import config, { isCanary } from './config/config.js';
 import constants from './constants.js';
 import mongoose from 'mongoose';
 import { TagCommandPlugin } from './plugins/tag.js';
 import { WelcomeCommandPlugin } from './plugins/welcome.js';
 import { Utils } from './utils.js';
 import { GoodbyeCommandPlugin } from './plugins/goodbye.js';
+import { CooldownCommandPlugin } from './plugins/cooldown.js';
 
 export default class Main {
 	public DiscordClient: DiscordClientType = client;
@@ -36,7 +37,8 @@ export default class Main {
 			plugins: {
 				tags: new TagCommandPlugin(this),
 				welcome: new WelcomeCommandPlugin(this),
-				goodbye: new GoodbyeCommandPlugin(this)
+				goodbye: new GoodbyeCommandPlugin(this),
+				cooldown: new CooldownCommandPlugin()
 			}
 		}
 	};
@@ -85,6 +87,7 @@ export default class Main {
 			if (!command.props.superUserOnly) command.props.superUserOnly = false;
 			if (!command.props.helperUserOnly) command.props.helperUserOnly = false;
 			if (!command.props.disabled) command.props.disabled = false;
+			if (!command.props.register) command.props.register = isCanary ? 'guild' : 'global';
 
 			// Filter out any commands that are disabled from being added to the application commands
 			if (!command.props.disabled) {
@@ -111,6 +114,8 @@ export default class Main {
 	 * @param interaction The interaction to handle
 	 */
 	public async processCommandInteraction(interaction: CommandInteraction): Promise<void> {
+		if (!interaction.guild) throw new Error('Guild not found');
+
 		const command = this.collections.commands.commandStoreMap.get(interaction.data.name);
 
 		if (command?.disabled && !this.keys.super_users.has(interaction.user.id)) {
@@ -125,13 +130,42 @@ export default class Main {
 			return interaction.createMessage({ content: constants.strings.events.interactionProcess.helpersOnly, flags: MessageFlags.EPHEMERAL });
 		}
 
-		// if (command?.premiumOnly && !this.database.managers.user_premium.isPremium(interaction.user.id)) {
-		// 	return interaction.createMessage({ content: constants.strings.events.interactionProcess.premiumOnly, flags: MessageFlags.EPHEMERAL });
-		// }
+		if (command?.requiredBotPermissions) {
+			if (!interaction.appPermissions?.has(...command.requiredBotPermissions)) {
+				return interaction.createMessage({
+					content: constants.strings.events.interactionProcess.botPermissions,
+					flags: MessageFlags.EPHEMERAL
+				});
+			}
+		}
 
-		// TODO - Add cooldown check
+		if (command?.requiredUserPermissions) {
+			if (!interaction.member?.permissions.has(...command.requiredUserPermissions)) {
+				return interaction.createMessage({
+					content: constants.strings.events.interactionProcess.userPermissions,
+					flags: MessageFlags.EPHEMERAL
+				});
+			}
+		}
 
-		// TODO - Add permission check
+		// TODO - Add cool-down check
+
+		if (command?.cooldown) {
+			let manager = this.collections.commands.plugins.cooldown;
+
+			if (manager.isOnCooldown(interaction.guild.id, interaction.user.id, command.trigger)) {
+				return interaction.createMessage({
+					content: constants.strings.events.interactionProcess.isOnCooldown,
+					flags: MessageFlags.EPHEMERAL
+				});
+			}
+
+			// If not on cooldown, add the user to the cooldown list
+			manager.set(interaction.guild.id, interaction.user.id, command.trigger, {
+				duration: command.cooldown.duration,
+				multiplier: command.cooldown.multiplier
+			});
+		}
 
 		await (command
 			? command.run.call(this, this, interaction)

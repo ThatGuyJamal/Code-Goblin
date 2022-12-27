@@ -12,13 +12,15 @@ export default CreateCommand({
 	description: 'View information about the bot and its services',
 	type: ApplicationCommandTypes.CHAT_INPUT,
 	register: 'global',
+	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'USE_EXTERNAL_EMOJIS'],
+	requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
 	options: (opts) => {
 		opts.addOption('option', ApplicationCommandOptionTypes.STRING, (option) => {
 			option
 				.setName('type')
 				.setDescription('The type of statistics to show')
-				.addChoice('Company', 'company')
 				.addChoice('Bot', 'bot')
+				.addChoice('Company', 'company')
 				.setRequired(true);
 		}).setDMPermission(false);
 	},
@@ -67,6 +69,7 @@ export default CreateCommand({
 
 			embed.setTitle('Bot Statistics');
 			embed.setDescription('Displaying current data below');
+			embed.setColor(constants.numbers.colors.primary);
 
 			let cpuUsage = process.cpuUsage();
 			let cpuUsagePercentage = (cpuUsage.user + cpuUsage.system) / 1000 / 1000 / 1000 / 1000;
@@ -76,7 +79,7 @@ export default CreateCommand({
 
 			embed.addField('Uptime', ms(client.uptime, { long: true }), true);
 
-			embed.addField('Guilds', `${client.guilds.size}`, true);
+			embed.addField('Guilds Cached', `${client.guilds.size}`, true);
 			embed.addField('Guilds Joined', `${global.guilds_joined}`, true);
 			embed.addField('Guilds Left', `${global.guilds_left}`, true);
 
@@ -88,12 +91,6 @@ export default CreateCommand({
 			embed.addField('Total Commands', `${instance.collections.commands.commandStoreMap.size}`, true);
 			embed.addField('Commands Executed', `${global.commands_executed}`, true);
 			embed.addField('Commands Failed', `${global.commands_failed}`, true);
-
-			if (statusCode) {
-				embed.setColor(0x00ff00);
-			} else {
-				embed.setColor(0xff0000);
-			}
 
 			await interaction.createMessage({
 				embeds: [embed.toJSON()],

@@ -2,6 +2,7 @@ import { ApplicationCommandBuilder } from '@oceanicjs/builders';
 import type { ApplicationCommandTypes, Client, CommandInteraction, CreateApplicationCommandOptions, Permission, PermissionName } from 'oceanic.js';
 import config from './config/config.js';
 import { MainInstance } from './main.js';
+import type { CooldownDurations } from './plugins/cooldown.js';
 
 export interface CommandDataProp {
 	props: Command;
@@ -9,6 +10,12 @@ export interface CommandDataProp {
 }
 
 export type CommandRegisterType = 'global' | 'guild' | 'both';
+
+export interface CommandCooldown {
+	/** The duration of the cooldown */
+	duration: CooldownDurations;
+	multiplier: number;
+}
 
 /**
  * The type structure for a command
@@ -20,7 +27,10 @@ export interface Command {
 	type: ApplicationCommandTypes;
 	options?: (opts: ApplicationCommandBuilder) => void;
 	run: (instance: typeof MainInstance, interaction: CommandInteraction) => Promise<any> | any;
-	register: CommandRegisterType;
+	register?: CommandRegisterType;
+	cooldown?: CommandCooldown;
+	requiredUserPermissions?: PermissionName[];
+	requiredBotPermissions?: PermissionName[];
 	defaultMemberPermissions?: bigint | string | Permission | Array<PermissionName>;
 	descriptionLocalizations?: Record<string, string>;
 	dmPermission?: boolean;

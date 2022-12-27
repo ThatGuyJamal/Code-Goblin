@@ -7,7 +7,7 @@ export class TagCommandPlugin {
 	// Cache of all tags mapped by guildId
 	public cache: Collection<string, Tag[]>;
 
-	private query;
+	public query;
 
 	public constructor(i: Main) {
 		this.instance = i;

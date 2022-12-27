@@ -15,9 +15,9 @@ import { WelcomeModel } from './database/schemas/welcome.js';
 export const client = new Client({
 	auth: `Bot ${config.BotToken}`,
 	collectionLimits: {
-		members: 20_000,
-		messages: 10_000,
-		users: 1_000
+		members: 1_000,
+		messages: 0,
+		users: 5_000
 	},
 	allowedMentions: {
 		everyone: false,

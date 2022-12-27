@@ -1,6 +1,6 @@
 {
   "name": "whisper-room-bot",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Official Discord Bot for Whisper Room",
   "main": "./dist/index.js",
   "type": "module",
