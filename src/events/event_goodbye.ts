@@ -14,6 +14,8 @@ export default async function (member: Member, guild: Guild | Uncached) {
 export async function getGoodbyeResults(member: Member) {
 	const { guild } = member;
 
+	if (!guild) return;
+
 	const data = await MainInstance.collections.commands.plugins.goodbye.GetGoodbye(guild.id);
 
 	if (!data) return;

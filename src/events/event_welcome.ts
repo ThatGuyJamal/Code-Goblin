@@ -16,6 +16,8 @@ export default async function (member: Member) {
 export async function getWelcomeResults(member: Member) {
 	const { guild } = member;
 
+	if (!guild) return;
+
 	const data = await MainInstance.collections.commands.plugins.welcome.GetWelcome(guild.id);
 
 	if (!data) return;
