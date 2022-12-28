@@ -35,7 +35,7 @@ export default CreateCommand({
 							type: ComponentTypes.BUTTON,
 							style: ButtonStyles.LINK,
 							label: 'Invite Me',
-							url: config.DevelopmentServerInviteUrl
+							url: config.BotClientOAuth2Url
 						},
 						{
 							type: ComponentTypes.BUTTON,
