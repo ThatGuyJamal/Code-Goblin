@@ -4,7 +4,8 @@ export default {
 	MongoDbUri: isCanary ? '' : '',
 	BotToken: isCanary ? '' : '',
 	BotClientId: '1055671501870874634',
-	BotClientOAuth2Url: 'https://discord.com/api/oauth2/authorize?client_id=1055671501870874634&permissions=2684700800&scope=bot%20applications.commands',
+	BotClientOAuth2Url:
+		'https://discord.com/api/oauth2/authorize?client_id=1055671501870874634&permissions=2684700800&scope=bot%20applications.commands',
 	BotName: 'Whisper Room',
 	GithubRepository: 'https://github.com/whisper-room-dev',
 	GithubContributionUrl: 'https://github.com/whisper-room-dev/.github/blob/main/contributing.md',

@@ -11,47 +11,41 @@ export default CreateCommand({
 	register: isCanary ? 'guild' : 'global',
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	options: (opt) => {
+		opt.addOption('tag-1', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
+			option
+				.setName('create')
+				.setDescription('Create a tag')
+				.addOption('name', ApplicationCommandOptionTypes.STRING, (option) => {
+					option.setName('name').setDescription('The name of the tag').setRequired(true);
+				})
+				.addOption('content', ApplicationCommandOptionTypes.STRING, (option) => {
+					option.setName('content').setDescription('The content of the tag').setRequired(true);
+				});
+		}).setDMPermission(false);
+		opt.addOption('tag-2', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
+			option
+				.setName('delete')
+				.setDescription('Delete a tag')
+				.addOption('name', ApplicationCommandOptionTypes.STRING, (option) => {
+					option.setName('name').setDescription('The name of the tag').setRequired(true);
+				});
+		}).setDMPermission(false);
+		opt.addOption('tag-3', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
+			option
+				.setName('edit')
+				.setDescription('Edit a tag')
+				.addOption('name', ApplicationCommandOptionTypes.STRING, (option) => {
+					option.setName('name').setDescription('The name of the tag').setRequired(true);
+				})
+				.addOption('content', ApplicationCommandOptionTypes.STRING, (option) => {
+					option.setName('content').setDescription('The content of the tag').setRequired(true);
+				});
+		}).setDMPermission(false);
 		opt
-			.addOption('tag-1', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
-				option
-					.setName('create')
-					.setDescription('Create a tag')
-					.addOption('name', ApplicationCommandOptionTypes.STRING, (option) => {
-						option.setName('name').setDescription('The name of the tag').setRequired(true);
-					})
-					.addOption('content', ApplicationCommandOptionTypes.STRING, (option) => {
-						option.setName('content').setDescription('The content of the tag').setRequired(true);
-					});
+			.addOption('tag-4', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
+				option.setName('list').setDescription('List all tags in this server');
 			})
-			.setDMPermission(false)
-			opt
-				.addOption('tag-2', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
-					option
-						.setName('delete')
-						.setDescription('Delete a tag')
-						.addOption('name', ApplicationCommandOptionTypes.STRING, (option) => {
-							option.setName('name').setDescription('The name of the tag').setRequired(true);
-						});
-				})
-				.setDMPermission(false)
-			opt
-				.addOption('tag-3', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
-					option
-						.setName('edit')
-						.setDescription('Edit a tag')
-						.addOption('name', ApplicationCommandOptionTypes.STRING, (option) => {
-							option.setName('name').setDescription('The name of the tag').setRequired(true);
-						})
-						.addOption('content', ApplicationCommandOptionTypes.STRING, (option) => {
-							option.setName('content').setDescription('The content of the tag').setRequired(true);
-						});
-				})
-				.setDMPermission(false)
-			opt
-				.addOption('tag-4', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
-					option.setName('list').setDescription('List all tags in this server');
-				})
-				.setDMPermission(false),
+			.setDMPermission(false),
 			opt
 				.addOption('tag-5', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 					option
@@ -71,10 +65,9 @@ export default CreateCommand({
 		const tagLimits = instance.collections.commands.plugins.tags.GetTagLimit(interaction.guild!.id);
 
 		if (subCommand.find((name) => name === 'create')) {
-
 			if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
 				return await interaction.createFollowup({
-					content: `You need the following permissions: \`Manage Messages\` to execute this command.`,
+					content: `You need the following permissions: \`Manage Messages\` to execute this command.`
 				});
 			}
 
@@ -112,7 +105,6 @@ export default CreateCommand({
 		}
 
 		if (subCommand.find((name) => name === 'delete')) {
-
 			if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
 				return await interaction.createFollowup({
 					content: `You need the following permissions: \`Manage Messages\` to execute this command.`
@@ -138,7 +130,6 @@ export default CreateCommand({
 		}
 
 		if (subCommand.find((name) => name === 'edit')) {
-
 			if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
 				return await interaction.createFollowup({
 					content: `You need the following permissions: \`Manage Messages\` to execute this command.`
@@ -169,37 +160,39 @@ export default CreateCommand({
 
 			const noTags = tags.length === 0;
 
-			return await interaction.createFollowup({
-				embeds: [
-					{
-						title: 'Tags',
-						description: noTags ? 'No tags to list' : tags.map((tag) => `\`${tag.name}\``).join('\n '),
-						color: constants.numbers.colors.secondary,
-						footer: {
-							text: noTags ? '' : `Use /tag view <name> to view a tag`
-						}
-					}
-				]
-			}).catch((err) => {
-				console.log(err);
-				instance.utils.sendToLogChannel('error', {
+			return await interaction
+				.createFollowup({
 					embeds: [
 						{
-							title: 'Tag List Command Error',
-							description: `Error sending tag list to ${interaction.user.tag} (${interaction.user.id}) in ${interaction.guild!.name} (${
-								interaction.guild!.id
-							})`,
-							color: 0xff0000,
-							fields: [
-								{
-									name: 'Error',
-									value: `\`\`\`${err}\`\`\``
-								}
-							]
+							title: 'Tags',
+							description: noTags ? 'No tags to list' : tags.map((tag) => `\`${tag.name}\``).join('\n '),
+							color: constants.numbers.colors.secondary,
+							footer: {
+								text: noTags ? '' : `Use /tag view <name> to view a tag`
+							}
 						}
 					]
+				})
+				.catch((err) => {
+					console.log(err);
+					instance.utils.sendToLogChannel('error', {
+						embeds: [
+							{
+								title: 'Tag List Command Error',
+								description: `Error sending tag list to ${interaction.user.tag} (${interaction.user.id}) in ${
+									interaction.guild!.name
+								} (${interaction.guild!.id})`,
+								color: 0xff0000,
+								fields: [
+									{
+										name: 'Error',
+										value: `\`\`\`${err}\`\`\``
+									}
+								]
+							}
+						]
+					});
 				});
-			})
 		}
 
 		if (subCommand.find((name) => name === 'view')) {
@@ -207,7 +200,9 @@ export default CreateCommand({
 			const tag = instance.collections.commands.plugins.tags.GetTag(interaction.guild!.id, name);
 
 			return await interaction.createFollowup({
-				content: tag ? instance.utils.FormatPluginStringData(interaction.member!, tag.content) : `Tag \`${name}\` doesn't exist for this server!`
+				content: tag
+					? instance.utils.FormatPluginStringData(interaction.member!, tag.content)
+					: `Tag \`${name}\` doesn't exist for this server!`
 			});
 		}
 

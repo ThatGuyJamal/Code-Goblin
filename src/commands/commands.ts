@@ -11,7 +11,6 @@ export default CreateCommand({
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	requiredUserPermissions: ['SEND_MESSAGES'],
 	run: async (instance, interaction) => {
-		
 		const filteredCmdProps = instance.collections.commands.commandStoreMap.map((command) => {
 			return {
 				name: command.trigger,

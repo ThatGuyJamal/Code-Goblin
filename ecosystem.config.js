@@ -3,7 +3,7 @@ module.exports = [
 	{
 		name: "Whisper Room Bot",
 		script: "./dist/index.js",
-		max_memory_restart: "450M",
+		max_memory_restart: "400",
 		env_production: {
 			NODE_ENV: "production",
 		},
