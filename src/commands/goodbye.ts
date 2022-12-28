@@ -8,7 +8,7 @@ export default CreateCommand({
 	description: 'Goodbye plugin',
 	type: ApplicationCommandTypes.CHAT_INPUT,
 	register: isCanary ? 'guild' : 'global',
-	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'USE_EXTERNAL_EMOJIS'],
+	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
 	options: (opt) => {
 		opt

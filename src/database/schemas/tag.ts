@@ -1,7 +1,7 @@
 import { Schema, Model, model } from 'mongoose';
 
 export enum TagLimits {
-	MAX_CREATED_TAGS = 2
+	MAX_CREATED_TAGS = 10
 }
 
 export interface Tag {

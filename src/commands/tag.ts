@@ -9,7 +9,7 @@ export default CreateCommand({
 	description: 'Tags plugin',
 	type: ApplicationCommandTypes.CHAT_INPUT,
 	register: isCanary ? 'guild' : 'global',
-	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'USE_EXTERNAL_EMOJIS'],
+	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	options: (opt) => {
 		opt
 			.addOption('tag-1', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
@@ -171,15 +171,35 @@ export default CreateCommand({
 
 			return await interaction.createFollowup({
 				embeds: [
-				{
-					title: 'Tags',
-					description: noTags ? 'No tags to list' : tags.map((tag) => `\`${tag.name}\``).join(', '),
-					color: constants.numbers.colors.secondary,
-					footer: {
-						text: noTags ? '' : `Use /tag view <name> to view a tag`
+					{
+						title: 'Tags',
+						description: noTags ? 'No tags to list' : tags.map((tag) => `\`${tag.name}\``).join('\n '),
+						color: constants.numbers.colors.secondary,
+						footer: {
+							text: noTags ? '' : `Use /tag view <name> to view a tag`
+						}
 					}
-				}]
-			});
+				]
+			}).catch((err) => {
+				console.log(err);
+				instance.utils.sendToLogChannel('error', {
+					embeds: [
+						{
+							title: 'Tag List Command Error',
+							description: `Error sending tag list to ${interaction.user.tag} (${interaction.user.id}) in ${interaction.guild!.name} (${
+								interaction.guild!.id
+							})`,
+							color: 0xff0000,
+							fields: [
+								{
+									name: 'Error',
+									value: `\`\`\`${err}\`\`\``
+								}
+							]
+						}
+					]
+				});
+			})
 		}
 
 		if (subCommand.find((name) => name === 'view')) {
@@ -187,7 +207,7 @@ export default CreateCommand({
 			const tag = instance.collections.commands.plugins.tags.GetTag(interaction.guild!.id, name);
 
 			return await interaction.createFollowup({
-				content: tag ? tag.content : `Tag \`${name}\` doesn't exist for this server!`
+				content: tag ? instance.utils.FormatPluginStringData(interaction.member!, tag.content) : `Tag \`${name}\` doesn't exist for this server!`
 			});
 		}
 

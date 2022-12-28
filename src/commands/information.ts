@@ -12,7 +12,7 @@ export default CreateCommand({
 	description: 'View information about the bot and its services',
 	type: ApplicationCommandTypes.CHAT_INPUT,
 	register: isCanary ? 'guild' : 'global',
-	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'USE_EXTERNAL_EMOJIS'],
+	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	requiredUserPermissions: ['SEND_MESSAGES'],
 	options: (opts) => {
 		opts.addOption('option', ApplicationCommandOptionTypes.STRING, (option) => {
