@@ -1,6 +1,6 @@
 import type { CreateMessageOptions, TextChannel } from 'oceanic.js';
-import config from './config/config.js';
-import type Main from './main';
+import config from '../config/config.js';
+import type Main from '../main';
 
 export class Utils {
 	private instance: Main;

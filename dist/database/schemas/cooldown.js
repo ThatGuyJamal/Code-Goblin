@@ -1,8 +1,0 @@
-import { Schema, model } from 'mongoose';
-const GCooldownSchema = new Schema({
-    // guild_id-user_id-command_name
-    _id: { type: String, required: true },
-    expires: { type: Date, required: true }
-});
-export const CooldownModel = model('cooldowns', GCooldownSchema);
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY29vbGRvd24uanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9zcmMvZGF0YWJhc2Uvc2NoZW1hcy9jb29sZG93bi50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxPQUFPLEVBQUUsTUFBTSxFQUFFLEtBQUssRUFBYyxNQUFNLFVBQVUsQ0FBQztBQVNyRCxNQUFNLGVBQWUsR0FBRyxJQUFJLE1BQU0sQ0FBWTtJQUM3QyxnQ0FBZ0M7SUFDaEMsR0FBRyxFQUFFLEVBQUUsSUFBSSxFQUFFLE1BQU0sRUFBRSxRQUFRLEVBQUUsSUFBSSxFQUFFO0lBQ3JDLE9BQU8sRUFBRSxFQUFFLElBQUksRUFBRSxJQUFJLEVBQUUsUUFBUSxFQUFFLElBQUksRUFBRTtDQUN2QyxDQUFDLENBQUM7QUFFSCxNQUFNLENBQUMsTUFBTSxhQUFhLEdBQXFCLEtBQUssQ0FBQyxXQUFXLEVBQUUsZUFBZSxDQUFDLENBQUMifQ==

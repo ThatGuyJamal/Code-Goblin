@@ -1,5 +1,5 @@
 import { Collection } from 'oceanic.js';
-import { Tag, TagLimits } from '../database/schemas/tags.js';
+import { Tag, TagLimits } from '../database/schemas/tag.js';
 import type Main from '../main.js';
 
 export class TagCommandPlugin {

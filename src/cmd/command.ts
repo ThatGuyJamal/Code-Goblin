@@ -1,8 +1,8 @@
 import { ApplicationCommandBuilder } from '@oceanicjs/builders';
 import type { ApplicationCommandTypes, Client, CommandInteraction, CreateApplicationCommandOptions, Permission, PermissionName } from 'oceanic.js';
-import config from './config/config.js';
-import { MainInstance } from './main.js';
-import type { CooldownDurations } from './plugins/cooldown.js';
+import config from '../config/config.js';
+import { MainInstance } from '../main.js';
+import type { CooldownDurations } from '../plugins/cooldown.js';
 
 export interface CommandDataProp {
 	props: Command;
@@ -101,6 +101,10 @@ export async function CreateGuildCommands(client: Client) {
 			await client.application.bulkEditGuildCommands(guilds, commandsArray);
 			console.log(`[INFO] Successfully created ${commandsArray.length} commands in guild ${guilds}`);
 		}
+
+		await MainInstance.utils.sendToLogChannel('api', {
+			content: `Successfully created ${commandsArray.length} commands in all guilds!`
+		});
 
 		console.log(`[INFO] Successfully created ${commandsArray.length} commands in all guilds`);
 	} catch (err) {

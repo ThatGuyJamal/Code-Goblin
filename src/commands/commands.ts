@@ -1,16 +1,18 @@
 import { ApplicationCommandTypes, ButtonStyles, ComponentTypes } from 'oceanic.js';
-import { CreateCommand } from '../command.js';
-import config from '../config/config.js';
+import { CreateCommand } from '../cmd/command.js';
+import config, { isCanary } from '../config/config.js';
+import constants from '../utils/constants.js';
 
 export default CreateCommand({
 	trigger: 'commands',
 	description: 'Lists all commands',
 	type: ApplicationCommandTypes.CHAT_INPUT,
-	register: 'global',
+	register: isCanary ? 'guild' : 'global',
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'USE_EXTERNAL_EMOJIS'],
 	requiredUserPermissions: ['SEND_MESSAGES'],
 	run: async (instance, interaction) => {
-		const commands = instance.collections.commands.commandStoreMap.map((command) => {
+		
+		const filteredCmdProps = instance.collections.commands.commandStoreMap.map((command) => {
 			return {
 				name: command.trigger,
 				description: command.description
@@ -21,7 +23,8 @@ export default CreateCommand({
 			embeds: [
 				{
 					title: 'Commands',
-					description: `${commands.map((cmd) => `\`/${cmd.name}\``).join(', ')}`
+					description: `${filteredCmdProps.map((cmd) => `\`/${cmd.name}\``).join(', ')}`,
+					color: constants.numbers.colors.primary
 				}
 			],
 			components: [

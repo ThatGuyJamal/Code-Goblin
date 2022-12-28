@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import { ActivityTypes, Client } from 'oceanic.js';
-import config from './config/config.js';
-import { GoodbyeModel } from './database/schemas/goodbye.js';
-import { TagModel } from './database/schemas/tags.js';
-import { WelcomeModel } from './database/schemas/welcome.js';
+import config from '../config/config.js';
+import { GoodbyeModel } from '../database/schemas/goodbye.js';
+import { TagModel } from '../database/schemas/tag.js';
+import { WelcomeModel } from '../database/schemas/welcome.js';
 
 /**
  * The Client Object for the bot by Oceanic.js
@@ -39,7 +39,7 @@ export const client = new Client({
 		firstShardID: 0,
 		getAllUsers: false,
 		guildCreateTimeout: 5000,
-		intents: ['GUILDS', 'GUILD_MEMBERS', 'MESSAGE_CONTENT', 'GUILD_MESSAGES'],
+		intents: ['GUILDS', 'GUILD_MEMBERS'],
 		largeThreshold: 1000,
 		maxReconnectAttempts: Infinity,
 		maxResumeAttempts: 10,

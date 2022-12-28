@@ -1,17 +1,17 @@
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes } from 'oceanic.js';
-import { CreateCommand } from '../command.js';
-import { TagLimits } from '../database/schemas/tags.js';
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, Permissions } from 'oceanic.js';
+import { CreateCommand } from '../cmd/command.js';
+import { isCanary } from '../config/config.js';
+import { TagLimits } from '../database/schemas/tag.js';
 
 export default CreateCommand({
 	trigger: 'tag',
 	description: 'Tags plugin',
 	type: ApplicationCommandTypes.CHAT_INPUT,
-	register: 'global',
+	register: isCanary ? 'guild' : 'global',
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'USE_EXTERNAL_EMOJIS'],
-	requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
 	options: (opt) => {
 		opt
-			.addOption('tag', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
+			.addOption('tag-1', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 				option
 					.setName('create')
 					.setDescription('Create a tag')
@@ -23,9 +23,8 @@ export default CreateCommand({
 					});
 			})
 			.setDMPermission(false)
-			.setDefaultMemberPermissions(['MANAGE_MESSAGES']),
 			opt
-				.addOption('tag', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
+				.addOption('tag-2', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 					option
 						.setName('delete')
 						.setDescription('Delete a tag')
@@ -34,9 +33,8 @@ export default CreateCommand({
 						});
 				})
 				.setDMPermission(false)
-				.setDefaultMemberPermissions(['MANAGE_MESSAGES']),
 			opt
-				.addOption('tag', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
+				.addOption('tag-3', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 					option
 						.setName('edit')
 						.setDescription('Edit a tag')
@@ -48,14 +46,13 @@ export default CreateCommand({
 						});
 				})
 				.setDMPermission(false)
-				.setDefaultMemberPermissions(['MANAGE_MESSAGES']),
 			opt
-				.addOption('tag', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
+				.addOption('tag-4', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 					option.setName('list').setDescription('List all tags in this server');
 				})
 				.setDMPermission(false),
 			opt
-				.addOption('tag', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
+				.addOption('tag-5', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 					option
 						.setName('view')
 						.setDescription('View a tag')
@@ -73,6 +70,13 @@ export default CreateCommand({
 		const tagLimits = instance.collections.commands.plugins.tags.GetTagLimit(interaction.guild!.id);
 
 		if (subCommand.find((name) => name === 'create')) {
+
+			if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
+				return await interaction.createFollowup({
+					content: `You need the following permissions: \`Manage Messages\` to execute this command.`,
+				});
+			}
+
 			const name = interaction.data.options.getString('name', true);
 			const content = interaction.data.options.getString('content', true);
 
@@ -107,6 +111,13 @@ export default CreateCommand({
 		}
 
 		if (subCommand.find((name) => name === 'delete')) {
+
+			if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
+				return await interaction.createFollowup({
+					content: `You need the following permissions: \`Manage Messages\` to execute this command.`
+				});
+			}
+
 			const name = interaction.data.options.getString('name', true);
 
 			// Check if the tag exists
@@ -126,6 +137,13 @@ export default CreateCommand({
 		}
 
 		if (subCommand.find((name) => name === 'edit')) {
+
+			if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
+				return await interaction.createFollowup({
+					content: `You need the following permissions: \`Manage Messages\` to execute this command.`
+				});
+			}
+
 			const name = interaction.data.options.getString('name', true);
 			const content = interaction.data.options.getString('content', true);
 
@@ -153,7 +171,7 @@ export default CreateCommand({
 			return await interaction.createFollowup({
 				content: `Available tags: ${
 					noTags
-						? 'No Tags created for this server.\n\nMembers with the __Manage Server__ permission can create, update, and delete tags.'
+						? 'No Tags created for this server.\n\nMembers with the __Manage Messages__ permission can create, update, and delete tags.'
 						: tags.map((tag) => `\`${tag.name}\``).join(', ')
 				}`
 			});

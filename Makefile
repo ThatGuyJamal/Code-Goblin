@@ -7,6 +7,13 @@ cbr:
 	@yarn format
 	@yarn build
 
+# Clean the project on windows
+cw:
+	@echo "Cleaning..."
+	@rmdir dist
+	@yarn format
+	@yarn build
+
 # Make the config file in the src/config folder named config.ts
 ccf:
 	@echo "Creating config file..."

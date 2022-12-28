@@ -1,12 +1,13 @@
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ChannelTypes } from 'oceanic.js';
-import { CreateCommand } from '../command.js';
-import constants from '../constants.js';
+import { CreateCommand } from '../cmd/command.js';
+import { isCanary } from '../config/config.js';
+import constants from '../utils/constants.js';
 
 export default CreateCommand({
 	trigger: 'goodbye',
 	description: 'Goodbye plugin',
 	type: ApplicationCommandTypes.CHAT_INPUT,
-	register: 'global',
+	register: isCanary ? 'guild' : 'global',
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'USE_EXTERNAL_EMOJIS'],
 	requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
 	options: (opt) => {

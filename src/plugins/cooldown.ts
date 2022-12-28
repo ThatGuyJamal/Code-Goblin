@@ -1,5 +1,5 @@
 import { Collection } from 'oceanic.js';
-import type { CommandCooldown } from '../command.js';
+import type { CommandCooldown } from '../cmd/command.js';
 import { CooldownModel } from '../database/schemas/cooldown.js';
 
 export enum CooldownDurations {
@@ -172,8 +172,8 @@ export class CooldownCommandPlugin {
 	 * @param command_name
 	 * @returns
 	 */
-	public async getRemainingCooldown(guild_id: string, user_id: string, command_name: string) {
-		const cooldown = await this.get(guild_id, user_id, command_name);
+	public getRemainingCooldown(guild_id: string, user_id: string, command_name: string) {
+		const cooldown = this.get(guild_id, user_id, command_name);
 
 		if (!cooldown) return 0;
 

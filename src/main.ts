@@ -1,21 +1,24 @@
+import path from 'path';
+import mongoose from 'mongoose';
 import { readdirSync } from 'fs';
 import { Client as DiscordClientType, Collection, CreateApplicationCommandOptions, CommandInteraction, MessageFlags } from 'oceanic.js';
-import path from 'path';
 import { fileURLToPath } from 'url';
-import { client, db_obj } from './client.js';
-import type { Command, CommandDataProp } from './command.js';
+
+import { Utils } from './utils/utils.js';
+import constants from './utils/constants.js';
+import { client, db_obj } from './client/client.js';
 import config, { isCanary } from './config/config.js';
-import constants from './constants.js';
-import mongoose from 'mongoose';
+import type { Command, CommandDataProp } from './cmd/command.js';
+
 import { TagCommandPlugin } from './plugins/tag.js';
 import { WelcomeCommandPlugin } from './plugins/welcome.js';
-import { Utils } from './utils.js';
 import { GoodbyeCommandPlugin } from './plugins/goodbye.js';
 import { CooldownCommandPlugin } from './plugins/cooldown.js';
 
 export default class Main {
 	public DiscordClient: DiscordClientType = client;
 
+	/** The config file */
 	public readonly config = config;
 
 	/** Database Object Properties */
@@ -132,8 +135,8 @@ export default class Main {
 
 		if (command?.requiredBotPermissions) {
 			if (!interaction.appPermissions?.has(...command.requiredBotPermissions)) {
-				return interaction.createMessage({
-					content: constants.strings.events.interactionProcess.botPermissions,
+				return await interaction.createMessage({
+					content: `I need the following permissions: \`${command.requiredBotPermissions}\` to execute this command.`,
 					flags: MessageFlags.EPHEMERAL
 				});
 			}
@@ -141,31 +144,14 @@ export default class Main {
 
 		if (command?.requiredUserPermissions) {
 			if (!interaction.member?.permissions.has(...command.requiredUserPermissions)) {
-				return interaction.createMessage({
-					content: constants.strings.events.interactionProcess.userPermissions,
+				return await interaction.createMessage({
+					content: `You need the following permissions: \`${command.requiredUserPermissions}\` to execute this command.`,
 					flags: MessageFlags.EPHEMERAL
 				});
 			}
 		}
 
 		// TODO - Add cool-down check
-
-		if (command?.cooldown) {
-			let manager = this.collections.commands.plugins.cooldown;
-
-			if (manager.isOnCooldown(interaction.guild.id, interaction.user.id, command.trigger)) {
-				return interaction.createMessage({
-					content: constants.strings.events.interactionProcess.isOnCooldown,
-					flags: MessageFlags.EPHEMERAL
-				});
-			}
-
-			// If not on cooldown, add the user to the cooldown list
-			manager.set(interaction.guild.id, interaction.user.id, command.trigger, {
-				duration: command.cooldown.duration,
-				multiplier: command.cooldown.multiplier
-			});
-		}
 
 		await (command
 			? command.run.call(this, this, interaction)

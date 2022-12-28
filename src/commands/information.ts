@@ -1,19 +1,19 @@
 import { EmbedBuilder } from '@oceanicjs/builders';
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ButtonStyles, ComponentTypes } from 'oceanic.js';
-import { client } from '../client.js';
-import { CreateCommand } from '../command.js';
+import { client } from '../client/client.js';
+import { CreateCommand } from '../cmd/command.js';
 import ms from 'ms';
-import config from '../config/config.js';
-import constants from '../constants.js';
+import config, { isCanary } from '../config/config.js';
+import constants from '../utils/constants.js';
 import { GlobalStatistics, GlobalStatsModel } from '../database/schemas/statistics.js';
 
 export default CreateCommand({
 	trigger: 'information',
 	description: 'View information about the bot and its services',
 	type: ApplicationCommandTypes.CHAT_INPUT,
-	register: 'global',
+	register: isCanary ? 'guild' : 'global',
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS', 'USE_EXTERNAL_EMOJIS'],
-	requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
+	requiredUserPermissions: ['SEND_MESSAGES'],
 	options: (opts) => {
 		opts.addOption('option', ApplicationCommandOptionTypes.STRING, (option) => {
 			option

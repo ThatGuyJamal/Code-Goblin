@@ -1,5 +1,5 @@
 import type { Client } from 'oceanic.js';
-import { deleteGuildCommands, deleteGlobalCommands, CreateGuildCommands, CreateGlobalCommands } from '../command.js';
+import { deleteGuildCommands, deleteGlobalCommands, CreateGuildCommands, CreateGlobalCommands } from '../cmd/command.js';
 import config from '../config/config.js';
 import { MainInstance } from '../main.js';
 
