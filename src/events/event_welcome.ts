@@ -26,10 +26,7 @@ export async function getWelcomeResults(member: Member) {
 
 	if (!welcomeChannel) return;
 
-	const welcomeMessage = data.content
-		.replace(/{user}/g, member.mention)
-		.replace(/{server}/g, guild.name)
-		.replace(/{memberCount}/g, guild.memberCount.toString());
+	const welcomeMessage = MainInstance.utils.FormatPluginStringData(member, data.content);
 
 	return { welcomeChannel, welcomeMessage };
 }

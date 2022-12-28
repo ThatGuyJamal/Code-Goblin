@@ -24,10 +24,7 @@ export async function getGoodbyeResults(member: Member) {
 
 	if (!GoodbyeChannel) return;
 
-	const GoodbyeMessage = data.content
-		.replace(/{user}/g, member.mention)
-		.replace(/{server}/g, guild.name)
-		.replace(/{memberCount}/g, guild.memberCount.toString());
+	const GoodbyeMessage = MainInstance.utils.FormatPluginStringData(member, data.content);
 
 	return { GoodbyeChannel, GoodbyeMessage };
 }

@@ -2,6 +2,7 @@ import { ApplicationCommandOptionTypes, ApplicationCommandTypes, Permissions } f
 import { CreateCommand } from '../cmd/command.js';
 import { isCanary } from '../config/config.js';
 import { TagLimits } from '../database/schemas/tag.js';
+import constants from '../utils/constants.js';
 
 export default CreateCommand({
 	trigger: 'tag',
@@ -84,7 +85,7 @@ export default CreateCommand({
 
 			if (tagLimits.limited) {
 				return await interaction.createFollowup({
-					content: `You have reached the tag limit of \`${TagLimits.MAX_CREATED_TAGS}\`! You can delete a tag to create a new one.`
+					content: `You have reached the max tag limit of \`${TagLimits.MAX_CREATED_TAGS}\`! You can delete a current tag and create a new one. Run \`/tag list\` to view all current tags in the server.`
 				});
 			}
 
@@ -169,11 +170,15 @@ export default CreateCommand({
 			const noTags = tags.length === 0;
 
 			return await interaction.createFollowup({
-				content: `Available tags: ${
-					noTags
-						? 'No Tags created for this server.\n\nMembers with the __Manage Messages__ permission can create, update, and delete tags.'
-						: tags.map((tag) => `\`${tag.name}\``).join(', ')
-				}`
+				embeds: [
+				{
+					title: 'Tags',
+					description: noTags ? 'No tags to list' : tags.map((tag) => `\`${tag.name}\``).join(', '),
+					color: constants.numbers.colors.secondary,
+					footer: {
+						text: noTags ? '' : `Use /tag view <name> to view a tag`
+					}
+				}]
 			});
 		}
 
@@ -182,7 +187,7 @@ export default CreateCommand({
 			const tag = instance.collections.commands.plugins.tags.GetTag(interaction.guild!.id, name);
 
 			return await interaction.createFollowup({
-				content: tag ? tag.content : 'Tag not found!'
+				content: tag ? tag.content : `Tag \`${name}\` doesn't exist for this server!`
 			});
 		}
 
