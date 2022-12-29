@@ -24,18 +24,12 @@ export default async function GuildCreateEvent(guild: Guild) {
 	const hasWelcome = await welcomePlugin.query.findOne({ guild_id: guild.id });
 	const hasGoodbye = await GoodbyePlugin.query.findOne({ guild_id: guild.id });
 
-	if (hasWelcome) {
-		welcomePlugin.cache.set(guild.id, hasWelcome);
-	}
+	if (hasWelcome) welcomePlugin.cache.set(guild.id, hasWelcome);
 
-	if (hasGoodbye) {
-		GoodbyePlugin.cache.set(guild.id, hasGoodbye);
-	}
+	if (hasGoodbye) GoodbyePlugin.cache.set(guild.id, hasGoodbye);
 
 	// Get the tags, because each tag has a record we have to find each tag with this guild id, which will return an array of tags
 	const tags = await MainInstance.collections.commands.plugins.tags.query.find({ guild_id: guild.id });
 
-	if (tags.length > 0) {
-		MainInstance.collections.commands.plugins.tags.cache.set(guild.id, tags);
-	}
+	if (tags.length > 0) MainInstance.collections.commands.plugins.tags.cache.set(guild.id, tags);
 }

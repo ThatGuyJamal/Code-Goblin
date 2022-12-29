@@ -22,15 +22,9 @@ export default async function GuildCreateEvent(guild: Guild) {
 	const welcomePluginCache = MainInstance.collections.commands.plugins.welcome.cache;
 	const GoodbyePluginCache = MainInstance.collections.commands.plugins.goodbye.cache;
 
-	if (TagPluginCache.has(guild.id)) {
-		TagPluginCache.delete(guild.id);
-	}
+	if (TagPluginCache.has(guild.id)) TagPluginCache.delete(guild.id);
 
-	if (welcomePluginCache.has(guild.id)) {
-		welcomePluginCache.delete(guild.id);
-	}
+	if (welcomePluginCache.has(guild.id)) welcomePluginCache.delete(guild.id);
 
-	if (GoodbyePluginCache.has(guild.id)) {
-		GoodbyePluginCache.delete(guild.id);
-	}
+	if (GoodbyePluginCache.has(guild.id)) GoodbyePluginCache.delete(guild.id);
 }

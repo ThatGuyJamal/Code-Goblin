@@ -6,6 +6,7 @@ import ms from 'ms';
 import config, { isCanary } from '../config/config.js';
 import constants from '../utils/constants.js';
 import { GlobalStatistics, GlobalStatsModel } from '../database/schemas/statistics.js';
+import os from "node:os"
 
 export default CreateCommand({
 	trigger: 'information',
@@ -71,11 +72,22 @@ export default CreateCommand({
 			embed.setDescription('Displaying current data below');
 			embed.setColor(constants.numbers.colors.primary);
 
-			let cpuUsage = process.cpuUsage();
-			let cpuUsagePercentage = (cpuUsage.user + cpuUsage.system) / 1000 / 1000 / 1000 / 1000;
+			// Get the CPU usage
+			const cpuUsage = process.cpuUsage();
 
-			embed.addField('CPU Usage', `${cpuUsagePercentage.toFixed(2)}%`, true);
-			embed.addField('Memory Usage', `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`, true);
+			// Calculate the CPU usage in percentage
+			const cpuUsageInPercent = (cpuUsage.user + cpuUsage.system) / os.cpus().length / 1000;
+
+			// Get the memory usage
+			const memoryUsage = process.memoryUsage();
+
+			// Calculate the memory usage in percentage
+			const totalMemory = os.totalmem();
+			const usedMemory = memoryUsage.heapUsed + memoryUsage.external;
+			const memoryUsageInPercent = (usedMemory / totalMemory) * 100;
+
+			embed.addField('CPU Usage', `${cpuUsageInPercent}`, true);
+			embed.addField('Memory Usage', `${memoryUsageInPercent}`, true);
 
 			embed.addField('Uptime', ms(client.uptime, { long: true }), true);
 
@@ -85,7 +97,7 @@ export default CreateCommand({
 
 			embed.addField('Users Cached', `${client.users.size}`, true);
 
-			embed.addField('Discord API Library', `[Oceanic.js-v1.4.0](https://oceanic.ws/)`, true);
+			embed.addField('Discord API Library', `[Oceanic.js-v1.4.0](https://oceanic.ws)`, true);
 			embed.addField('Database State', `${statusCode ? 'Online' : 'Offline'}`, true);
 
 			embed.addField('Total Commands', `${instance.collections.commands.commandStoreMap.size}`, true);
