@@ -73,18 +73,19 @@ export function CreateCommand(props: Command): CommandDataProp {
 
 /**
  * 
+ * 
  * import { ApplicationCommandTypes } from 'oceanic.js';
-import { CreateCommand } from '../../lib/command.js';
+import { CreateCommand } from '../cmd/command.js';
+import { isCanary } from '../config/config.js';
 
 export default CreateCommand({
 	trigger: '',
 	description: ``,
 	type: ApplicationCommandTypes.CHAT_INPUT,
-	options: (command) => {},
-	register: {
-		guild: true,
-		global: false
-	},
+	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
+	requiredUserPermissions: ['SEND_MESSAGES'],
+	options: (opt) => {},
+	register: isCanary ? "guild" : "global",
 	run: async (_instance, interaction) => {}
 });
  */

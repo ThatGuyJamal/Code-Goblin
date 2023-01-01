@@ -33,7 +33,8 @@ export default CreateCommand({
 		if (type.value === 'company') {
 			embed.setTitle('Company Statistics');
 			embed.setDescription('About the developers of Whisper Room');
-			embed.addField('About', constants.strings.commands.info.company.bio, true);
+			embed.addField('Us', constants.strings.commands.info.company.bio, true);
+			embed.addField('Bot', constants.strings.commands.info.bot.bio, true);
 			embed.setColor(constants.numbers.colors.primary);
 
 			await interaction.createMessage({

@@ -16,6 +16,9 @@ export default {
 			info: {
 				company: {
 					bio: 'A place for people to talk about anything they want, without being judged. Users are anonymous, and can only see the messages of other users. The messages are deleted after a certain amount of time, so you can talk about anything you want, without worrying about it being seen by anyone else.'
+				},
+				bot: {
+					bio: `An open source tool helpful for programmers on discord. While its main functions are support the Whisper Rooms API, it can also be used for programmers to automate their own development.`
 				}
 			}
 		}
