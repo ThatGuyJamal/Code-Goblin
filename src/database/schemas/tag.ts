@@ -4,9 +4,12 @@ export enum TagLimits {
 	MAX_CREATED_TAGS = 10
 }
 
+// Type def for the tag model
 export interface Tag {
 	guild_id: string;
+	// The name of the tag
 	name: string;
+	// The data to display when the tag is called
 	content: string;
 	created_by_name: string;
 	created_by_id: string;
