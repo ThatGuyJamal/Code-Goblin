@@ -65,7 +65,7 @@ export default class Main {
 			.on('guildMemberAdd', (await import('./events/event_welcome.js')).default.bind(this))
 			.on('guildMemberRemove', (await import('./events/event_goodbye.js')).default.bind(this) as any)
 			.on('messageCreate', (await import('./events/event_messageCreate.js')).default.bind(this))
-			.on('debug', (await import('./events/event_debug')).default.bind(this.DiscordClient))
+			.on('debug', (await import('./events/event_debug.js')).default.bind(this.DiscordClient))
 			.on('error', (err) => {
 				console.error(`[ERROR] Somethings broken...`, err);
 			});

@@ -6,7 +6,7 @@ import ms from 'ms';
 import config, { isCanary } from '../config/config.js';
 import constants from '../utils/constants.js';
 import { GlobalStatistics, GlobalStatsModel } from '../database/schemas/statistics.js';
-import os from "node:os"
+import os from 'node:os';
 
 export default CreateCommand({
 	trigger: 'information',
