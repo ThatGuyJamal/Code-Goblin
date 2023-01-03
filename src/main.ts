@@ -76,7 +76,7 @@ export default class Main {
 		// Finds all command files in the modules folder
 		const commandFiles: string[] = readdirSync(path.join(path.dirname(fileURLToPath(import.meta.url)), './commands')).filter((file) =>
 			file.endsWith('.js' || '.ts')
-		);
+		)
 
 		console.log(`[INFO] Loading ${commandFiles.length} commands...`);
 
@@ -84,7 +84,8 @@ export default class Main {
 
 		// Loops through all command files and loads them into the cache
 		for (const file of commandFiles) {
-			const command = (await import(`./commands/${file}`)).default as CommandDataProp;
+			try {
+				const command = (await import(`./commands/${file}`)).default as CommandDataProp;
 
 			if (!command.props.nsfw) command.props.nsfw = false;
 			if (!command.props.premiumOnly) command.props.premiumOnly = false;
@@ -109,6 +110,9 @@ export default class Main {
 				console.log(`[COMMAND] Loaded ${command.props.trigger} into memory.`);
 			} else {
 				console.log(`[COMMAND] ${command.props.trigger} was not loaded into memory because it is disabled.`);
+			}
+			} catch (err) {
+				console.error(`[ERROR] Failed to load command ${file} into memory.`, err);
 			}
 		}
 	}

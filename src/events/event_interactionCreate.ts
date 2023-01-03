@@ -36,4 +36,9 @@ export default async function (this: typeof MainInstance, interaction: AnyIntera
 			);
 		}
 	}
+
+	 if (interaction.type === InteractionTypes.APPLICATION_COMMAND_AUTOCOMPLETE) {
+			console.log(`[${new Date().toISOString()}][autocomplete/${interaction.data.name}]: ${interaction.user.tag} (${interaction.user.id})`);
+			switch (interaction.data.name) {}
+		}
 }

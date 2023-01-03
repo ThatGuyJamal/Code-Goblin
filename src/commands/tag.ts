@@ -54,7 +54,6 @@ export default CreateCommand({
 						.addOption('name', ApplicationCommandOptionTypes.STRING, (option) => {
 							option.setName('name').setDescription('The name of the tag').setRequired(true);
 						})
-						.setAutocomplete(true);
 				})
 				.setDMPermission(false);
 	},
