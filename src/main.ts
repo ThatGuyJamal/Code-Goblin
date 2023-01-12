@@ -76,7 +76,7 @@ export default class Main {
 		// Finds all command files in the modules folder
 		const commandFiles: string[] = readdirSync(path.join(path.dirname(fileURLToPath(import.meta.url)), './commands')).filter((file) =>
 			file.endsWith('.js' || '.ts')
-		)
+		);
 
 		console.log(`[INFO] Loading ${commandFiles.length} commands...`);
 
@@ -87,30 +87,30 @@ export default class Main {
 			try {
 				const command = (await import(`./commands/${file}`)).default as CommandDataProp;
 
-			if (!command.props.nsfw) command.props.nsfw = false;
-			if (!command.props.premiumOnly) command.props.premiumOnly = false;
-			if (!command.props.superUserOnly) command.props.superUserOnly = false;
-			if (!command.props.helperUserOnly) command.props.helperUserOnly = false;
-			if (!command.props.disabled) command.props.disabled = false;
-			if (!command.props.register) command.props.register = isCanary ? 'guild' : 'global';
+				if (!command.props.nsfw) command.props.nsfw = false;
+				if (!command.props.premiumOnly) command.props.premiumOnly = false;
+				if (!command.props.superUserOnly) command.props.superUserOnly = false;
+				if (!command.props.helperUserOnly) command.props.helperUserOnly = false;
+				if (!command.props.disabled) command.props.disabled = false;
+				if (!command.props.register) command.props.register = isCanary ? 'guild' : 'global';
 
-			// Filter out any commands that are disabled from being added to the application commands
-			if (!command.props.disabled) {
-				this.collections.commands.commandStoreMap.set(command.props.trigger, command.props);
+				// Filter out any commands that are disabled from being added to the application commands
+				if (!command.props.disabled) {
+					this.collections.commands.commandStoreMap.set(command.props.trigger, command.props);
 
-				if (command.props.register === 'global') {
-					this.collections.commands.commandStoreArrayJsonGlobal.push(command.toJson());
-				} else if (command.props.register === 'guild') {
-					this.collections.commands.commandStoreArrayJsonGuild.push(command.toJson());
-				} else if (command.props.register === 'both') {
-					this.collections.commands.commandStoreArrayJsonGlobal.push(command.toJson());
-					this.collections.commands.commandStoreArrayJsonGuild.push(command.toJson());
+					if (command.props.register === 'global') {
+						this.collections.commands.commandStoreArrayJsonGlobal.push(command.toJson());
+					} else if (command.props.register === 'guild') {
+						this.collections.commands.commandStoreArrayJsonGuild.push(command.toJson());
+					} else if (command.props.register === 'both') {
+						this.collections.commands.commandStoreArrayJsonGlobal.push(command.toJson());
+						this.collections.commands.commandStoreArrayJsonGuild.push(command.toJson());
+					}
+
+					console.log(`[COMMAND] Loaded ${command.props.trigger} into memory.`);
+				} else {
+					console.log(`[COMMAND] ${command.props.trigger} was not loaded into memory because it is disabled.`);
 				}
-
-				console.log(`[COMMAND] Loaded ${command.props.trigger} into memory.`);
-			} else {
-				console.log(`[COMMAND] ${command.props.trigger} was not loaded into memory because it is disabled.`);
-			}
 			} catch (err) {
 				console.error(`[ERROR] Failed to load command ${file} into memory.`, err);
 			}

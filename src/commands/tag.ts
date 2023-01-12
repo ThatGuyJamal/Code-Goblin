@@ -53,7 +53,7 @@ export default CreateCommand({
 						.setDescription('View a tag')
 						.addOption('name', ApplicationCommandOptionTypes.STRING, (option) => {
 							option.setName('name').setDescription('The name of the tag').setRequired(true);
-						})
+						});
 				})
 				.setDMPermission(false);
 	},
