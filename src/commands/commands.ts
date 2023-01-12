@@ -23,7 +23,8 @@ export default CreateCommand({
 				{
 					title: 'Commands',
 					description: `${filteredCmdProps.map((cmd) => `\`/${cmd.name}\``).join(', ')}`,
-					color: constants.numbers.colors.primary
+					color: constants.numbers.colors.primary,
+					timestamp: new Date().toISOString()
 				}
 			],
 			components: [
