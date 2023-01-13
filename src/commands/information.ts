@@ -27,6 +27,7 @@ export default CreateCommand({
 	},
 	run: async (instance, interaction) => {
 		const type = interaction.data.options.getStringOption('type', true);
+		const plugins = instance.collections.commands.plugins;
 
 		let embed = new EmbedBuilder();
 
@@ -104,6 +105,12 @@ export default CreateCommand({
 			embed.addField('Total Commands', `${instance.collections.commands.commandStoreMap.size}`, true);
 			embed.addField('Commands Executed', `${global.commands_executed}`, true);
 			embed.addField('Commands Failed', `${global.commands_failed}`, true);
+
+			embed.addField(
+				'Cached Plugins',
+				`Tags: ${plugins.tags.cache.size}, Welcome: ${plugins.welcome.cache.size}, Goodbye: ${plugins.goodbye.cache.size}`,
+				true
+			);
 
 			await interaction.createMessage({
 				embeds: [embed.toJSON()],

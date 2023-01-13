@@ -53,6 +53,9 @@ export default CreateCommand({
 						.setDescription('View a tag')
 						.addOption('name', ApplicationCommandOptionTypes.STRING, (option) => {
 							option.setName('name').setDescription('The name of the tag').setRequired(true);
+						})
+						.addOption('mention', ApplicationCommandOptionTypes.USER, (option) => {
+							option.setName('mention').setDescription('Mention a user in the tag');
 						});
 				})
 				.setDMPermission(false);
@@ -62,7 +65,7 @@ export default CreateCommand({
 
 		const subCommand = interaction.data.options.getSubCommand(true);
 
-		const tagLimits = instance.collections.commands.plugins.tags.GetTagLimit(interaction.guild!.id);
+		const tagLimits = await instance.collections.commands.plugins.tags.GetTagLimits(interaction.guild!.id);
 
 		if (subCommand.find((name) => name === 'create')) {
 			if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
@@ -83,7 +86,7 @@ export default CreateCommand({
 			}
 
 			// Check if the tag already exists
-			const tagExists = instance.collections.commands.plugins.tags.GetTag(interaction.guild!.id, name);
+			const tagExists = await instance.collections.commands.plugins.tags.GetTag(interaction.guild!.id, name);
 
 			if (tagExists) {
 				return await interaction.createFollowup({
@@ -156,7 +159,7 @@ export default CreateCommand({
 		}
 
 		if (subCommand.find((name) => name === 'list')) {
-			const tags = instance.collections.commands.plugins.tags.GetTags(interaction.guild!.id);
+			const tags = await instance.collections.commands.plugins.tags.GetTags(interaction.guild!.id);
 
 			const noTags = tags.length === 0;
 
@@ -197,11 +200,15 @@ export default CreateCommand({
 
 		if (subCommand.find((name) => name === 'view')) {
 			const name = interaction.data.options.getString('name', true);
-			const tag = instance.collections.commands.plugins.tags.GetTag(interaction.guild!.id, name);
+			const mention = interaction.data.options.getUser('mention', false);
+			const tag = await instance.collections.commands.plugins.tags.GetTag(interaction.guild!.id, name);
 
 			return await interaction.createFollowup({
 				content: tag
-					? instance.utils.FormatPluginStringData(interaction.member!, tag.content)
+					? `${mention ? `__*<@${mention.id}> was mentioned in this tag...*__` : ''}\n\n${instance.utils.FormatPluginStringData(
+							interaction.member!,
+							tag.content
+					  )}`
 					: `Tag \`${name}\` doesn't exist for this server!`
 			});
 		}

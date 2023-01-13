@@ -1,4 +1,5 @@
 import { Collection } from 'oceanic.js';
+import config from '../config/config.js';
 import { Tag, TagLimits } from '../database/schemas/tag.js';
 import type Main from '../main.js';
 
@@ -9,15 +10,20 @@ export class TagCommandPlugin {
 
 	public query;
 
+	private cachingDisabled: boolean;
+
 	public constructor(i: Main) {
 		this.instance = i;
 		this.cache = new Collection();
 		this.query = this.instance.database.managers.tag;
+		this.cachingDisabled = config.CachingDisabled;
 
 		this.init();
 	}
 
 	public async init(): Promise<void> {
+		if (this.cachingDisabled) return;
+
 		// Load all tags into cache
 		const tags = await this.query.find();
 
@@ -52,14 +58,16 @@ export class TagCommandPlugin {
 			updated_at: null
 		} as Tag;
 
-		// Add the tag to the cache
-		const cachedTags = this.cache.get(guildId);
+		if (!this.cachingDisabled) {
+			// Add the tag to the cache
+			const cachedTags = this.cache.get(guildId);
 
-		if (cachedTags) {
-			cachedTags.push(data);
-			this.cache.set(guildId, cachedTags);
-		} else {
-			this.cache.set(guildId, [data]);
+			if (cachedTags) {
+				cachedTags.push(data);
+				this.cache.set(guildId, cachedTags);
+			} else {
+				this.cache.set(guildId, [data]);
+			}
 		}
 
 		await this.query.create(data);
@@ -92,19 +100,21 @@ export class TagCommandPlugin {
 
 		// Update the tag in the cache
 
-		const cachedTags = this.cache.get(guildId);
+		if (!this.cachingDisabled) {
+			const cachedTags = this.cache.get(guildId);
 
-		if (cachedTags) {
-			const index = cachedTags.findIndex((t) => t.name === name);
-			if (index !== -1) {
-				cachedTags[index] = tag;
+			if (cachedTags) {
+				const index = cachedTags.findIndex((t) => t.name === name);
+				if (index !== -1) {
+					cachedTags[index] = tag;
+				} else {
+					cachedTags.push(tag);
+				}
+
+				this.cache.set(guildId, cachedTags);
 			} else {
-				cachedTags.push(tag);
+				this.cache.set(guildId, [tag]);
 			}
-
-			this.cache.set(guildId, cachedTags);
-		} else {
-			this.cache.set(guildId, [tag]);
 		}
 
 		return tag;
@@ -121,31 +131,50 @@ export class TagCommandPlugin {
 			name: name
 		});
 
-		// Remove the tag from the cache
-		const cachedTags = this.cache.get(guildId);
+		if (!this.cachingDisabled) {
+			// Remove the tag from the cache
+			const cachedTags = this.cache.get(guildId);
 
-		if (cachedTags) {
-			const index = cachedTags.findIndex((t) => t.name === name);
-			if (index !== -1) {
-				cachedTags.splice(index, 1);
+			if (cachedTags) {
+				const index = cachedTags.findIndex((t) => t.name === name);
+				if (index !== -1) {
+					cachedTags.splice(index, 1);
+				}
+
+				this.cache.set(guildId, cachedTags);
+			} else {
+				this.cache.set(guildId, []);
 			}
-
-			this.cache.set(guildId, cachedTags);
-		} else {
-			this.cache.set(guildId, []);
 		}
 	}
 
-	public GetTags(guildId: string): Tag[] {
-		return this.cache.get(guildId) || [];
+	public async GetTags(guildId: string): Promise<Tag[]> {
+		if (!this.cachingDisabled) return this.cache.get(guildId) || [];
+
+		let tags = await this.query.find({ guild_id: guildId });
+
+		if (tags.length === 0) {
+			return [];
+		}
+
+		return tags;
 	}
 
-	public GetTag(guildId: string, name: string): Tag | undefined {
-		return this.cache.get(guildId)?.find((t) => t.name === name);
+	public async GetTag(guildId: string, name: string): Promise<Tag | null | undefined> {
+		if (!this.cachingDisabled) return this.cache.get(guildId)?.find((t) => t.name === name);
+		let t_name = name;
+
+		let tag = await this.query.findOne({ guild_id: guildId, name: t_name });
+
+		return tag;
 	}
 
-	public GetTagLimit(guildId: string) {
-		const tags = this.cache.get(guildId);
+	public async GetTagLimits(guildId: string) {
+		let tags;
+
+		if (!this.cachingDisabled) tags = this.cache.get(guildId);
+		else tags = await this.query.find({ guild_id: guildId });
+
 		if (!tags) return { limited: false, remaining: TagLimits.MAX_CREATED_TAGS };
 
 		return {

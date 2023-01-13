@@ -38,5 +38,6 @@ export default {
 			guild: true,
 			global: false
 		}
-	}
+	},
+	CachingDisabled: false,
 };

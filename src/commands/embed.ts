@@ -110,7 +110,7 @@ export default CreateCommand({
 			if (channel) {
 				let ch = interaction.guild?.channels.get(channel.id) as TextChannel;
 
-                if(!ch) return await interaction.createMessage({ content: `I could not send the embed to this channel...` });
+				if (!ch) return await interaction.createMessage({ content: `I could not send the embed to this channel...` });
 
 				await ch.createMessage({ embeds: [embed.toJSON()] }).catch(() => {});
 				await interaction.createMessage({ content: `Embed sent to ${channel.mention}` });
