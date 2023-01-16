@@ -8,6 +8,34 @@ import constants from '../utils/constants.js';
 import { GlobalStatistics, GlobalStatsModel } from '../database/schemas/statistics.js';
 import os from 'node:os';
 
+function getCpuUsage() {
+	const cpus = os.cpus();
+	let idleCpu = 0;
+	let totalCpu = 0;
+
+	for (const cpu of cpus) {
+		for (const type in cpu.times) {
+			//@ts-ignore
+			totalCpu += cpu.times[type];
+		}
+		idleCpu += cpu.times.idle;
+	}
+	return {
+		usage: 100 - ~~((100 * idleCpu) / totalCpu),
+		cores: cpus.length
+	};
+}
+
+function getMemoryUsage() {
+	const freeMem = os.freemem();
+	const totalMem = os.totalmem();
+	return {
+		usage: ~~(((totalMem - freeMem) / totalMem) * 100),
+		total: ~~((totalMem / totalMem) * 100),
+		free: ~~((freeMem / totalMem) * 100)
+	};
+}
+
 export default CreateCommand({
 	trigger: 'information',
 	description: 'View information about the bot and its services',
@@ -74,24 +102,10 @@ export default CreateCommand({
 			embed.setDescription('Displaying current data below');
 			embed.setColor(constants.numbers.colors.primary);
 
-			// Get the CPU usage
-			const cpuUsage = process.cpuUsage();
+			embed.addField('CPU', `Usage: ${getCpuUsage().usage}%\nCores: ${getCpuUsage().cores}`, true);
+			embed.addField('Memory', `Usage: ${getMemoryUsage().usage}%\nFree: ${getMemoryUsage().free}%\nTotal: ${getMemoryUsage().total}%`, true);
 
-			// Calculate the CPU usage in percentage
-			const cpuUsageInPercent = (cpuUsage.user + cpuUsage.system) / os.cpus().length / 1000;
-
-			// Get the memory usage
-			const memoryUsage = process.memoryUsage();
-
-			// Calculate the memory usage in percentage
-			const totalMemory = os.totalmem();
-			const usedMemory = memoryUsage.heapUsed + memoryUsage.external;
-			const memoryUsageInPercent = (usedMemory / totalMemory) * 100;
-
-			embed.addField('CPU Usage', `${cpuUsageInPercent}`, true);
-			embed.addField('Memory Usage', `${memoryUsageInPercent}`, true);
-
-			embed.addField('Uptime', ms(client.uptime, { long: true }), true);
+			embed.addField('Uptime', ms(client.uptime), true);
 
 			embed.addField('Guilds Cached', `${client.guilds.size}`, true);
 			embed.addField('Guilds Joined', `${global.guilds_joined}`, true);
@@ -99,7 +113,7 @@ export default CreateCommand({
 
 			embed.addField('Users Cached', `${client.users.size}`, true);
 
-			embed.addField('Discord API Library', `[Oceanic.js-v1.4.0](https://oceanic.ws)`, true);
+			embed.addField('Discord API Library', `[Oceanic.js-v1.4.1](https://oceanic.ws)`, true);
 			embed.addField('Database State', `${statusCode ? 'Online' : 'Offline'}`, true);
 
 			embed.addField('Total Commands', `${instance.collections.commands.commandStoreMap.size}`, true);
@@ -143,3 +157,4 @@ export default CreateCommand({
 		}
 	}
 });
+

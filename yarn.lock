@@ -1367,10 +1367,10 @@ object.assign@^4.1.4:
     has-symbols "^1.0.3"
     object-keys "^1.1.1"
 
-oceanic.js@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/oceanic.js/-/oceanic.js-1.4.0.tgz#678953ced69f56fd3c878c2398affaf8861cfe9b"
-  integrity sha512-YLdKxZtUtdvehP45cGFT66chkmyjI7a9EZPUJj8We9w5XqaoGvIs4mhJU1eOA+3JcVXtbwU/yw04dyTweB46zA==
+oceanic.js@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/oceanic.js/-/oceanic.js-1.4.1.tgz#ae84ed0e5127443e45ade733b5c99d1367cf5bc5"
+  integrity sha512-wwL31SyGc6JrF0wXlgNapSR5Ziu3oBrETKpWvCXMG3YrM4EdcCGYRdwwsPtKp5lfrW9K0/+X6mvJonSyU6TByw==
   dependencies:
     undici "^5.12.0"
     ws "^8.11.0"
