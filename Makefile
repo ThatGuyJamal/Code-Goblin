@@ -15,7 +15,7 @@ cw:
 	@yarn build
 
 # Make the config file in the src/config folder named config.ts
-ccf:
+	:
 	@echo "Creating config file..."
 	@cp ./dist/config/example.config.ts ./dist/config/config.js
 	@echo Done!
