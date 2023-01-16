@@ -16,7 +16,7 @@ export class TagCommandPlugin {
 		this.instance = i;
 		this.cache = new Collection();
 		this.query = this.instance.database.managers.tag;
-		this.cachingDisabled = config.CachingDisabled;
+		this.cachingDisabled = config.cacheDisabled.tags;
 
 		this.init();
 	}
@@ -160,8 +160,8 @@ export class TagCommandPlugin {
 		return tags;
 	}
 
-	public async GetTag(guildId: string, name: string): Promise<Tag | null | undefined> {
-		if (!this.cachingDisabled) return this.cache.get(guildId)?.find((t) => t.name === name);
+	public async GetTag(guildId: string, name: string): Promise<Tag | null> {
+		if (!this.cachingDisabled) return this.cache.get(guildId)?.find((t) => t.name === name) || null;
 		let t_name = name;
 
 		let tag = await this.query.findOne({ guild_id: guildId, name: t_name });

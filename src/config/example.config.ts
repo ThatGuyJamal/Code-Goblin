@@ -39,5 +39,9 @@ export default {
 			global: false
 		}
 	},
-	CachingDisabled: false,
+	cacheDisabled: {
+		tags: true,
+		welcome: false,
+		goodbye: false
+	}
 };

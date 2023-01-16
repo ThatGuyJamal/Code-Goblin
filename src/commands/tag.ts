@@ -209,7 +209,10 @@ export default CreateCommand({
 							interaction.member!,
 							tag.content
 					  )}`
-					: `Tag \`${name}\` doesn't exist for this server!`
+					: `Tag \`${name}\` doesn't exist for this server!`,
+				allowedMentions: {
+					users: mention ? [mention.id] : []
+				},
 			});
 		}
 

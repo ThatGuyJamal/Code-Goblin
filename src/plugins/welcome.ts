@@ -1,4 +1,5 @@
 import { Collection } from 'oceanic.js';
+import config from '../config/config.js';
 import type { ContentType, Welcome } from '../database/schemas/welcome.js';
 import type Main from '../main.js';
 
@@ -7,17 +8,22 @@ export class WelcomeCommandPlugin {
 	// Cache of all tags mapped by guildId
 	public cache: Collection<string, Welcome>;
 
+	private cachingDisabled: boolean;
+
 	public query;
 
 	public constructor(i: Main) {
 		this.instance = i;
 		this.cache = new Collection();
 		this.query = this.instance.database.managers.welcome;
+		this.cachingDisabled = config.cacheDisabled.welcome;
 
 		this.init();
 	}
 
 	public async init(): Promise<void> {
+		if (this.cachingDisabled) return;
+
 		// Load all tags into cache
 		const welcome = await this.query.find();
 
@@ -44,8 +50,7 @@ export class WelcomeCommandPlugin {
 			enabled: enabled
 		} as Welcome;
 
-		// Add the tag to the cache
-		this.cache.set(guildId, data);
+		if (!this.cachingDisabled) this.cache.set(guildId, data);
 
 		return await this.query.create(data);
 	}
@@ -77,7 +82,7 @@ export class WelcomeCommandPlugin {
 			}
 		);
 
-		this.cache.set(guildId, welcome);
+		if (!this.cachingDisabled) this.cache.set(guildId, welcome);
 
 		return welcome;
 	}
@@ -87,7 +92,8 @@ export class WelcomeCommandPlugin {
 	 * @param guildId
 	 */
 	public async DeleteWelcome(guildId: string): Promise<void> {
-		this.cache.delete(guildId);
+		if (!this.cachingDisabled) this.cache.delete(guildId);
+
 		await this.query.deleteOne({ guild_id: guildId });
 	}
 
@@ -96,7 +102,9 @@ export class WelcomeCommandPlugin {
 	 * @param guildId
 	 * @returns
 	 */
-	public async GetWelcome(guildId: string): Promise<Welcome | undefined> {
-		return this.cache.get(guildId);
+	public async GetWelcome(guildId: string): Promise<Welcome | null> {
+		if (!this.cachingDisabled) return this.cache.get(guildId) ?? null;
+
+		return await this.query.findOne({ guild_id: guildId });
 	}
 }

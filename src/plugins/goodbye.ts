@@ -1,4 +1,5 @@
 import { Collection } from 'oceanic.js';
+import config from '../config/config.js';
 import type { Goodbye } from '../database/schemas/goodbye.js';
 import type { ContentType } from '../database/schemas/welcome.js';
 import type Main from '../main.js';
@@ -7,6 +8,7 @@ export class GoodbyeCommandPlugin {
 	private instance: Main;
 	// Cache of all tags mapped by guildId
 	public cache: Collection<string, Goodbye>;
+	private cachingDisabled: boolean;
 
 	public query;
 
@@ -14,11 +16,13 @@ export class GoodbyeCommandPlugin {
 		this.instance = i;
 		this.cache = new Collection();
 		this.query = this.instance.database.managers.goodbye;
+		this.cachingDisabled = config.cacheDisabled.goodbye;
 
 		this.init();
 	}
 
 	public async init(): Promise<void> {
+		if (this.cachingDisabled) return;
 		// Load all tags into cache
 		const goodbye = await this.query.find();
 
@@ -46,7 +50,7 @@ export class GoodbyeCommandPlugin {
 		} as Goodbye;
 
 		// Add the tag to the cache
-		this.cache.set(guildId, data);
+		if (!this.cachingDisabled) this.cache.set(guildId, data);
 
 		return await this.query.create(data);
 	}
@@ -78,7 +82,7 @@ export class GoodbyeCommandPlugin {
 			}
 		);
 
-		this.cache.set(guildId, Goodbye);
+		if (!this.cachingDisabled) this.cache.set(guildId, Goodbye);
 
 		return Goodbye;
 	}
@@ -88,7 +92,7 @@ export class GoodbyeCommandPlugin {
 	 * @param guildId
 	 */
 	public async DeleteGoodbye(guildId: string): Promise<void> {
-		this.cache.delete(guildId);
+		if (!this.cachingDisabled) this.cache.delete(guildId);
 		await this.query.deleteOne({ guild_id: guildId });
 	}
 
@@ -97,7 +101,9 @@ export class GoodbyeCommandPlugin {
 	 * @param guildId
 	 * @returns
 	 */
-	public async GetGoodbye(guildId: string): Promise<Goodbye | undefined> {
-		return this.cache.get(guildId);
+	public async GetGoodbye(guildId: string): Promise<Goodbye | null> {
+		if (!this.cachingDisabled) return this.cache.get(guildId) ?? null;
+
+		return await this.query.findOne({ guild_id: guildId });
 	}
 }
