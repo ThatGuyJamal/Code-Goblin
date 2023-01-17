@@ -356,7 +356,8 @@ export default CreateCommand({
 			await instance.collections.commands.plugins.jam.addJamParticipant(interaction.guild!.id, interaction.member!.id);
 
 			await interaction.createFollowup({ content: `You have successfully joined the Code Jam!` });
-		} if (subcommand?.find((name) => name === 'leave')) {
+		}
+		if (subcommand?.find((name) => name === 'leave')) {
 			const jam = await instance.collections.commands.plugins.jam.getCodeJam(interaction.guild!.id);
 
 			if (jam?.event_participants_ids?.includes(interaction.member!.id))

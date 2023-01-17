@@ -9,7 +9,7 @@ export default CreateCommand({
 	description: `Manage embed plugin`,
 	type: ApplicationCommandTypes.CHAT_INPUT,
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
-	requiredUserPermissions: ['SEND_MESSAGES', "MANAGE_MESSAGES"],
+	requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_MESSAGES'],
 	options: (opt) => {
 		opt.setName('embed-generate')
 			.setDescription('Generate an embed')

@@ -11,7 +11,7 @@ async function bootstrap() {
 
 	await MainInstance.init();
 
-	console.log('Ready!')
+	console.log('Ready!');
 }
 
 process
