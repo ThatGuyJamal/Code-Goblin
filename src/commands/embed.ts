@@ -20,7 +20,7 @@ export default CreateCommand({
 				option.setName('description').setDescription('The description of the embed');
 			})
 			.addOption('color', ApplicationCommandOptionTypes.STRING, (option) => {
-				option.setName('color').setDescription('The color of the embed');
+				option.setName('color').setDescription('The color of the embed').setMinMax(1, 7);
 			})
 			.addOption('footer', ApplicationCommandOptionTypes.STRING, (option) => {
 				option.setName('footer').setDescription('The footer of the embed');
@@ -74,10 +74,11 @@ export default CreateCommand({
 
 		const channel = interaction.data.options.getChannel('channel');
 
-		await interaction.defer(6);
-
 		const embed = new EmbedBuilder();
 		try {
+
+			await interaction.defer(64);
+
 			// If no options are given return
 			if (
 				!title &&
@@ -125,8 +126,10 @@ export default CreateCommand({
 					});
 				}
 
+				// Send the embed
 				await ch.createMessage({ embeds: [embed.toJSON()] }).catch(() => {});
 
+				// Send a followup message
 				await interaction.createFollowup({ content: `Embed sent to ${channel.mention} successfully!` });
 			} else {
 				const send = await interaction.channel?.createMessage({ embeds: [embed.toJSON()] }).catch(() => null);
@@ -134,7 +137,7 @@ export default CreateCommand({
 				if (!send) return await interaction.createFollowup({ content: `I could not send the embed to the channel.` });
 
 				await interaction.createFollowup({
-					content: `Embed sent to ${interaction.channel?.mention} successfully!`
+					content: `Embed created successfully!`
 				});
 			}
 		} catch (error) {

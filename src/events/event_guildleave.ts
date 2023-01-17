@@ -1,4 +1,5 @@
 import type { Guild } from 'oceanic.js';
+import config from '../config/config.js';
 import { GlobalStatsModel } from '../database/schemas/statistics.js';
 import { MainInstance } from '../main.js';
 
@@ -17,14 +18,18 @@ export default async function GuildCreateEvent(guild: Guild) {
 	});
 
 	// Clear cache on guild leave to save memory
+	if (!config.cacheDisabled.welcome) {
+		const welcomePlugin = MainInstance.collections.commands.plugins.welcome;
+		welcomePlugin.cache.delete(guild.id);
+	}
+	if (!config.cacheDisabled.goodbye) {
+		const goodbyePlugin = MainInstance.collections.commands.plugins.goodbye;
+		goodbyePlugin.cache.delete(guild.id);
+	}
 
-	const TagPluginCache = MainInstance.collections.commands.plugins.tags.cache;
-	const welcomePluginCache = MainInstance.collections.commands.plugins.welcome.cache;
-	const GoodbyePluginCache = MainInstance.collections.commands.plugins.goodbye.cache;
-
-	if (TagPluginCache.has(guild.id)) TagPluginCache.delete(guild.id);
-
-	if (welcomePluginCache.has(guild.id)) welcomePluginCache.delete(guild.id);
-
-	if (GoodbyePluginCache.has(guild.id)) GoodbyePluginCache.delete(guild.id);
+	if (!config.cacheDisabled.tags) {
+		const tagPlugin = MainInstance.collections.commands.plugins.tags;
+		// Get the tags, because each tag has a record we have to find each tag with this guild id, which will return an array of tags
+		tagPlugin.cache.delete(guild.id);
+	}
 }

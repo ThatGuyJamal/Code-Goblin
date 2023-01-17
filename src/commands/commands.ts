@@ -40,8 +40,8 @@ export default CreateCommand({
 						{
 							type: ComponentTypes.BUTTON,
 							style: ButtonStyles.LINK,
-							label: 'Whisper Room',
-							url: config.whisper_room.url
+							label: 'Support Server',
+							url: config.DevelopmentServerInviteUrl
 						}
 					]
 				}

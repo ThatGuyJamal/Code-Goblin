@@ -1,4 +1,5 @@
 import type { Guild } from 'oceanic.js';
+import config from '../config/config.js';
 import { GlobalStatsModel } from '../database/schemas/statistics.js';
 import { MainInstance } from '../main.js';
 
@@ -17,19 +18,21 @@ export default async function GuildCreateEvent(guild: Guild) {
 	});
 
 	// Load documents into cache on join if any exist
+	if (!config.cacheDisabled.welcome) {
+		const welcomePlugin = MainInstance.collections.commands.plugins.welcome;
+		const hasWelcome = await welcomePlugin.query.findOne({ guild_id: guild.id });
+		if (hasWelcome) welcomePlugin.cache.set(guild.id, hasWelcome);
+	}
+	if (!config.cacheDisabled.goodbye) {
+		const goodbyePlugin = MainInstance.collections.commands.plugins.goodbye;
+		const hasGoodbye = await goodbyePlugin.query.findOne({ guild_id: guild.id });
+		if (hasGoodbye) goodbyePlugin.cache.set(guild.id, hasGoodbye);
+	}
 
-	const welcomePlugin = MainInstance.collections.commands.plugins.welcome;
-	const GoodbyePlugin = MainInstance.collections.commands.plugins.goodbye;
-
-	const hasWelcome = await welcomePlugin.query.findOne({ guild_id: guild.id });
-	const hasGoodbye = await GoodbyePlugin.query.findOne({ guild_id: guild.id });
-
-	if (hasWelcome) welcomePlugin.cache.set(guild.id, hasWelcome);
-
-	if (hasGoodbye) GoodbyePlugin.cache.set(guild.id, hasGoodbye);
-
-	// Get the tags, because each tag has a record we have to find each tag with this guild id, which will return an array of tags
-	const tags = await MainInstance.collections.commands.plugins.tags.query.find({ guild_id: guild.id });
-
-	if (tags.length > 0) MainInstance.collections.commands.plugins.tags.cache.set(guild.id, tags);
+	if (!config.cacheDisabled.tags) {
+		const tagPlugin = MainInstance.collections.commands.plugins.tags
+		// Get the tags, because each tag has a record we have to find each tag with this guild id, which will return an array of tags
+		const tags = await tagPlugin.query.find({ guild_id: guild.id });
+		if (tags.length > 0) MainInstance.collections.commands.plugins.tags.cache.set(guild.id, tags);
+	}
 }

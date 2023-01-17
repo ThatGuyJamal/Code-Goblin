@@ -16,7 +16,7 @@ export const client = new Client({
 	auth: `Bot ${config.BotToken}`,
 	collectionLimits: {
 		members: 1_000,
-		messages: 0,
+		messages: 100,
 		users: 5_000
 	},
 	allowedMentions: {
