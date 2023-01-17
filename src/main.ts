@@ -154,8 +154,6 @@ export default class Main {
 			}
 		}
 
-		// TODO - Add cool-down check
-
 		await (command
 			? command.run.call(this, this, interaction)
 			: interaction.createMessage({ content: "I couldn't figure out how to execute that command.", flags: MessageFlags.EPHEMERAL }));
