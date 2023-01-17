@@ -21,7 +21,7 @@ export default CreateCommand({
 		await interaction.createMessage({
 			embeds: [
 				{
-					title: 'Commands',
+					title: 'Bot Commands',
 					description: `${filteredCmdProps.map((cmd) => `\`/${cmd.name}\``).join(', ')}`,
 					color: constants.numbers.colors.primary,
 					timestamp: new Date().toISOString()

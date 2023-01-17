@@ -13,7 +13,6 @@ import type { Command, CommandDataProp } from './cmd/command.js';
 import { TagCommandPlugin } from './plugins/tag.js';
 import { WelcomeCommandPlugin } from './plugins/welcome.js';
 import { GoodbyeCommandPlugin } from './plugins/goodbye.js';
-import { CooldownCommandPlugin } from './plugins/cooldown.js';
 
 export default class Main {
 	public DiscordClient: DiscordClientType = client;
@@ -41,7 +40,6 @@ export default class Main {
 				tags: new TagCommandPlugin(this),
 				welcome: new WelcomeCommandPlugin(this),
 				goodbye: new GoodbyeCommandPlugin(this),
-				cooldown: new CooldownCommandPlugin()
 			}
 		}
 	};

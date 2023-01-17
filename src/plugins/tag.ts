@@ -120,6 +120,12 @@ export class TagCommandPlugin {
 		return tag;
 	}
 
+	public async ClearTags(guildId: string): Promise<void> {
+		await this.query.deleteMany({ guild_id: guildId });
+
+		if (!this.cachingDisabled) this.cache.delete(guildId);
+	}
+
 	/**
 	 * Deletes a tag record in the database
 	 * @param guildId

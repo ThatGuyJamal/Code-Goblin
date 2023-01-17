@@ -59,6 +59,9 @@ export default CreateCommand({
 						});
 				})
 				.setDMPermission(false);
+		opt.addOption('tag-5', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
+			option.setName('clear').setDescription('Delete all tags in this server');
+		}).setDMPermission(false);
 	},
 	run: async (instance, interaction) => {
 		await interaction.defer();
@@ -168,7 +171,7 @@ export default CreateCommand({
 					embeds: [
 						{
 							title: 'Tags',
-							description: noTags ? 'No tags to list' : tags.map((tag) => `\`${tag.name}\``).join('\n '),
+							description: noTags ? 'No tags to list in this server' : tags.map((tag) => `\`${tag.name}\``).join('\n '),
 							color: constants.numbers.colors.secondary,
 							footer: {
 								text: noTags ? '' : `Use /tag view <name> to view a tag`
@@ -212,7 +215,21 @@ export default CreateCommand({
 					: `Tag \`${name}\` doesn't exist for this server!`,
 				allowedMentions: {
 					users: mention ? [mention.id] : []
-				},
+				}
+			});
+		}
+
+		if(subCommand.find((name) => name === 'clear')) {
+			if (!interaction.member?.permissions.has(Permissions.MANAGE_GUILD)) {
+				return await interaction.createFollowup({
+					content: `You need the following permissions: \`Manage Server\` to execute this command.`
+				});
+			}
+
+			await instance.collections.commands.plugins.tags.ClearTags(interaction.guild!.id);
+
+			return await interaction.createFollowup({
+				content: `All tags cleared!`
 			});
 		}
 

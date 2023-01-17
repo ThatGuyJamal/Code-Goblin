@@ -1,3 +1,5 @@
+import { ActivityTypes, BotActivityTypes } from 'oceanic.js';
+
 export const isCanary = false;
 
 export default {
@@ -7,6 +9,9 @@ export default {
 	BotClientOAuth2Url:
 		'https://discord.com/api/oauth2/authorize?client_id=1055671501870874634&permissions=2684700800&scope=bot%20applications.commands',
 	BotName: 'Code Buddy',
+	BotPrefix: 'w!',
+	BotActivityType: ActivityTypes.LISTENING as BotActivityTypes,
+	BotActivityMessage: `to the console`,
 	GithubRepository: 'https://github.com/whisper-room-dev',
 	GithubContributionUrl: 'https://github.com/whisper-room-dev/.github/blob/main/contributing.md',
 	DevelopmentServerId: isCanary

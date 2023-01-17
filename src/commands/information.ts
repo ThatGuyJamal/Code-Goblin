@@ -1,5 +1,5 @@
 import { EmbedBuilder } from '@oceanicjs/builders';
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ButtonStyles, ComponentTypes } from 'oceanic.js';
+import { ApplicationCommandTypes, ButtonStyles, ComponentTypes } from 'oceanic.js';
 import { client } from '../client/client.js';
 import { CreateCommand } from '../cmd/command.js';
 import ms from 'ms';
@@ -43,60 +43,14 @@ export default CreateCommand({
 	register: isCanary ? 'guild' : 'global',
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	requiredUserPermissions: ['SEND_MESSAGES'],
-	options: (opts) => {
-		opts.addOption('option', ApplicationCommandOptionTypes.STRING, (option) => {
-			option
-				.setName('type')
-				.setDescription('The type of statistics to show')
-				.addChoice('Bot', 'bot')
-				.addChoice('Company', 'company')
-				.setRequired(true);
-		}).setDMPermission(false);
-	},
+	options: (opts) => {},
 	run: async (instance, interaction) => {
-		const type = interaction.data.options.getStringOption('type', true);
 		const plugins = instance.collections.commands.plugins;
 
 		let embed = new EmbedBuilder();
-
-		if (type.value === 'company') {
-			embed.setTitle('Company Statistics');
-			embed.setDescription('About the developers of Whisper Room');
-			embed.addField('Us', constants.strings.commands.info.company.bio, true);
-			embed.addField('Bot', constants.strings.commands.info.bot.bio, true);
-			embed.setColor(constants.numbers.colors.primary);
-
-			await interaction.createMessage({
-				embeds: [embed.toJSON()],
-				components: [
-					{
-						type: ComponentTypes.ACTION_ROW,
-						components: [
-							{
-								type: ComponentTypes.BUTTON,
-								style: ButtonStyles.LINK,
-								label: 'Invite Bot',
-								url: config.BotClientOAuth2Url
-							},
-							{
-								type: ComponentTypes.BUTTON,
-								style: ButtonStyles.LINK,
-								label: 'Code Repository',
-								url: config.GithubRepository
-							},
-							{
-								type: ComponentTypes.BUTTON,
-								style: ButtonStyles.LINK,
-								label: 'Website',
-								url: config.whisper_room.url
-							}
-						]
-					}
-				]
-			});
-		} else if (type.value === 'bot') {
+		
 			let statusCode = instance.database.network_status();
-			const global = (await GlobalStatsModel.findOne({ id: 'global' })) as GlobalStatistics;
+			const global = await GlobalStatsModel.findOne({ id: 'global' }) as GlobalStatistics;
 
 			embed.setTitle('Bot Statistics');
 			embed.setDescription('Displaying current data below');
@@ -154,7 +108,6 @@ export default CreateCommand({
 					}
 				]
 			});
-		}
 	}
 });
 

@@ -74,6 +74,8 @@ export default CreateCommand({
 
 		const channel = interaction.data.options.getChannel('channel');
 
+		await interaction.defer(6);
+
 		const embed = new EmbedBuilder();
 		try {
 			// If no options are given return
@@ -93,7 +95,7 @@ export default CreateCommand({
 				!field2value &&
 				!channel
 			)
-				return await interaction.createMessage({ content: `Please provide an option to create an embed.` });
+				return await interaction.createFollowup({ content: `No option given to create an embed.` });
 
 			if (title) embed.setTitle(title);
 			if (description) embed.setDescription(description);
@@ -110,15 +112,32 @@ export default CreateCommand({
 			if (channel) {
 				let ch = interaction.guild?.channels.get(channel.id) as TextChannel;
 
-				if (!ch) return await interaction.createMessage({ content: `I could not send the embed to this channel...` });
+				// If the channel doesn't exist  return
+				if (!ch) return await interaction.createFollowup({ content: `I could not find the channel to send the embed to.` });
+
+				// check if we have permission to send messages in the channel
+				if (
+					!ch.permissionsOf(interaction.client.user.id).has('SEND_MESSAGES') &&
+					!ch.permissionsOf(interaction.client.user.id).has('EMBED_LINKS')
+				) {
+					return await interaction.createFollowup({
+						content: `I do not have permission to send messages in ${channel.mention}. The embed was not created!`
+					});
+				}
 
 				await ch.createMessage({ embeds: [embed.toJSON()] }).catch(() => {});
-				await interaction.createMessage({ content: `Embed sent to ${channel.mention}` });
+
+				await interaction.createFollowup({ content: `Embed sent to ${channel.mention} successfully!` });
 			} else {
-				await interaction.channel?.createMessage({ embeds: [embed.toJSON()] }).catch(() => {});
+				const send = await interaction.channel?.createMessage({ embeds: [embed.toJSON()] }).catch(() => null);
+
+				if (!send) return await interaction.createFollowup({ content: `I could not send the embed to the channel.` });
+
+				await interaction.createFollowup({
+					content: `Embed sent to ${interaction.channel?.mention} successfully!`
+				});
 			}
 		} catch (error) {
-			await interaction.createMessage({ content: `Error: ${error}` });
 			// console.log(error)
 		}
 	}

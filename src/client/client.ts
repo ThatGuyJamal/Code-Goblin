@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ActivityTypes, Client } from 'oceanic.js';
+import { Client } from 'oceanic.js';
 import config from '../config/config.js';
 import { GoodbyeModel } from '../database/schemas/goodbye.js';
 import { TagModel } from '../database/schemas/tag.js';
@@ -45,7 +45,7 @@ export const client = new Client({
 		maxResumeAttempts: 10,
 		maxShards: 1,
 		presence: {
-			activities: [{ type: ActivityTypes.WATCHING, name: 'The Chat Rooms' }],
+			activities: [{ type: config.BotActivityType , name: config.BotActivityMessage }],
 			status: 'online'
 		},
 		seedVoiceConnections: false
