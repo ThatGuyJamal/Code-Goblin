@@ -186,7 +186,9 @@ export default CreateCommand({
 				logger.error(err);
 				console.error(err);
 			}
-		} else if (subcommand?.find((name) => name === 'delete')) {
+		}
+
+		if (subcommand?.find((name) => name === 'delete')) {
 			const jam = await instance.collections.commands.plugins.jam.getCodeJam(interaction.guild!.id);
 
 			if (!jam) return await interaction.createFollowup({ content: `No current Code Jam found in __${interaction.guild!.name}__` });
@@ -205,7 +207,8 @@ export default CreateCommand({
 				content: `Successfully deleted the Code Jam in __${interaction.guild!.name}__!`,
 				flags: MessageFlags.EPHEMERAL
 			});
-		} else if (subcommand?.find((name) => name === 'manage')) {
+		}
+		if (subcommand?.find((name) => name === 'manage')) {
 			const jam = await instance.collections.commands.plugins.jam.getCodeJam(interaction.guild!.id);
 
 			if (!jam) return await interaction.createFollowup({ content: `No current Code Jam found in __${interaction.guild!.name}__` });
@@ -335,7 +338,8 @@ export default CreateCommand({
 					repliedUser: true
 				}
 			});
-		} else if (subcommand?.find((name) => name === 'join')) {
+		}
+		if (subcommand?.find((name) => name === 'join')) {
 			const jam = await instance.collections.commands.plugins.jam.getCodeJam(interaction.guild!.id);
 
 			if (jam?.event_participants_ids?.includes(interaction.member!.id))
@@ -352,7 +356,7 @@ export default CreateCommand({
 			await instance.collections.commands.plugins.jam.addJamParticipant(interaction.guild!.id, interaction.member!.id);
 
 			await interaction.createFollowup({ content: `You have successfully joined the Code Jam!` });
-		} else if (subcommand?.find((name) => name === 'leave')) {
+		} if (subcommand?.find((name) => name === 'leave')) {
 			const jam = await instance.collections.commands.plugins.jam.getCodeJam(interaction.guild!.id);
 
 			if (jam?.event_participants_ids?.includes(interaction.member!.id))
@@ -369,7 +373,8 @@ export default CreateCommand({
 			await instance.collections.commands.plugins.jam.removeJamParticipant(interaction.guild!.id, interaction.member!.id);
 
 			await interaction.createFollowup({ content: `You have successfully left the Code Jam!` });
-		} else if (subcommand?.find((name) => name === 'info')) {
+		}
+		if (subcommand?.find((name) => name === 'info')) {
 			const jam = await instance.collections.commands.plugins.jam.getCodeJam(interaction.guild!.id);
 
 			if (!jam) return await interaction.createFollowup({ content: `No current Code Jam found in __${interaction.guild!.name}__` });
