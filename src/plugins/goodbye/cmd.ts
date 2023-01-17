@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ChannelTypes } from 'oceanic.js';
-import { CreateCommand } from '../cmd/command.js';
-import { isCanary } from '../config/config.js';
-import constants from '../utils/constants.js';
+import { CreateCommand } from '../../command.js';
+import { isCanary } from '../../config/config.js';
+import constants from '../../constants.js';
 
 export default CreateCommand({
 	trigger: 'goodbye',

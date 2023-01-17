@@ -1,6 +1,6 @@
 import { EmbedBuilder } from '@oceanicjs/builders';
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ChannelTypes, TextChannel } from 'oceanic.js';
-import { CreateCommand } from '../cmd/command.js';
+import { CreateCommand } from '../command.js';
 import { isCanary } from '../config/config.js';
 
 export default CreateCommand({

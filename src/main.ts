@@ -1,18 +1,16 @@
-import path from 'path';
 import mongoose from 'mongoose';
-import { readdirSync } from 'fs';
 import { Client as DiscordClientType, Collection, CreateApplicationCommandOptions, CommandInteraction, MessageFlags } from 'oceanic.js';
-import { fileURLToPath } from 'url';
 
-import { Utils } from './utils/utils.js';
-import constants from './utils/constants.js';
+import { Utils } from './utils.js';
+import constants from './constants.js';
 import { client, db_obj } from './client/client.js';
-import config, { isCanary } from './config/config.js';
-import type { Command, CommandDataProp } from './cmd/command.js';
+import config from './config/config.js';
+import type { Command, CommandDataProp } from './command.js';
 
-import { TagCommandPlugin } from './plugins/tag.js';
-import { WelcomeCommandPlugin } from './plugins/welcome.js';
-import { GoodbyeCommandPlugin } from './plugins/goodbye.js';
+import { TagCommandPlugin } from './plugins/tag/index.js';
+import { WelcomeCommandPlugin } from './plugins/welcome/index.js';
+import { GoodbyeCommandPlugin } from './plugins/goodbye/index.js';
+import { CodeJamCommandPlugin } from './plugins/jam/index.js';
 
 export default class Main {
 	public DiscordClient: DiscordClientType = client;
@@ -40,6 +38,7 @@ export default class Main {
 				tags: new TagCommandPlugin(this),
 				welcome: new WelcomeCommandPlugin(this),
 				goodbye: new GoodbyeCommandPlugin(this),
+				jam: new CodeJamCommandPlugin(this)
 			}
 		}
 	};
@@ -71,48 +70,13 @@ export default class Main {
 
 	/** Loads the bot commands into the system cache */
 	public async loadCommands(): Promise<void> {
-		// Finds all command files in the modules folder
-		const commandFiles: string[] = readdirSync(path.join(path.dirname(fileURLToPath(import.meta.url)), './commands')).filter((file) =>
-			file.endsWith('.js' || '.ts')
-		);
-
-		console.log(`[INFO] Loading ${commandFiles.length} commands...`);
-
-		if (!commandFiles.length) return console.warn(`[WARN] No commands found to load.`);
-
-		// Loops through all command files and loads them into the cache
-		for (const file of commandFiles) {
-			try {
-				const command = (await import(`./commands/${file}`)).default as CommandDataProp;
-
-				if (!command.props.nsfw) command.props.nsfw = false;
-				if (!command.props.premiumOnly) command.props.premiumOnly = false;
-				if (!command.props.superUserOnly) command.props.superUserOnly = false;
-				if (!command.props.helperUserOnly) command.props.helperUserOnly = false;
-				if (!command.props.disabled) command.props.disabled = false;
-				if (!command.props.register) command.props.register = isCanary ? 'guild' : 'global';
-
-				// Filter out any commands that are disabled from being added to the application commands
-				if (!command.props.disabled) {
-					this.collections.commands.commandStoreMap.set(command.props.trigger, command.props);
-
-					if (command.props.register === 'global') {
-						this.collections.commands.commandStoreArrayJsonGlobal.push(command.toJson());
-					} else if (command.props.register === 'guild') {
-						this.collections.commands.commandStoreArrayJsonGuild.push(command.toJson());
-					} else if (command.props.register === 'both') {
-						this.collections.commands.commandStoreArrayJsonGlobal.push(command.toJson());
-						this.collections.commands.commandStoreArrayJsonGuild.push(command.toJson());
-					}
-
-					console.log(`[COMMAND] Loaded ${command.props.trigger} into memory.`);
-				} else {
-					console.log(`[COMMAND] ${command.props.trigger} was not loaded into memory because it is disabled.`);
-				}
-			} catch (err) {
-				console.error(`[ERROR] Failed to load command ${file} into memory.`, err);
-			}
-		}
+		this.utils.addCommand((await import("./commands/commands.js")).default as CommandDataProp);
+		this.utils.addCommand((await import("./commands/embed.js")).default as CommandDataProp);
+		this.utils.addCommand((await import('./commands/information.js')).default as CommandDataProp);
+		this.utils.addCommand((await import('./plugins/goodbye/cmd.js')).default as CommandDataProp);
+		this.utils.addCommand((await import('./plugins/tag/cmd.js')).default as CommandDataProp);
+		this.utils.addCommand((await import('./plugins/welcome/cmd.js')).default as CommandDataProp);
+		this.utils.addCommand((await import('./plugins/jam/cmd.js')).default as CommandDataProp);
 	}
 
 	/**

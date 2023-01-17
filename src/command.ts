@@ -1,7 +1,7 @@
 import { ApplicationCommandBuilder } from '@oceanicjs/builders';
 import type { ApplicationCommandTypes, Client, CommandInteraction, CreateApplicationCommandOptions, Permission, PermissionName } from 'oceanic.js';
-import config from '../config/config.js';
-import { MainInstance } from '../main.js';
+import config from './config/config.js';
+import { MainInstance } from './main.js';
 
 export interface CommandDataProp {
 	props: Command;

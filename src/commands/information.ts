@@ -1,10 +1,10 @@
 import { EmbedBuilder } from '@oceanicjs/builders';
 import { ApplicationCommandTypes, ButtonStyles, ComponentTypes } from 'oceanic.js';
 import { client } from '../client/client.js';
-import { CreateCommand } from '../cmd/command.js';
+import { CreateCommand } from '../command.js';
 import ms from 'ms';
 import config, { isCanary } from '../config/config.js';
-import constants from '../utils/constants.js';
+import constants from '../constants.js';
 import { GlobalStatistics, GlobalStatsModel } from '../database/schemas/statistics.js';
 import os from 'node:os';
 
@@ -76,7 +76,7 @@ export default CreateCommand({
 
 			embed.addField(
 				'Cached Plugins',
-				`Tags: ${plugins.tags.cache.size}, Welcome: ${plugins.welcome.cache.size}, Goodbye: ${plugins.goodbye.cache.size}`,
+				`Tags: ${plugins.tags.cache.size}, Welcome: ${plugins.welcome.cache.size}, Goodbye: ${plugins.goodbye.cache.size}, Jams: ${plugins.jam.cache.size}`,
 				true
 			);
 

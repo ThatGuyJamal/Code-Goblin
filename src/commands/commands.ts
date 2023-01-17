@@ -1,7 +1,7 @@
 import { ApplicationCommandTypes, ButtonStyles, ComponentTypes } from 'oceanic.js';
-import { CreateCommand } from '../cmd/command.js';
+import { CreateCommand } from '../command.js';
 import config, { isCanary } from '../config/config.js';
-import constants from '../utils/constants.js';
+import constants from '../constants.js';
 
 export default CreateCommand({
 	trigger: 'commands',

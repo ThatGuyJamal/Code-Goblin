@@ -1,8 +1,8 @@
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes, Permissions } from 'oceanic.js';
-import { CreateCommand } from '../cmd/command.js';
-import { isCanary } from '../config/config.js';
-import { TagLimits } from '../database/schemas/tag.js';
-import constants from '../utils/constants.js';
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, MessageFlags, Permissions } from 'oceanic.js';
+import { CreateCommand } from '../../command.js';
+import { isCanary } from '../../config/config.js';
+import { TagLimits } from '../../database/schemas/tag.js';
+import constants from '../../constants.js';
 
 export default CreateCommand({
 	trigger: 'tag',
@@ -73,7 +73,8 @@ export default CreateCommand({
 		if (subCommand.find((name) => name === 'create')) {
 			if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
 				return await interaction.createFollowup({
-					content: `You need the following permissions: \`Manage Messages\` to execute this command.`
+					content: `You need the following permissions: \`Manage Messages\` to execute this command.`,
+					flags: MessageFlags.EPHEMERAL
 				});
 			}
 
@@ -84,7 +85,8 @@ export default CreateCommand({
 
 			if (tagLimits.limited) {
 				return await interaction.createFollowup({
-					content: `You have reached the max tag limit of \`${TagLimits.MAX_CREATED_TAGS}\`! You can delete a current tag and create a new one. Run \`/tag list\` to view all current tags in the server.`
+					content: `You have reached the max tag limit of \`${TagLimits.MAX_CREATED_TAGS}\`! You can delete a current tag and create a new one. Run \`/tag list\` to view all current tags in the server.`,
+					flags: MessageFlags.EPHEMERAL
 				});
 			}
 
@@ -93,7 +95,8 @@ export default CreateCommand({
 
 			if (tagExists) {
 				return await interaction.createFollowup({
-					content: `Tag \`${name}\` already exists!`
+					content: `Tag \`${name}\` already exists!`,
+					flags: MessageFlags.EPHEMERAL
 				});
 			}
 
@@ -106,14 +109,16 @@ export default CreateCommand({
 			);
 
 			return await interaction.createFollowup({
-				content: `Tag \`${tag.name}\` created!`
+				content: `Tag \`${tag.name}\` created!`,
+				flags: MessageFlags.EPHEMERAL
 			});
 		}
 
 		if (subCommand.find((name) => name === 'delete')) {
 			if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
 				return await interaction.createFollowup({
-					content: `You need the following permissions: \`Manage Messages\` to execute this command.`
+					content: `You need the following permissions: \`Manage Messages\` to execute this command.`,
+					flags: MessageFlags.EPHEMERAL
 				});
 			}
 
@@ -124,21 +129,24 @@ export default CreateCommand({
 
 			if (!tagExists) {
 				return await interaction.createFollowup({
-					content: `Tag \`${name}\` doesn't exist!`
+					content: `Tag \`${name}\` doesn't exist!`,
+					flags: MessageFlags.EPHEMERAL
 				});
 			}
 
 			await instance.collections.commands.plugins.tags.DeleteTag(interaction.guild!.id, name);
 
 			return await interaction.createFollowup({
-				content: `Tag deleted!`
+				content: `Tag deleted!`,
+				flags: MessageFlags.EPHEMERAL
 			});
 		}
 
 		if (subCommand.find((name) => name === 'edit')) {
 			if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
 				return await interaction.createFollowup({
-					content: `You need the following permissions: \`Manage Messages\` to execute this command.`
+					content: `You need the following permissions: \`Manage Messages\` to execute this command.`,
+					flags: MessageFlags.EPHEMERAL
 				});
 			}
 
@@ -150,14 +158,16 @@ export default CreateCommand({
 
 			if (!tagExists) {
 				return await interaction.createFollowup({
-					content: `Tag \`${name}\` doesn't exist!`
+					content: `Tag \`${name}\` doesn't exist!`,
+					flags: MessageFlags.EPHEMERAL
 				});
 			}
 
 			const tag = await instance.collections.commands.plugins.tags.UpdateTag(interaction.guild!.id, name, content);
 
 			return await interaction.createFollowup({
-				content: `Tag \`${tag.name}\` edited!`
+				content: `Tag \`${tag.name}\` edited!`,
+				flags: MessageFlags.EPHEMERAL
 			});
 		}
 
@@ -196,7 +206,8 @@ export default CreateCommand({
 									}
 								]
 							}
-						]
+						],
+						flags: MessageFlags.EPHEMERAL
 					});
 				});
 		}
@@ -222,19 +233,22 @@ export default CreateCommand({
 		if(subCommand.find((name) => name === 'clear')) {
 			if (!interaction.member?.permissions.has(Permissions.MANAGE_GUILD)) {
 				return await interaction.createFollowup({
-					content: `You need the following permissions: \`Manage Server\` to execute this command.`
+					content: `You need the following permissions: \`Manage Server\` to execute this command.`,
+					flags: MessageFlags.EPHEMERAL
 				});
 			}
 
 			await instance.collections.commands.plugins.tags.ClearTags(interaction.guild!.id);
 
 			return await interaction.createFollowup({
-				content: `All tags cleared!`
+				content: `All tags cleared!`,
+				flags: MessageFlags.EPHEMERAL
 			});
 		}
 
 		return await interaction.createFollowup({
-			content: 'Invalid subcommand!'
+			content: 'Invalid subcommand!',
+			flags: MessageFlags.EPHEMERAL
 		});
 	}
 });

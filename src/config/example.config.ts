@@ -7,7 +7,7 @@ export default {
 	BotToken: isCanary ? '' : '',
 	BotClientId: '1055671501870874634',
 	BotClientOAuth2Url:
-		'https://discord.com/api/oauth2/authorize?client_id=1055671501870874634&permissions=2684700800&scope=bot%20applications.commands',
+		'https://discord.com/api/oauth2/authorize?client_id=1055671501870874634&permissions=148981992464&scope=bot%20applications.commands',
 	BotName: 'Code Buddy',
 	BotPrefix: 'w!',
 	BotActivityType: ActivityTypes.LISTENING as BotActivityTypes,
@@ -46,6 +46,7 @@ export default {
 	cacheDisabled: {
 		tags: true,
 		welcome: false,
-		goodbye: false
+		goodbye: false,
+		jam: false
 	}
 };

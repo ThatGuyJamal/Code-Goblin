@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { Client } from 'oceanic.js';
 import config from '../config/config.js';
 import { GoodbyeModel } from '../database/schemas/goodbye.js';
+import { CodeJamModel } from '../database/schemas/jam.js';
 import { TagModel } from '../database/schemas/tag.js';
 import { WelcomeModel } from '../database/schemas/welcome.js';
 
@@ -15,8 +16,8 @@ import { WelcomeModel } from '../database/schemas/welcome.js';
 export const client = new Client({
 	auth: `Bot ${config.BotToken}`,
 	collectionLimits: {
-		members: 1_000,
-		messages: 100,
+		members: 500,
+		messages: 0,
 		users: 5_000
 	},
 	allowedMentions: {
@@ -58,7 +59,8 @@ export const db_obj = {
 	managers: {
 		tag: TagModel,
 		welcome: WelcomeModel,
-		goodbye: GoodbyeModel
+		goodbye: GoodbyeModel,
+		jam: CodeJamModel
 	}
 };
 
