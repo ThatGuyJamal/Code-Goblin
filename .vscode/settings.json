@@ -1,5 +1,9 @@
 {
     "cSpell.words": [
-        "oceanicjs"
+        "guildcreate",
+        "guildleave",
+        "logform",
+        "oceanicjs",
+        "pino"
     ]
 }

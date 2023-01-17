@@ -1,6 +1,7 @@
 import type { Client } from 'oceanic.js';
 import { deleteGuildCommands, deleteGlobalCommands, CreateGuildCommands, CreateGlobalCommands } from '../command.js';
 import config from '../config/config.js';
+import { logger } from '../index.js';
 import { MainInstance } from '../main.js';
 
 export default async function (client: Client) {
@@ -12,7 +13,7 @@ export default async function (client: Client) {
 	if (config.register_commands.create.guild) await CreateGuildCommands(client);
 	if (config.register_commands.create.global) await CreateGlobalCommands(client);
 
-	console.log(`[EVENT] Ready As`, client.user.tag);
+	logger.info(`Ready As`, client.user.tag);
 
 	await MainInstance.utils.sendToLogChannel('api', {
 		content: `Ready as ${client.user.tag} (${client.user.id})`

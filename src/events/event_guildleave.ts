@@ -4,7 +4,6 @@ import { GlobalStatsModel } from '../database/schemas/statistics.js';
 import { MainInstance } from '../main.js';
 
 export default async function GuildCreateEvent(guild: Guild) {
-
 	await MainInstance.utils.sendToLogChannel('api', {
 		content: `Left a guild: ${guild.name} (${guild.id}) with ${guild.memberCount} members. Now in ${MainInstance.DiscordClient.guilds.size} guilds.`
 	});

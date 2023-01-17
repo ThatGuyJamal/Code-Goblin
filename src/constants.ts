@@ -8,9 +8,9 @@ export default {
 				superUsersOnly: `This command can only be used by super users.`,
 				commandDisabled: `This command is currently disabled.`,
 				botPermissions: `I do not have the required permissions to run this command.`,
-				userPermissions: `You do not have the required permissions to run this command.`,
+				userPermissions: `You do not have the required permissions to run this command.`
 			}
-		},
+		}
 	},
 	numbers: {
 		// Used in embeds

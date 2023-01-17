@@ -41,42 +41,42 @@ export class CodeJamCommandPlugin {
 	 * @returns
 	 */
 	public async createCodeJam({
-        guildId,
-        name,
-        description,
-        roleId,
-        image,
-        start,
-        end,
-        entity,
-        createdBy,
-        createdById,
-        channel
-    }: {
-        guildId: string;
-        name: string;
-        description: string;
-        roleId?: string;
-        image?: string;
-        start: string;
-        end: string;
-        entity: string;
-        createdBy: string;
-        createdById: string;
-        channel?: string
-    }): Promise<CodeJam> {
-
+		guildId,
+		jam_name,
+		jam_description,
+		roleId,
+		image,
+		start,
+		end,
+		entity,
+		createdBy,
+		createdById,
+		channel
+	}: {
+		guildId: string;
+		jam_name: string;
+		jam_description: string;
+		roleId?: string;
+		image?: string;
+		start?: string;
+		end?: string;
+		entity?: string;
+		createdBy: string;
+		createdById: string;
+		channel?: string;
+	}): Promise<CodeJam> {
 		const jam = await this.query.create({
 			guild_id: guildId,
-			name: name,
-            description: description,
+			name: jam_name,
+			description: jam_description,
 			event_role_id: roleId,
 			event_participants_id: [],
 			event_managers_id: [],
-            event_image_url: image,
-            scheduledStartTime: start,
-            scheduledEndTime: end,
-            entityType: entity,
+			event_image_url: image,
+			scheduledStartTime: start,
+			scheduledEndTime: end,
+			event_channel: channel,
+			entityType: entity,
 			created_by_name: createdBy,
 			created_by_id: createdById,
 			created_at: new Date()
@@ -136,19 +136,77 @@ export class CodeJamCommandPlugin {
 		if (!this.cachingDisabled) this.cache.set(guildId, result);
 	}
 
-    public async updateCodeJamDescription(guildId: string, description: string): Promise<void> {
-        let result = await this.query.findOneAndUpdate({guild_id: guildId}, {
-            $set: {
-                description: description,
-                updated_at: new Date()
-            }
-        }, {
-            upsert: true,
-            new: true
-        })
+	public async updateCodeJamDescription(guildId: string, description: string): Promise<void> {
+		let result = await this.query.findOneAndUpdate(
+			{ guild_id: guildId },
+			{
+				$set: {
+					description: description,
+					updated_at: new Date()
+				}
+			},
+			{
+				upsert: true,
+				new: true
+			}
+		);
 
-        if (!this.cachingDisabled) this.cache.set(guildId, result);
-    }
+		if (!this.cachingDisabled) this.cache.set(guildId, result);
+	}
+
+	public async updateCodeJamImage(guildId: string, image: string): Promise<void> {
+		let result = await this.query.findOneAndUpdate(
+			{ guild_id: guildId },
+			{
+				$set: {
+					event_image_url: image,
+					updated_at: new Date()
+				}
+			},
+			{
+				upsert: true,
+				new: true
+			}
+		);
+
+		if (!this.cachingDisabled) this.cache.set(guildId, result);
+	}
+
+	public async updateCodeJamRole(guildId: string, role: string): Promise<void> {
+		let result = await this.query.findOneAndUpdate(
+			{ guild_id: guildId },
+			{
+				$set: {
+					event_role_id: role,
+					updated_at: new Date()
+				}
+			},
+			{
+				upsert: true,
+				new: true
+			}
+		);
+
+		if (!this.cachingDisabled) this.cache.set(guildId, result);
+	}
+
+	public async updateCodeJamChannel(guildId: string, channel: string): Promise<void> {
+		let result = await this.query.findOneAndUpdate(
+			{ guild_id: guildId },
+			{
+				$set: {
+					event_channel: channel,
+					updated_at: new Date()
+				}
+			},
+			{
+				upsert: true,
+				new: true
+			}
+		);
+
+		if (!this.cachingDisabled) this.cache.set(guildId, result);
+	}
 
 	/**
 	 * Gets the role id of the code jam

@@ -11,6 +11,7 @@ import { TagCommandPlugin } from './plugins/tag/index.js';
 import { WelcomeCommandPlugin } from './plugins/welcome/index.js';
 import { GoodbyeCommandPlugin } from './plugins/goodbye/index.js';
 import { CodeJamCommandPlugin } from './plugins/jam/index.js';
+import { logger } from './index.js';
 
 export default class Main {
 	public DiscordClient: DiscordClientType = client;
@@ -49,7 +50,7 @@ export default class Main {
 	public async init(): Promise<void> {
 		await this.connectToDatabase();
 		await this.DiscordClient.connect();
-		console.log(`[INFO] Connecting to Discord API Gateway...`);
+		logger.info(`Connecting to Discord API Gateway...`);
 		await this.runEvents();
 	}
 
@@ -64,14 +65,14 @@ export default class Main {
 			.on('messageCreate', (await import('./events/event_messageCreate.js')).default.bind(this))
 			.on('debug', (await import('./events/event_debug.js')).default.bind(this.DiscordClient))
 			.on('error', (err) => {
-				console.error(`[ERROR] Somethings broken...`, err);
+				logger.error(`Somethings broken...`, err);
 			});
 	}
 
 	/** Loads the bot commands into the system cache */
 	public async loadCommands(): Promise<void> {
-		this.utils.addCommand((await import("./commands/commands.js")).default as CommandDataProp);
-		this.utils.addCommand((await import("./commands/embed.js")).default as CommandDataProp);
+		this.utils.addCommand((await import('./commands/commands.js')).default as CommandDataProp);
+		this.utils.addCommand((await import('./commands/embed.js')).default as CommandDataProp);
 		this.utils.addCommand((await import('./commands/information.js')).default as CommandDataProp);
 		this.utils.addCommand((await import('./plugins/goodbye/cmd.js')).default as CommandDataProp);
 		this.utils.addCommand((await import('./plugins/tag/cmd.js')).default as CommandDataProp);
@@ -127,10 +128,10 @@ export default class Main {
 		await mongoose
 			.connect(config.MongoDbUri)
 			.then(() => {
-				console.log(`[INFO] Connected to MongoDB`);
+				logger.info(`Connected to MongoDB`);
 			})
 			.catch((err) => {
-				console.error(`[ERROR] Failed to connect to MongoDB`, err);
+				logger.error(`Failed to connect to MongoDB`, err);
 			});
 	}
 }

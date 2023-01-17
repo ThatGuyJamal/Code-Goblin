@@ -3,6 +3,7 @@ import { CreateCommand } from '../../command.js';
 import { isCanary } from '../../config/config.js';
 import { TagLimits } from '../../database/schemas/tag.js';
 import constants from '../../constants.js';
+import { logger } from '../../index.js';
 
 export default CreateCommand({
 	trigger: 'tag',
@@ -190,7 +191,7 @@ export default CreateCommand({
 					]
 				})
 				.catch((err) => {
-					console.log(err);
+					logger.error(err);
 					instance.utils.sendToLogChannel('error', {
 						embeds: [
 							{
@@ -230,7 +231,7 @@ export default CreateCommand({
 			});
 		}
 
-		if(subCommand.find((name) => name === 'clear')) {
+		if (subCommand.find((name) => name === 'clear')) {
 			if (!interaction.member?.permissions.has(Permissions.MANAGE_GUILD)) {
 				return await interaction.createFollowup({
 					content: `You need the following permissions: \`Manage Server\` to execute this command.`,

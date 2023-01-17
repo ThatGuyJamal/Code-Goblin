@@ -2,6 +2,7 @@ import { EmbedBuilder } from '@oceanicjs/builders';
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ChannelTypes, TextChannel } from 'oceanic.js';
 import { CreateCommand } from '../command.js';
 import { isCanary } from '../config/config.js';
+import { logger } from '../index.js';
 
 export default CreateCommand({
 	trigger: 'embed-generate',
@@ -76,7 +77,6 @@ export default CreateCommand({
 
 		const embed = new EmbedBuilder();
 		try {
-
 			await interaction.defer(64);
 
 			// If no options are given return
@@ -141,7 +141,7 @@ export default CreateCommand({
 				});
 			}
 		} catch (error) {
-			// console.log(error)
+			logger.error(error);
 		}
 	}
 });

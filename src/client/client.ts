@@ -16,9 +16,9 @@ import { WelcomeModel } from '../database/schemas/welcome.js';
 export const client = new Client({
 	auth: `Bot ${config.BotToken}`,
 	collectionLimits: {
-		members: 500,
+		members: 2_000,
 		messages: 0,
-		users: 5_000
+		users: 1_000
 	},
 	allowedMentions: {
 		everyone: false,
@@ -46,7 +46,7 @@ export const client = new Client({
 		maxResumeAttempts: 10,
 		maxShards: 1,
 		presence: {
-			activities: [{ type: config.BotActivityType , name: config.BotActivityMessage }],
+			activities: [{ type: config.BotActivityType, name: config.BotActivityMessage }],
 			status: 'online'
 		},
 		seedVoiceConnections: false

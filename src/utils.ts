@@ -1,6 +1,7 @@
 import type { CreateMessageOptions, Member, TextChannel } from 'oceanic.js';
 import type { Command, CommandDataProp } from './command.js';
 import config from './config/config.js';
+import { logger } from './index.js';
 import type Main from './main';
 
 export class Utils {
@@ -68,13 +69,13 @@ export class Utils {
 					this.instance.collections.commands.commandStoreArrayJsonGlobal.push(cmd.toJson());
 					this.instance.collections.commands.commandStoreArrayJsonGuild.push(cmd.toJson());
 				}
-				console.log(`[COMMAND] Loaded ${cmd.props.trigger} into memory.`);
+				logger.info(`Loaded ${cmd.props.trigger} into memory.`);
 			} else {
-				console.log(`[COMMAND] ${cmd.props.trigger} was not loaded into memory because it is disabled.`);
+				logger.info(`${cmd.props.trigger} was not loaded into memory because it is disabled.`);
 			}
 		} catch (err) {
-			console.log(`[ERROR] Failed to load command ${cmd.props.trigger} into memory.`, err);
-			console.log(err)
+			logger.error(`[ERROR] Failed to load command ${cmd.props.trigger} into memory.`, err);
+			logger.error(err);
 		}
 	}
 }

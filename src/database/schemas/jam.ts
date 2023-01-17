@@ -14,8 +14,10 @@ export interface CodeJam {
 	event_participants_ids: string[] | null;
 	// A list of users who are managing the code jam
 	event_managers_ids: string[] | null;
+	// The channel where the code jam is being hosted
+	event_channel: string | null;
 
-	event_image_url: string | null
+	event_image_url: string | null;
 	scheduledStartTime: Date | null;
 	scheduledEndTime: Date | null;
 	entityType: string | null;
@@ -31,15 +33,19 @@ const JamSchema = new Schema<CodeJam>({
 	event_role_id: { type: String, required: false, default: null },
 	event_participants_ids: { type: [String], required: false, default: [] },
 	event_managers_ids: { type: [String], required: false, default: [] },
+	event_channel: { type: String, required: false, default: null },
+
+	name: { type: String, required: false },
+	description: { type: String, required: false },
 
 	event_image_url: { type: String, required: false, default: null },
 	scheduledStartTime: { type: Date, required: false, default: null },
 	scheduledEndTime: { type: Date, required: false, default: null },
 	entityType: { type: String, required: false, default: null },
 
-	created_by_name: { type: String, required: false },
-	created_by_id: { type: String, required: false },
-	created_at: { type: Date, required: false }
+	created_by_name: { type: String, required: false, default: null },
+	created_by_id: { type: String, required: false, default: null },
+	created_at: { type: Date, required: false, default: new Date() }
 });
 
 export const CodeJamModel: Model<CodeJam> = model('code-jams', JamSchema);

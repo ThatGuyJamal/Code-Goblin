@@ -1,6 +1,7 @@
 import { ApplicationCommandBuilder } from '@oceanicjs/builders';
 import type { ApplicationCommandTypes, Client, CommandInteraction, CreateApplicationCommandOptions, Permission, PermissionName } from 'oceanic.js';
 import config from './config/config.js';
+import { logger } from './index.js';
 import { MainInstance } from './main.js';
 
 export interface CommandDataProp {
@@ -92,23 +93,23 @@ export async function CreateGuildCommands(client: Client) {
 
 		for (const guilds of config.DevelopmentServerId) {
 			await client.application.bulkEditGuildCommands(guilds, commandsArray);
-			console.log(`[INFO] Successfully created ${commandsArray.length} commands in guild ${guilds}`);
+			logger.info(`Successfully created ${commandsArray.length} commands in guild ${guilds}`);
 		}
 
 		await MainInstance.utils.sendToLogChannel('api', {
 			content: `Successfully created ${commandsArray.length} commands in all guilds!`
 		});
 
-		console.log(`[INFO] Successfully created ${commandsArray.length} commands in all guilds`);
+		logger.info(`Successfully created ${commandsArray.length} commands in all guilds`);
 	} catch (err) {
-		console.error(`[ERROR] Failed to create guild commands`, err);
+		logger.error(`Failed to create guild commands`, err);
 
 		await MainInstance.utils.sendToLogChannel('error', {
 			content: `Failed to create guild commands!\n ${err}`
 		});
 	}
 
-	console.log('[INFO] Created Guild Commands');
+	logger.info('Created Guild Commands');
 }
 
 /**
@@ -121,13 +122,13 @@ export async function CreateGlobalCommands(client: Client) {
 
 		await client.application.bulkEditGlobalCommands(commandsArray);
 
-		console.log(`[INFO] Successfully created ${commandsArray.length} commands globally`);
+		logger.info(`Successfully created ${commandsArray.length} commands globally`);
 
 		await MainInstance.utils.sendToLogChannel('api', {
 			content: `Successfully created ${commandsArray.length} commands globally!`
 		});
 	} catch (err) {
-		console.error(`[ERROR] Failed to create global commands`, err);
+		logger.error(`Failed to create global commands`, err);
 
 		await MainInstance.utils.sendToLogChannel('error', {
 			content: `Failed to create global commands!\n ${err}`
@@ -143,7 +144,7 @@ export async function deleteGuildCommands(client: Client) {
 	// Delete Commands from the API
 	for (const guild of config.DevelopmentServerId) {
 		await client.application.bulkEditGuildCommands(guild, []).catch((err) => {
-			console.log(err);
+			logger.error(err);
 			MainInstance.utils.sendToLogChannel('error', {
 				content: `Failed to delete commands in guild ${guild}!\n ${err}`
 			});
@@ -162,7 +163,7 @@ export async function deleteGuildCommands(client: Client) {
 export async function deleteGlobalCommands(client: Client) {
 	// Delete Commands from the API
 	await client.application.bulkEditGlobalCommands([]).catch((err) => {
-		console.log(err);
+		logger.error(err);
 		MainInstance.utils.sendToLogChannel('error', {
 			content: `Failed to delete commands globally!\n ${err}`
 		});
