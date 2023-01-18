@@ -1,4 +1,4 @@
-import type { CommandInteraction, AnyTextChannelWithoutGroup, Uncached } from 'oceanic.js';
+import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, MessageFlags } from 'oceanic.js';
 import { logger } from '../../../index.js';
 import type Main from '../../../main.js';
 
@@ -12,6 +12,15 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	try {
 		const jam = await instance.collections.commands.plugins.jam.getCodeJam(interaction.guild!.id);
 
+		if(!jam) return await interaction.createFollowup({ content: `No current Code Jam found in __${interaction.guild!.name}__` });
+
+		if (!interaction.member?.permissions.has('MANAGE_GUILD') || jam.event_managers_ids?.includes(interaction.member!.id)) {
+			return interaction.createFollowup({
+				content: 'You do not have the `MANAGE_GUILD` permission to create a Code Jam!',
+				flags: MessageFlags.EPHEMERAL
+			});
+		}
+
 		if (!jam) return await interaction.createFollowup({ content: `No current Code Jam found in __${interaction.guild!.name}__` });
 
 		let participants = jam.event_participants_ids ?? [];
@@ -19,7 +28,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		let pRole = interaction.guild!.roles.get(jam.event_role_id!);
 		let mRole = interaction.guild!.roles.get(jam.event_managers_role_id!);
 
-		if (!pRole && !mRole || !pRole || !mRole) {
+		if ((!pRole && !mRole) || !pRole || !mRole) {
 			return await interaction.editOriginal({
 				content: `The event role and event managers role is not set! Please check the data with ${instance.utils.codeBlock('/jam manage')}`
 			});
