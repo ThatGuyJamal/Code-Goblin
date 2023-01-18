@@ -52,7 +52,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		});
 
 		await interaction.createFollowup({
-			content: `Successfully created a new Code Jam!\n As its creator you can manage the Code Jam with the \`/jam manage\` command.\n Add more managers and participants.`,
+			content: `Successfully created a new Code Jam!\nAs its creator you can manage the Code Jam with the \`/jam manage\` command.\nAdd more managers and participants.`,
 			flags: MessageFlags.EPHEMERAL
 		});
 	} catch (err) {

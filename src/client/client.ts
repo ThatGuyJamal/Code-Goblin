@@ -22,9 +22,6 @@ export const client = new Client({
 	},
 	allowedMentions: {
 		everyone: false,
-		repliedUser: true,
-		roles: true,
-		users: true
 	},
 	defaultImageFormat: 'png',
 	defaultImageSize: 4096,

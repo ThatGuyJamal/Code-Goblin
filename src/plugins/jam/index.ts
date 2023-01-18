@@ -2,7 +2,6 @@ import { Collection } from 'oceanic.js';
 import config from '../../config/config.js';
 import type { CodeJam } from './schema/jam.js';
 import type Main from '../../main.js';
-import { logger } from '../../index.js';
 
 export class CodeJamCommandPlugin {
 	private instance: Main;
@@ -96,7 +95,7 @@ export class CodeJamCommandPlugin {
 	 * @returns
 	 */
 	public async deleteCodeJam(guildId: string): Promise<void> {
-		await this.query.findOneAndDelete({ guild_id: guildId });
+		await this.query.deleteOne({ guild_id: guildId });
 		if (!this.cachingDisabled) this.cache.delete(guildId);
 	}
 
@@ -434,34 +433,5 @@ export class CodeJamCommandPlugin {
 		);
 
 		if (!this.cachingDisabled) this.cache.set(guildId, result);
-	}
-
-	public async endCodeJam(guildId: string) {
-		try {
-			let result = await this.query.findOne({ guild_id: guildId });
-
-			if (!result) return;
-
-			let guild = this.instance.DiscordClient.guilds.get(guildId);
-
-			if (!guild) return;
-
-			if (!result.event_role_id || !result.event_managers_role_id) return;
-
-			let eventRole = guild.roles.get(result.event_role_id);
-			let managerRole = guild.roles.get(result.event_managers_role_id);
-
-			if (!eventRole || !managerRole) return;
-
-			let members = guild.members.filter((m) => m.roles.includes(eventRole!.id) && !m.roles.includes(managerRole!.id));
-
-			for (let member of members) Promise.all([member.removeRole(eventRole.id), member.removeRole(managerRole.id)]);
-
-			await this.query.deleteOne({ guild_id: guildId });
-
-			if (!this.cachingDisabled) this.cache.delete(guildId);
-		} catch (e) {
-			logger.error(e);
-		}
 	}
 }
