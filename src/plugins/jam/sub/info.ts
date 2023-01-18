@@ -15,7 +15,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		.setDescription(jam.description)
 		.setColor(constants.numbers.colors.secondary)
 		.setTimestamp(new Date().toISOString())
-		.setThumbnail(interaction.guild?.iconURL('png') ?? 'https://cdn.discordapp.com/embed/avatars/0.png');
+		.setThumbnail(interaction.guild?.iconURL('png') ?? instance.DiscordClient.user.avatarURL("png"));
 
 	if (jam.event_image_url) embed.setImage(jam.event_image_url);
 
