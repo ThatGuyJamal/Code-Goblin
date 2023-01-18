@@ -1,7 +1,10 @@
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ChannelTypes } from 'oceanic.js';
 import { CreateCommand } from '../../command.js';
 import { isCanary } from '../../config/config.js';
-import constants from '../../constants.js';
+
+import handleConfigure from './sub/configure.js';
+import handleView from './sub/view.js';
+import handleDelete from './sub/delete.js';
 
 export default CreateCommand({
 	trigger: 'welcome',
@@ -51,55 +54,15 @@ export default CreateCommand({
 				.setDMPermission(false);
 	},
 	run: async (instance, interaction) => {
-		await interaction.defer();
-
 		if (!interaction.guild) return;
 
 		const subCommand = interaction.data.options.getSubCommand(true);
 
-		if (subCommand.find((name) => name === 'configure')) {
-			const channel = interaction.data.options.getChannel('channel', true);
-			const context = interaction.data.options.getString('context', true);
+		if (subCommand.find((name) => name === 'configure')) await handleConfigure(instance, interaction);
 
-			await instance.collections.commands.plugins.welcome.CreateWelcome(interaction.guild.id, channel.id, 'text', context, true);
+		if (subCommand.find((name) => name === 'delete')) await handleDelete(instance, interaction);
 
-			return await interaction.createFollowup({
-				content: 'Welcome Plugin Configured!'
-			});
-		}
-
-		if (subCommand.find((name) => name === 'delete')) {
-			await instance.collections.commands.plugins.welcome.DeleteWelcome(interaction.guild.id);
-			return await interaction.createFollowup({
-				content: 'Welcome Plugin Config Deleted!'
-			});
-		}
-
-		if (subCommand.find((name) => name === 'view')) {
-			const data = await instance.collections.commands.plugins.welcome.GetWelcome(interaction.guild.id);
-
-			if (!data)
-				return await interaction.createFollowup({
-					content: 'No data to view.'
-				});
-
-			return await interaction.createFollowup({
-				embeds: [
-					{
-						title: 'Welcome Plugin Current Config',
-						description: data.content,
-						fields: [
-							{
-								name: 'raw view',
-								value: `\`\`\`${data.content}\`\`\``,
-								inline: false
-							}
-						],
-						color: constants.numbers.colors.secondary
-					}
-				]
-			});
-		}
+		if (subCommand.find((name) => name === 'view')) await handleView(instance, interaction);
 
 		return await interaction.createFollowup({
 			content: 'Invalid subcommand!'
