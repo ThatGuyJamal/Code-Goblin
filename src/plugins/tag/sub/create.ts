@@ -1,5 +1,5 @@
 import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, MessageFlags, Permissions } from 'oceanic.js';
-import { TagLimits } from '../../../database/schemas/tag.js';
+import { TagLimits } from '../schema/tag.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {

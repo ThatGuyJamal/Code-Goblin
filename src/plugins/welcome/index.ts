@@ -1,6 +1,6 @@
 import { Collection } from 'oceanic.js';
 import config from '../../config/config.js';
-import type { ContentType, Welcome } from '../../database/schemas/welcome.js';
+import type { ContentType, Welcome } from './schema/welcome.js';
 import type Main from '../../main.js';
 
 export class WelcomeCommandPlugin {

@@ -17,9 +17,10 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	const createDescription = interaction.data.options.getString('create-description', true);
 	// const createEventType = interaction.data.options.getString('create-event-type', true);
 	const createEventChannel = interaction.data.options.getChannel('create-event-channel', true);
-	// const createEventStart = interaction.data.options.getString('create-event-start', true);
-	// const createEventEnd = interaction.data.options.getString('create-event-end', true);
+	let createEventStart = interaction.data.options.getString('create-event-start', true);
+	let createEventEnd = interaction.data.options.getString('create-event-end', true);
 	const createEventRole = interaction.data.options.getRole('create-event-role', true);
+	const createEventManagerRole = interaction.data.options.getRole('create-event-manager-role', true);
 
 	const createEventImage = interaction.data.options.getString('create-event-image');
 
@@ -32,42 +33,26 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	}
 
 	try {
+		createEventStart = instance.utils.convertDateStringToDiscordTimeStamp(createEventStart, 'd');
+		createEventEnd = instance.utils.convertDateStringToDiscordTimeStamp(createEventEnd, 'd');
+
 		// Create the Code Jam
 		await instance.collections.commands.plugins.jam.createCodeJam({
 			guildId: interaction.guild!.id,
 			jam_name: createName,
 			jam_description: createDescription,
 			roleId: createEventRole?.id,
+			roleIdManagers: createEventManagerRole?.id,
 			image: createEventImage,
-			// start: createEventStart,
-			// end: createEventEnd,
-			// entity: createEventType,
+			start: createEventStart,
+			end: createEventEnd,
 			channel: createEventChannel?.id,
 			createdBy: interaction.member.username,
 			createdById: interaction.member.user.id
 		});
 
-		// const entityOption =
-		// 	createEventType === 'external'
-		// 		? GuildScheduledEventEntityTypes.EXTERNAL
-		// 		: createEventType === 'stage'
-		// 		? GuildScheduledEventEntityTypes.STAGE_INSTANCE
-		// 		: GuildScheduledEventEntityTypes.VOICE;
-
-		// await interaction.guild?.createScheduledEvent({
-		// 	name: createName,
-		// 	description: createDescription,
-		// 	channelID: createEventChannel?.id,
-		// 	reason: 'New Code Jam',
-		// 	image: createEventImage,
-		// 	scheduledStartTime: createEventStart,
-		// 	scheduledEndTime: createEventEnd,
-		// 	privacyLevel: GuildScheduledEventPrivacyLevels.GUILD_ONLY,
-		// 	entityType: entityOption
-		// });
-
 		await interaction.createFollowup({
-			content: `Successfully created a new Code Jam! You can now manage __**${createName}**__ with the \`/jam manage\` command!`,
+			content: `Successfully created a new Code Jam!\n As its creator you can manage the Code Jam with the \`/jam manage\` command.\n Add more managers and participants.`,
 			flags: MessageFlags.EPHEMERAL
 		});
 	} catch (err) {

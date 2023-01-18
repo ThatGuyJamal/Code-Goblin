@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 import { Client } from 'oceanic.js';
 import config from '../config/config.js';
-import { GoodbyeModel } from '../database/schemas/goodbye.js';
-import { CodeJamModel } from '../database/schemas/jam.js';
-import { TagModel } from '../database/schemas/tag.js';
-import { WelcomeModel } from '../database/schemas/welcome.js';
+import { GoodbyeModel } from '../plugins/goodbye/schema/goodbye.js';
+import { CodeJamModel } from '../plugins/jam/schema/jam.js';
+import { TagModel } from '../plugins/tag/schema/tag.js';
+import { WelcomeModel } from '../plugins/welcome/schema/welcome.js';
 
 /**
  * The Client Object for the bot by Oceanic.js

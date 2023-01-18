@@ -3,9 +3,9 @@ import constants from '../../../constants.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
-    await interaction.defer();
+	await interaction.defer();
 
-    const data = await instance.collections.commands.plugins.welcome.GetWelcome(interaction.guild!.id);
+	const data = await instance.collections.commands.plugins.welcome.GetWelcome(interaction.guild!.id);
 
 	if (!data)
 		return await interaction.createFollowup({

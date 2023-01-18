@@ -9,9 +9,9 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	if (!jam) return await interaction.createFollowup({ content: `No current Code Jam found in __${interaction.guild!.name}__` });
 
 	// Check
-	if (!interaction.member?.permissions.has('MANAGE_GUILD') || jam.created_by_id !== interaction.member.user.id) {
+	if (!interaction.member?.permissions.has('MANAGE_GUILD') || jam.event_managers_ids?.includes(interaction.member!.id)) {
 		return await interaction.createFollowup({
-			content: `You are not the creator of this Code Jam or you do not have the \`MANAGE_GUILD\` permission!\n\nThis Code Jam was not deleted.`,
+			content: `You do not have permission to manage this Code Jam!`,
 			flags: MessageFlags.EPHEMERAL
 		});
 	}
@@ -21,6 +21,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	const manageEventType = interaction.data.options.getString('manage-event-type');
 	const manageEventChannel = interaction.data.options.getChannel('manage-event-channel');
 	const manageEventRole = interaction.data.options.getRole('manage-event-role');
+	const manageEventManagerRole = interaction.data.options.getRole('manage-event-manager-role');
 	const manageEventImage = interaction.data.options.getString('manage-event-image');
 
 	const manageAddParticipant = interaction.data.options.getUser('manage-add-participant');
@@ -28,6 +29,9 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 
 	const manageAddManager = interaction.data.options.getUser('manage-add-manager');
 	const manageRemoveManager = interaction.data.options.getUser('manage-remove-manager');
+
+	const manageEventStart = interaction.data.options.getString('manage-event-start');
+	const manageEventEnd = interaction.data.options.getString('manage-event-end');
 
 	let changes: string[] = [];
 
@@ -42,7 +46,11 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		!manageAddParticipant &&
 		!manageRemoveParticipant &&
 		!manageAddManager &&
-		!manageRemoveManager
+		!manageRemoveManager &&
+		!manageEventStart &&
+		!manageEventEnd &&
+		!manageEventManagerRole &&
+		!manageEventImage
 	) {
 		return await interaction.createFollowup({
 			content: `You must provide at least one option to manage the Code Jam!`,
@@ -67,7 +75,15 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 
 		await instance.collections.commands.plugins.jam.addJamParticipant(interaction.guild!.id, manageAddParticipant.id);
 
-		changes.push(`Added <@${manageAddParticipant.id}> as a participant`);
+		const role = interaction.guild?.roles.get(jam.event_role_id!);
+		const member = interaction.guild?.members.get(manageAddParticipant.id);
+
+		if (!role) {
+			changes.push(`Failed to add <@${manageAddParticipant.id}> as a participant. The event role was not found!`);
+		} else {
+			await member?.addRole(role.id, `Joined Code Jam`).catch(() => {});
+			changes.push(`Added <@${manageAddParticipant.id}> as a participant`);
+		}
 	}
 
 	if (manageName) {
@@ -98,6 +114,20 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		changes.push(`Updated the event role to <@&${manageEventRole.id}>`);
 	}
 
+	// TODO - Make it so if this role is updated, it updates the role for all participants
+	if (manageEventManagerRole) {
+		await instance.collections.commands.plugins.jam.updateCodeJamManagerRole(interaction.guild!.id, manageEventManagerRole.id);
+
+		const role = interaction.guild?.roles.get(jam.event_managers_role_id!);
+
+		if (!role) {
+			changes.push(`Failed to add <@${manageEventManagerRole.id}> as a manager. The event role was not found!`);
+		} else {
+			await interaction.member?.addRole(role.id, `Joined Code Jam`).catch(() => {});
+			changes.push(`Added <@${manageEventManagerRole.id}> as a manager`);
+		}
+	}
+
 	if (manageEventImage) {
 		await instance.collections.commands.plugins.jam.updateCodeJamImage(interaction.guild!.id, manageEventImage);
 
@@ -107,19 +137,59 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	if (manageRemoveParticipant) {
 		await instance.collections.commands.plugins.jam.removeJamParticipant(interaction.guild!.id, manageRemoveParticipant.id);
 
-		changes.push(`Removed <@${manageRemoveParticipant.id}> as a participant`);
+		const role = interaction.guild?.roles.get(jam.event_role_id!);
+		const member = interaction.guild?.members.get(manageRemoveParticipant.id);
+
+		if (!role) {
+			changes.push(`Failed to remove <@${manageRemoveParticipant.id}> as a participant. The event role was not found!`);
+		} else {
+			await member?.removeRole(role.id, `Left Code Jam`).catch(() => {});
+			changes.push(`Removed <@${manageRemoveParticipant.id}> as a participant`);
+		}
 	}
 
 	if (manageAddManager) {
 		await instance.collections.commands.plugins.jam.addJamManager(interaction.guild!.id, manageAddManager.id);
 
-		changes.push(`Added <@${manageAddManager.id}> as a manager`);
+		const role = interaction.guild?.roles.get(jam.event_managers_role_id!);
+		const member = interaction.guild?.members.get(manageAddManager.id);
+
+		if (!role) {
+			changes.push(`Failed to add <@${manageAddManager.id}> as a manager. The event role was not found!`);
+		} else {
+			await member?.addRole(role.id, `Joined Code Jam`).catch(() => {});
+			changes.push(`Added <@${manageAddManager.id}> as a manager`);
+		}
 	}
 
 	if (manageRemoveManager) {
 		await instance.collections.commands.plugins.jam.removeJamManager(interaction.guild!.id, manageRemoveManager.id);
 
-		changes.push(`Removed <@${manageRemoveManager.id}> as a manager`);
+		const role = interaction.guild?.roles.get(jam.event_managers_role_id!);
+		const member = interaction.guild?.members.get(manageRemoveManager.id);
+
+		if (!role) {
+			changes.push(`Failed to remove <@${manageRemoveManager.id}> as a manager. The event role was not found!`);
+		} else {
+			await member?.removeRole(role.id, `Left Code Jam`).catch(() => {});
+			changes.push(`Removed <@${manageRemoveManager.id}> as a manager`);
+		}
+	}
+
+	if (manageEventStart) {
+		let format = instance.utils.convertDateStringToDiscordTimeStamp(manageEventStart, 'd');
+
+		await instance.collections.commands.plugins.jam.updateCodeJamStartDate(interaction.guild!.id, format);
+
+		changes.push(`Updated the event start date to ${format}`);
+	}
+
+	if (manageEventEnd) {
+		let format = instance.utils.convertDateStringToDiscordTimeStamp(manageEventEnd, 'd');
+
+		await instance.collections.commands.plugins.jam.updateCodeJamEndDate(interaction.guild!.id, format);
+
+		changes.push(`Updated the event end date to ${format}`);
 	}
 
 	await interaction.createFollowup({

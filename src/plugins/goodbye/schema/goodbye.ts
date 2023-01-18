@@ -1,6 +1,6 @@
 // todo
 import { Schema, type Model, model } from 'mongoose';
-import type { ContentType } from './welcome.js';
+import type { ContentType } from '../../welcome/schema/welcome.js';
 
 export interface Goodbye {
 	guild_id: string;

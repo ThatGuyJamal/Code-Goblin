@@ -9,11 +9,11 @@ export default {
 	BotClientOAuth2Url:
 		'https://discord.com/api/oauth2/authorize?client_id=1055671501870874634&permissions=148981992464&scope=bot%20applications.commands',
 	BotName: 'Code Goblin',
-	BotPrefix: 'w!',
+	BotPrefix: 'c!',
 	BotActivityType: ActivityTypes.LISTENING as BotActivityTypes,
 	BotActivityMessage: `to the console`,
-	GithubRepository: 'https://github.com/whisper-room-dev',
-	GithubContributionUrl: 'https://github.com/whisper-room-dev/.github/blob/main/contributing.md',
+	GithubRepository: 'https://github.com/ThatGuyJamal/Code-Goblin',
+	GithubContributionUrl: '',
 	DevelopmentServerId: isCanary
 		? ['']
 		: [

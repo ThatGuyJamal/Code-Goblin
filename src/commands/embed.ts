@@ -58,7 +58,7 @@ export default CreateCommand({
 			});
 	},
 	register: isCanary ? 'guild' : 'global',
-	run: async (_instance, interaction) => {
+	run: async (instance, interaction) => {
 		const title = interaction.data.options.getString('title');
 		const description = interaction.data.options.getString('description');
 		const color = interaction.data.options.getString('color');
@@ -127,10 +127,17 @@ export default CreateCommand({
 				}
 
 				// Send the embed
-				await ch.createMessage({ embeds: [embed.toJSON()] }).catch(() => {});
+				let send = await ch.createMessage({ embeds: [embed.toJSON()] });
 
 				// Send a followup message
-				await interaction.createFollowup({ content: `Embed sent to ${channel.mention} successfully!` });
+				await interaction.createFollowup({
+					content: `Embed sent to ${channel.mention} successfully!`,
+					embeds: [
+						{
+							description: `[View Embed](${instance.utils.messageLink(ch.id, send.id, interaction.guild!.id)}).`
+						}
+					]
+				});
 			} else {
 				const send = await interaction.channel?.createMessage({ embeds: [embed.toJSON()] }).catch(() => null);
 

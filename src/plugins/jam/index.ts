@@ -1,7 +1,8 @@
 import { Collection } from 'oceanic.js';
 import config from '../../config/config.js';
-import type { CodeJam } from '../../database/schemas/jam.js';
+import type { CodeJam } from './schema/jam.js';
 import type Main from '../../main.js';
+import { logger } from '../../index.js';
 
 export class CodeJamCommandPlugin {
 	private instance: Main;
@@ -45,6 +46,7 @@ export class CodeJamCommandPlugin {
 		jam_name,
 		jam_description,
 		roleId,
+		roleIdManagers,
 		image,
 		start,
 		end,
@@ -57,9 +59,10 @@ export class CodeJamCommandPlugin {
 		jam_name: string;
 		jam_description: string;
 		roleId?: string;
+		roleIdManagers?: string;
 		image?: string;
-		start?: string;
-		end?: string;
+		start: string;
+		end: string;
 		entity?: string;
 		createdBy: string;
 		createdById: string;
@@ -70,11 +73,11 @@ export class CodeJamCommandPlugin {
 			name: jam_name,
 			description: jam_description,
 			event_role_id: roleId,
-			event_participants_id: [],
-			event_managers_id: [],
+			event_managers_role_id: roleIdManagers,
+			event_participants_ids: [],
 			event_image_url: image,
-			scheduledStartTime: start,
-			scheduledEndTime: end,
+			event_scheduled_start_time: start,
+			event_scheduled_end_time: end,
 			event_channel: channel,
 			entityType: entity,
 			created_by_name: createdBy,
@@ -190,12 +193,76 @@ export class CodeJamCommandPlugin {
 		if (!this.cachingDisabled) this.cache.set(guildId, result);
 	}
 
+	public async updateCodeJamManagerRole(guildId: string, role: string): Promise<void> {
+		let result = await this.query.findOneAndUpdate(
+			{ guild_id: guildId },
+			{
+				$set: {
+					event_managers_role_id: role,
+					updated_at: new Date()
+				}
+			},
+			{
+				upsert: true,
+				new: true
+			}
+		);
+
+		if (!this.cachingDisabled) this.cache.set(guildId, result);
+	}
+
 	public async updateCodeJamChannel(guildId: string, channel: string): Promise<void> {
 		let result = await this.query.findOneAndUpdate(
 			{ guild_id: guildId },
 			{
 				$set: {
 					event_channel: channel,
+					updated_at: new Date()
+				}
+			},
+			{
+				upsert: true,
+				new: true
+			}
+		);
+
+		if (!this.cachingDisabled) this.cache.set(guildId, result);
+	}
+
+	/**
+	 * Updates the start date of the code jam
+	 * @param guildId
+	 * @param date
+	 */
+	public async updateCodeJamStartDate(guildId: string, date: string): Promise<void> {
+		let result = await this.query.findOneAndUpdate(
+			{ guild_id: guildId },
+			{
+				$set: {
+					event_scheduled_start_time: date,
+					updated_at: new Date()
+				}
+			},
+			{
+				upsert: true,
+				new: true
+			}
+		);
+
+		if (!this.cachingDisabled) this.cache.set(guildId, result);
+	}
+
+	/**
+	 * Updates the end date of the code jam
+	 * @param guildId
+	 * @param date
+	 */
+	public async updateCodeJamEndDate(guildId: string, date: string): Promise<void> {
+		let result = await this.query.findOneAndUpdate(
+			{ guild_id: guildId },
+			{
+				$set: {
+					event_scheduled_end_time: date,
 					updated_at: new Date()
 				}
 			},
@@ -367,5 +434,34 @@ export class CodeJamCommandPlugin {
 		);
 
 		if (!this.cachingDisabled) this.cache.set(guildId, result);
+	}
+
+	public async endCodeJam(guildId: string) {
+		try {
+			let result = await this.query.findOne({ guild_id: guildId });
+
+			if (!result) return;
+
+			let guild = this.instance.DiscordClient.guilds.get(guildId);
+
+			if (!guild) return;
+
+			if (!result.event_role_id || !result.event_managers_role_id) return;
+
+			let eventRole = guild.roles.get(result.event_role_id);
+			let managerRole = guild.roles.get(result.event_managers_role_id);
+
+			if (!eventRole || !managerRole) return;
+
+			let members = guild.members.filter((m) => m.roles.includes(eventRole!.id) && !m.roles.includes(managerRole!.id));
+
+			for (let member of members) Promise.all([member.removeRole(eventRole.id), member.removeRole(managerRole.id)]);
+
+			await this.query.deleteOne({ guild_id: guildId });
+
+			if (!this.cachingDisabled) this.cache.delete(guildId);
+		} catch (e) {
+			logger.error(e);
+		}
 	}
 }

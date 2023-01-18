@@ -9,6 +9,7 @@ import handleInfo from './sub/info.js';
 import handleJoin from './sub/join.js';
 import handleLeave from './sub/leave.js';
 import handleManage from './sub/manage.js';
+import handleEnd from './sub/end.js';
 
 export default CreateCommand({
 	trigger: 'jam',
@@ -30,6 +31,9 @@ export default CreateCommand({
 				.addOption('event role', ApplicationCommandOptionTypes.ROLE, (option) => {
 					option.setName('create-event-role').setDescription('The event role of the Code Jam').setRequired(true);
 				})
+				.addOption('event manager role', ApplicationCommandOptionTypes.ROLE, (option) => {
+					option.setName('create-event-manager-role').setDescription('The manager role of the Code Jam').setRequired(true);
+				})
 				// .addOption('event type', ApplicationCommandOptionTypes.STRING, (option) => {
 				// 	option
 				// 		.setName('create-event-type')
@@ -46,12 +50,12 @@ export default CreateCommand({
 						.setChannelTypes([ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_STAGE_VOICE, ChannelTypes.GUILD_TEXT])
 						.setRequired(true);
 				})
-				// .addOption('event start', ApplicationCommandOptionTypes.STRING, (option) => {
-				// 	option.setName('create-event-start').setDescription('The start date of the Code Jam').setRequired(true);
-				// })
-				// .addOption('event end', ApplicationCommandOptionTypes.STRING, (option) => {
-				// 	option.setName('create-event-end').setDescription('The end date of the Code Jam').setRequired(true);
-				// })
+				.addOption('event start', ApplicationCommandOptionTypes.STRING, (option) => {
+					option.setName('create-event-start').setDescription('The start date of the Code Jam').setRequired(true);
+				})
+				.addOption('event end', ApplicationCommandOptionTypes.STRING, (option) => {
+					option.setName('create-event-end').setDescription('The end date of the Code Jam').setRequired(true);
+				})
 				.addOption('event image', ApplicationCommandOptionTypes.STRING, (option) => {
 					option.setName('create-event-image').setDescription('The image of the Code Jam');
 				});
@@ -71,6 +75,9 @@ export default CreateCommand({
 				})
 				.addOption('update event role', ApplicationCommandOptionTypes.ROLE, (option) => {
 					option.setName('manage-event-role').setDescription('Update the event role of the Code Jam');
+				})
+				.addOption('update event manager role', ApplicationCommandOptionTypes.ROLE, (option) => {
+					option.setName('manage-event-manager-role').setDescription('Update the manager role of the Code Jam');
 				})
 				.addOption('add manager', ApplicationCommandOptionTypes.USER, (option) => {
 					option.setName('manage-add-manager').setDescription('Add a manager to the Code Jam');
@@ -92,6 +99,12 @@ export default CreateCommand({
 						.setName('manage-event-channel')
 						.setDescription('Update the channel of the Code Jam')
 						.setChannelTypes([ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_STAGE_VOICE]);
+				})
+				.addOption('update event start', ApplicationCommandOptionTypes.STRING, (option) => {
+					option.setName('manage-event-start').setDescription('Update the start date of the Code Jam');
+				})
+				.addOption('update event end', ApplicationCommandOptionTypes.STRING, (option) => {
+					option.setName('manage-event-end').setDescription('Update the end date of the Code Jam');
 				});
 		});
 		opt.addOption('jam-4', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
@@ -102,6 +115,9 @@ export default CreateCommand({
 		});
 		opt.addOption('jam-6', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 			option.setName('info').setDescription('Current Code Jam Info');
+		});
+		opt.addOption('jam-7', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
+			option.setName('end').setDescription('End Current Code Jam Info');
 		});
 	},
 	register: isCanary ? 'guild' : 'global',
@@ -114,5 +130,6 @@ export default CreateCommand({
 		if (subcommand?.find((name) => name === 'join')) return await handleJoin(instance, interaction);
 		if (subcommand?.find((name) => name === 'leave')) return await handleLeave(instance, interaction);
 		if (subcommand?.find((name) => name === 'info')) return await handleInfo(instance, interaction);
+		if (subcommand?.find((name) => name === 'end')) return await handleEnd(instance, interaction);
 	}
 });

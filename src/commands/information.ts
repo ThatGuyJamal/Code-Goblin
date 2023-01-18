@@ -2,7 +2,6 @@ import { EmbedBuilder } from '@oceanicjs/builders';
 import { ApplicationCommandTypes, ButtonStyles, ComponentTypes } from 'oceanic.js';
 import { client } from '../client/client.js';
 import { CreateCommand } from '../command.js';
-import ms from 'ms';
 import config, { isCanary } from '../config/config.js';
 import constants from '../constants.js';
 import { GlobalStatistics, GlobalStatsModel } from '../database/schemas/statistics.js';
@@ -37,7 +36,7 @@ function getMemoryUsage() {
 }
 
 export default CreateCommand({
-	trigger: 'information',
+	trigger: 'info',
 	description: 'View information about the bot and its services',
 	type: ApplicationCommandTypes.CHAT_INPUT,
 	register: isCanary ? 'guild' : 'global',
@@ -58,8 +57,6 @@ export default CreateCommand({
 
 		embed.addField('CPU', `Usage: ${getCpuUsage().usage}%\nCores: ${getCpuUsage().cores}`, true);
 		embed.addField('Memory', `Usage: ${getMemoryUsage().usage}%\nFree: ${getMemoryUsage().free}%\nTotal: ${getMemoryUsage().total}%`, true);
-
-		embed.addField('Uptime', ms(client.uptime), true);
 
 		embed.addField('Guilds Cached', `${client.guilds.size}`, true);
 		embed.addField('Guilds Joined', `${global.guilds_joined}`, true);
@@ -102,7 +99,8 @@ export default CreateCommand({
 							type: ComponentTypes.BUTTON,
 							style: ButtonStyles.LINK,
 							label: 'Website',
-							url: config.whisper_room.url
+							url: config.whisper_room.url,
+							disabled: true
 						}
 					]
 				}

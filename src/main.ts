@@ -74,10 +74,9 @@ export default class Main {
 		this.utils.addCommand((await import('./commands/commands.js')).default as CommandDataProp);
 		this.utils.addCommand((await import('./commands/embed.js')).default as CommandDataProp);
 		this.utils.addCommand((await import('./commands/information.js')).default as CommandDataProp);
-		this.utils.addCommand((await import('./plugins/goodbye/cmd.js')).default as CommandDataProp);
 		this.utils.addCommand((await import('./plugins/tag/cmd.js')).default as CommandDataProp);
-		this.utils.addCommand((await import('./plugins/welcome/cmd.js')).default as CommandDataProp);
 		this.utils.addCommand((await import('./plugins/jam/cmd.js')).default as CommandDataProp);
+		this.utils.addCommand((await import('./plugins/automate/cmd.js')).default as CommandDataProp);
 	}
 
 	/**

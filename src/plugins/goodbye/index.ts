@@ -1,7 +1,7 @@
 import { Collection } from 'oceanic.js';
 import config from '../../config/config.js';
-import type { Goodbye } from '../../database/schemas/goodbye.js';
-import type { ContentType } from '../../database/schemas/welcome.js';
+import type { Goodbye } from './schema/goodbye.js';
+import type { ContentType } from '../welcome/schema/welcome.js';
 import type Main from '../../main.js';
 
 export class GoodbyeCommandPlugin {

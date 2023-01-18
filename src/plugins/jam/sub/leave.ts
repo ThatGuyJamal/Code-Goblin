@@ -6,7 +6,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 
 	const jam = await instance.collections.commands.plugins.jam.getCodeJam(interaction.guild!.id);
 
-	if (jam?.event_participants_ids?.includes(interaction.member!.id))
+	if (!jam?.event_participants_ids?.includes(interaction.member!.id))
 		return await interaction.createFollowup({ content: `You are not in this Code Jam!` });
 
 	if (!jam) return await interaction.createFollowup({ content: `You can only leave a Jam during an active event.` });
