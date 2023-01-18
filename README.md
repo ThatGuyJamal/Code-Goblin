@@ -1,4 +1,4 @@
-# Code Buddy
+# Code Goblin
 
 A programmers best friend.
 
