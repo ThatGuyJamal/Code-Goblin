@@ -15,9 +15,9 @@ export default {
 	numbers: {
 		// Used in embeds
 		colors: {
-			primary: 0x28cea3,
-			secondary: 0x28a6ce,
-			tertiary: 0x2853ce
+			primary: 0x0e5519,
+			secondary: 0x0e553d,
+			tertiary: 0x0e4a55
 		}
 	}
 };
