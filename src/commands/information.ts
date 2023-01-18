@@ -53,7 +53,7 @@ export default CreateCommand({
 
 		embed.setTitle('Bot Statistics');
 		embed.setDescription('Displaying current data below');
-		embed.setColor(constants.numbers.colors.primary);
+		embed.setColor(constants.numbers.colors.secondary);
 
 		embed.addField('CPU', `Usage: ${getCpuUsage().usage}%\nCores: ${getCpuUsage().cores}`, true);
 		embed.addField('Memory', `Usage: ${getMemoryUsage().usage}%\nFree: ${getMemoryUsage().free}%\nTotal: ${getMemoryUsage().total}%`, true);
