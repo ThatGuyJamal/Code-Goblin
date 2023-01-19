@@ -19,3 +19,5 @@ A programmers best friend.
 -   [x] `/jam <subcommand>` Create, Edit, View, and Delete custom server Code Jams.
 -   [ ] `/github <user|repo>` View GitHub information about a user or repository.
 -   [ ] `/poll` Create a poll.
+-   [ ] `imagine <prompt>` Generate an image from a prompt.
+-   [ ] `code <language> <code>` Generate code completions from text.
