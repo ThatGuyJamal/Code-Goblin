@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
-import { Client as DiscordClientType, Collection, CreateApplicationCommandOptions, CommandInteraction, MessageFlags } from 'oceanic.js';
+import { Client as DiscordClientType, Collection, CreateApplicationCommandOptions, Guild, User } from 'oceanic.js';
 
 import { Utils } from './utils.js';
-import constants from './constants.js';
 import { client, db_obj } from './client/client.js';
 import config from './config/config.js';
 import type { Command, CommandDataProp } from './command.js';
@@ -12,6 +11,15 @@ import { WelcomeCommandPlugin } from './plugins/welcome/index.js';
 import { GoodbyeCommandPlugin } from './plugins/goodbye/index.js';
 import { CodeJamCommandPlugin } from './plugins/jam/index.js';
 import { logger } from './index.js';
+
+import event_ready from './events/event_ready.js';
+import event_guildcreate from './events/event_guildcreate.js';
+import event_guildleave from './events/event_guildleave.js';
+import event_interactionCreate from './events/event_interactionCreate.js';
+import event_messageCreate from './events/event_messageCreate.js';
+import event_goodbye from './events/event_goodbye.js';
+import event_welcome from './events/event_welcome.js';
+import event_debug from './events/event_debug.js';
 
 export default class Main {
 	public DiscordClient: DiscordClientType = client;
@@ -56,16 +64,33 @@ export default class Main {
 
 	/** Loads and runs event modules for the bot */
 	public async runEvents(): Promise<void> {
-		this.DiscordClient.once('ready', (await import('./events/event_ready.js')).default.bind(null, this.DiscordClient))
-			.on('interactionCreate', (await import('./events/event_interactionCreate.js')).default.bind(this))
-			.on('guildCreate', (await import('./events/event_guildcreate.js')).default.bind(this.DiscordClient))
-			.on('guildDelete', (await import('./events/event_guildleave.js')).default.bind(this.DiscordClient) as any)
-			.on('guildMemberAdd', (await import('./events/event_welcome.js')).default.bind(this))
-			.on('guildMemberRemove', (await import('./events/event_goodbye.js')).default.bind(this) as any)
-			.on('messageCreate', (await import('./events/event_messageCreate.js')).default.bind(this))
-			.on('debug', (await import('./events/event_debug.js')).default.bind(this.DiscordClient))
+		this.DiscordClient.on('ready', async () => {
+			await event_ready(this.DiscordClient);
+		})
+			.on('interactionCreate', async (interaction) => {
+				await event_interactionCreate(this, interaction);
+			})
+			.on('guildCreate', async (guild) => {
+				await event_guildcreate(guild);
+			})
+			.on('guildDelete', async (guild) => {
+				await event_guildleave(guild as Guild);
+			})
+			.on('guildMemberAdd', async (member) => {
+				await event_welcome(member);
+			})
+			.on('guildMemberRemove', async (member, guild) => {
+					if (member instanceof User) return;
+				await event_goodbye(member, guild);
+			})
+			.on('messageCreate', async (message) => {
+				await event_messageCreate(message);
+			})
+			.on('debug', (info) => {
+				event_debug(this.DiscordClient, info);
+			})
 			.on('error', (err) => {
-				logger.error(`Somethings broken...`, err);
+				logger.error(err);
 			});
 	}
 
@@ -77,50 +102,6 @@ export default class Main {
 		this.utils.addCommand((await import('./plugins/tag/cmd.js')).default as CommandDataProp);
 		this.utils.addCommand((await import('./plugins/jam/cmd.js')).default as CommandDataProp);
 		this.utils.addCommand((await import('./plugins/automate/cmd.js')).default as CommandDataProp);
-	}
-
-	/**
-	 * Handles command interactions
-	 * @param interaction The interaction to handle
-	 */
-	public async processCommandInteraction(interaction: CommandInteraction): Promise<void> {
-		if (!interaction.guild) throw new Error('Guild not found');
-
-		const command = this.collections.commands.commandStoreMap.get(interaction.data.name);
-
-		if (command?.disabled && !this.keys.super_users.has(interaction.user.id)) {
-			return interaction.createMessage({ content: constants.strings.events.interactionProcess.commandDisabled, flags: MessageFlags.EPHEMERAL });
-		}
-
-		if (command?.superUserOnly && !this.keys.super_users.has(interaction.user.id)) {
-			return interaction.createMessage({ content: constants.strings.events.interactionProcess.superUsersOnly, flags: MessageFlags.EPHEMERAL });
-		}
-
-		if (command?.helperUserOnly && !this.keys.helper_users.has(interaction.user.id) && !this.keys.super_users.has(interaction.user.id)) {
-			return interaction.createMessage({ content: constants.strings.events.interactionProcess.helpersOnly, flags: MessageFlags.EPHEMERAL });
-		}
-
-		if (command?.requiredBotPermissions) {
-			if (!interaction.appPermissions?.has(...command.requiredBotPermissions)) {
-				return await interaction.createMessage({
-					content: `I need the following permissions: \`${command.requiredBotPermissions}\` to execute this command.`,
-					flags: MessageFlags.EPHEMERAL
-				});
-			}
-		}
-
-		if (command?.requiredUserPermissions) {
-			if (!interaction.member?.permissions.has(...command.requiredUserPermissions)) {
-				return await interaction.createMessage({
-					content: `You need the following permissions: \`${command.requiredUserPermissions}\` to execute this command.`,
-					flags: MessageFlags.EPHEMERAL
-				});
-			}
-		}
-
-		await (command
-			? command.run.call(this, this, interaction)
-			: interaction.createMessage({ content: "I couldn't figure out how to execute that command.", flags: MessageFlags.EPHEMERAL }));
 	}
 
 	public async connectToDatabase() {

@@ -1,4 +1,5 @@
 import type { Member, TextChannel } from 'oceanic.js';
+import { logger } from '../index.js';
 import { MainInstance } from '../main.js';
 
 export default async function (member: Member) {
@@ -10,7 +11,9 @@ export default async function (member: Member) {
 		.createMessage({
 			content: result.welcomeMessage
 		})
-		.catch(() => {});
+		.catch((err) => {
+			logger.error(err);
+		});
 }
 
 export async function getWelcomeResults(member: Member) {

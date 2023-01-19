@@ -13,7 +13,7 @@ export default async function (client: Client) {
 	if (config.register_commands.create.guild) await CreateGuildCommands(client);
 	if (config.register_commands.create.global) await CreateGlobalCommands(client);
 
-	logger.info(`Ready As`, client.user.tag);
+	logger.info(`Ready As ${client.user.tag} (${client.user.id})`);
 
 	await MainInstance.utils.sendToLogChannel('api', {
 		content: `Ready as ${client.user.tag} (${client.user.id})`

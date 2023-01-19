@@ -37,7 +37,7 @@ export const client = new Client({
 		firstShardID: 0,
 		getAllUsers: false,
 		guildCreateTimeout: 5000,
-		intents: ['GUILDS', 'GUILD_MEMBERS'],
+		intents: ['GUILDS', 'GUILD_MEMBERS', "GUILD_MESSAGES", "MESSAGE_CONTENT", "GUILD_WEBHOOKS", "GUILD_EMOJIS_AND_STICKERS", "GUILD_SCHEDULED_EVENTS"],
 		largeThreshold: 1000,
 		maxReconnectAttempts: Infinity,
 		maxResumeAttempts: 10,

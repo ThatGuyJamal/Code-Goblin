@@ -1,14 +1,17 @@
 import type { Guild, Member, TextChannel, Uncached } from 'oceanic.js';
+import { logger } from '../index.js';
 import { MainInstance } from '../main.js';
 
-export default async function (member: Member, guild: Guild | Uncached) {
+export default async function (member: Member, _guild: Guild | Uncached) {
 	const result = await getGoodbyeResults(member);
 
 	if (!result) return;
 
 	await result.GoodbyeChannel.createMessage({
 		content: result.GoodbyeMessage
-	}).catch(() => {});
+	}).catch((err) => {
+		logger.error(err);
+	});
 }
 
 export async function getGoodbyeResults(member: Member) {

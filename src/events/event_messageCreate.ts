@@ -88,7 +88,8 @@ export default async function (message: Message) {
 								type: ComponentTypes.BUTTON,
 								style: ButtonStyles.LINK,
 								label: 'Website',
-								url: config.whisper_room.url
+								url: config.whisper_room.url,
+								disabled: true
 							}
 						]
 					}
