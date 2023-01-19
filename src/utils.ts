@@ -3,6 +3,7 @@ import type { Command, CommandDataProp } from './command.js';
 import config from './config/config.js';
 import { logger } from './index.js';
 import type Main from './main';
+import { stripIndents } from "common-tags"
 
 export class Utils {
 	private instance: Main;
@@ -102,6 +103,15 @@ export class Utils {
 		let format = style ? `<t:${time}:${style}>` : `<t:${time}>`;
 
 		return format;
+	}
+
+	/**
+	 * Strip all of the indentation from the beginning of each line in a multiline string
+	 * @param str
+	 * @returns
+	 */
+	public stripIndents(str: string) {
+		return stripIndents(str);
 	}
 
 	validateDate(date: string) {
