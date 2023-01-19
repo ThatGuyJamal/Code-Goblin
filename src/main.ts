@@ -80,7 +80,7 @@ export default class Main {
 				await event_welcome(member);
 			})
 			.on('guildMemberRemove', async (member, guild) => {
-					if (member instanceof User) return;
+				if (member instanceof User) return;
 				await event_goodbye(member, guild);
 			})
 			.on('messageCreate', async (message) => {

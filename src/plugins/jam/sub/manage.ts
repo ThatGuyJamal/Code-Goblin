@@ -143,9 +143,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		const member = interaction.guild?.members.get(manageRemoveParticipant.id);
 
 		if (!role) {
-			changes.push(
-				`Failed to remove ${utils.userMention(manageRemoveParticipant.id)} as a participant. The event role was not found!`
-			);
+			changes.push(`Failed to remove ${utils.userMention(manageRemoveParticipant.id)} as a participant. The event role was not found!`);
 		} else {
 			await member?.removeRole(role.id, `Left Code Jam`).catch(() => {});
 			changes.push(`Removed ${utils.userMention(manageRemoveParticipant.id)} as a participant`);

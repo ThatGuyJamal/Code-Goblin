@@ -85,9 +85,7 @@ async function processCommandInteraction(_this: typeof MainInstance, interaction
 		}
 	}
 
-	await(
-		command
-			? command.run.call(_this, _this, interaction)
-			: interaction.createMessage({ content: "I couldn't figure out how to execute that command.", flags: MessageFlags.EPHEMERAL })
-	);
+	await (command
+		? command.run.call(_this, _this, interaction)
+		: interaction.createMessage({ content: "I couldn't figure out how to execute that command.", flags: MessageFlags.EPHEMERAL }));
 }

@@ -183,28 +183,11 @@ export class Utils {
 	}
 
 	/**
-	 * Formats the content into a block quote. This needs to be at the start of the line for Discord to format it
-	 *
-	 * @param content - The content to wrap
-	 */
-	public blockQuote<C extends string>(content: C): `>>> ${C}` {
-		return `>>> ${content}`;
-	}
-
-	/**
 	 * Wraps the URL into `<>`, which stops it from embedding
 	 *
 	 * @param url - The URL to wrap
 	 */
-	public hideLinkEmbed<C extends string>(url: C): `<${C}>`;
-
-	/**
-	 * Wraps the URL into `<>`, which stops it from embedding
-	 *
-	 * @param url - The URL to wrap
-	 */
-	public hideLinkEmbed(url: URL): `<${string}>`;
-	public hideLinkEmbed(url: URL | string) {
+	public hideLinkEmbed(url: URL | string): string {
 		return `<${url}>`;
 	}
 
@@ -213,35 +196,9 @@ export class Utils {
 	 *
 	 * @param content - The content to display
 	 * @param url - The URL the content links to
-	 */
-	public hyperlink<C extends string>(content: C, url: URL): `[${C}](${string})`;
-
-	/**
-	 * Formats the content and the URL into a masked URL
-	 *
-	 * @param content - The content to display
-	 * @param url - The URL the content links to
-	 */
-	public hyperlink<C extends string, U extends string>(content: C, url: U): `[${C}](${U})`;
-
-	/**
-	 * Formats the content and the URL into a masked URL
-	 *
-	 * @param content - The content to display
-	 * @param url - The URL the content links to
 	 * @param title - The title shown when hovering on the masked link
 	 */
-	public hyperlink<C extends string, T extends string>(content: C, url: URL, title: T): `[${C}](${string} "${T}")`;
-
-	/**
-	 * Formats the content and the URL into a masked URL
-	 *
-	 * @param content - The content to display
-	 * @param url - The URL the content links to
-	 * @param title - The title shown when hovering on the masked link
-	 */
-	public hyperlink<C extends string, U extends string, T extends string>(content: C, url: U, title: T): `[${C}](${U} "${T}")`;
-	public hyperlink(content: string, url: URL | string, title?: string) {
+	public hyperlink(content: string, url: URL | string, title?: string): string | undefined {
 		return title ? `[${content}](${url} "${title}")` : `[${content}](${url})`;
 	}
 

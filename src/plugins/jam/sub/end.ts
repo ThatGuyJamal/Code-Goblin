@@ -12,7 +12,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	try {
 		const jam = await instance.collections.commands.plugins.jam.getCodeJam(interaction.guild!.id);
 
-		if(!jam) return await interaction.createFollowup({ content: `No current Code Jam found in __${interaction.guild!.name}__` });
+		if (!jam) return await interaction.createFollowup({ content: `No current Code Jam found in __${interaction.guild!.name}__` });
 
 		if (!interaction.member?.permissions.has('MANAGE_GUILD') || jam.event_managers_ids?.includes(interaction.member!.id)) {
 			return interaction.createFollowup({
