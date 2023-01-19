@@ -96,6 +96,7 @@ export default class Main {
 
 	/** Loads the bot commands into the system cache */
 	public async loadCommands(): Promise<void> {
+		this.utils.addCommand((await import('./commands/ping')).default as CommandDataProp);
 		this.utils.addCommand((await import('./commands/commands.js')).default as CommandDataProp);
 		this.utils.addCommand((await import('./commands/embed.js')).default as CommandDataProp);
 		this.utils.addCommand((await import('./commands/information.js')).default as CommandDataProp);
