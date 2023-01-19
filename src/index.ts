@@ -1,18 +1,5 @@
-import config from './config/config.js';
-import { ILogger } from './logger.js';
-import { MainInstance } from './main.js';
-
-export const logger = new ILogger();
-
-async function bootstrap() {
-	if (config.IsInDevelopmentMode && !config.register_commands.create.guild) {
-		logger.warn('[WARNING] Guild only commands are disabled and we are not in production mode.');
-	}
-
-	await MainInstance.init();
-
-	console.log('Ready!');
-}
+import { bootstrapCore } from './core/index.js';
+import { logger } from './utils/index.js';
 
 process
 	.on('unhandledRejection', (err, promise) => {
@@ -25,4 +12,4 @@ process
 		logger.error('Uncaught Exception Monitor:', err, origin);
 	});
 
-bootstrap();
+bootstrapCore();
