@@ -59,24 +59,24 @@ export default CreateCommand({
 	},
 	register: isCanary ? 'guild' : 'global',
 	run: async (instance, interaction) => {
-		const title = interaction.data.options.getString('title');
-		const description = interaction.data.options.getString('description');
-		const color = interaction.data.options.getString('color');
-		const footer = interaction.data.options.getString('footer');
-		const thumbnail = interaction.data.options.getString('thumbnail');
-		const image = interaction.data.options.getString('image');
-		const author = interaction.data.options.getString('author');
-		const url = interaction.data.options.getString('url');
-		const timestamp = interaction.data.options.getString('timestamp');
-		const field1name = interaction.data.options.getString('name-1');
-		const field1value = interaction.data.options.getString('value-1');
-		const field2name = interaction.data.options.getString('name-2');
-		const field2value = interaction.data.options.getString('value-2');
-
-		const channel = interaction.data.options.getChannel('channel');
-
-		const embed = new EmbedBuilder();
 		try {
+			const title = interaction.data.options.getString('title');
+			const description = interaction.data.options.getString('description');
+			const color = interaction.data.options.getString('color');
+			const footer = interaction.data.options.getString('footer');
+			const thumbnail = interaction.data.options.getString('thumbnail');
+			const image = interaction.data.options.getString('image');
+			const author = interaction.data.options.getString('author');
+			const url = interaction.data.options.getString('url');
+			const timestamp = interaction.data.options.getString('timestamp');
+			const field1name = interaction.data.options.getString('name-1');
+			const field1value = interaction.data.options.getString('value-1');
+			const field2name = interaction.data.options.getString('name-2');
+			const field2value = interaction.data.options.getString('value-2');
+
+			const channel = interaction.data.options.getChannel('channel');
+
+			const embed = new EmbedBuilder();
 			await interaction.defer(64);
 
 			// If no options are given return
@@ -130,7 +130,7 @@ export default CreateCommand({
 				let send = await ch.createMessage({ embeds: [embed.toJSON()] });
 
 				// Send a followup message
-				await interaction.createFollowup({
+				return await interaction.createFollowup({
 					content: `Embed sent to ${channel.mention} successfully!`,
 					embeds: [
 						{

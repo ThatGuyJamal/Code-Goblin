@@ -9,7 +9,11 @@ export default async function (member: Member) {
 
 	await result.welcomeChannel
 		.createMessage({
-			content: result.welcomeMessage
+			content: result.welcomeMessage,
+			allowedMentions: {
+				users: true,
+				roles: true
+			}
 		})
 		.catch((err) => {
 			logger.error(err);

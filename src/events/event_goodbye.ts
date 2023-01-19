@@ -8,7 +8,11 @@ export default async function (member: Member, _guild: Guild | Uncached) {
 	if (!result) return;
 
 	await result.GoodbyeChannel.createMessage({
-		content: result.GoodbyeMessage
+		content: result.GoodbyeMessage,
+		allowedMentions: {
+			users: true, 
+			roles: true,
+		}
 	}).catch((err) => {
 		logger.error(err);
 	});
