@@ -6,10 +6,10 @@ import { client, db_obj } from './client/client.js';
 import config from './config/config.js';
 import type { Command, CommandDataProp } from './command.js';
 
-import { TagCommandPlugin } from './plugins/tag/index.js';
-import { WelcomeCommandPlugin } from './plugins/welcome/index.js';
-import { GoodbyeCommandPlugin } from './plugins/goodbye/index.js';
-import { CodeJamCommandPlugin } from './plugins/jam/index.js';
+import { TagCommandPlugin } from './plugins/tag/plugin.js';
+import { WelcomeCommandPlugin } from './plugins/welcome/plugin.js';
+import { GoodbyeCommandPlugin } from './plugins/goodbye/plugin.js';
+import { CodeJamCommandPlugin } from './plugins/jam/plugin.js';
 import { logger } from './index.js';
 
 import event_ready from './events/event_ready.js';

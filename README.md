@@ -18,3 +18,4 @@ A programmers best friend.
 -   [x] `/tag <subcommand>` Create, Edit, View, and Delete custom server tags.
 -   [x] `/jam <subcommand>` Create, Edit, View, and Delete custom server Code Jams.
 -   [ ] `/github <user|repo>` View GitHub information about a user or repository.
+-   [ ] `/poll` Create a poll.
