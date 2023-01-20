@@ -1,7 +1,7 @@
 // https://pm2.keymetrics.io/docs/usage/application-declaration/
 module.exports = [
 	{
-		name: "Whisper Room Bot",
+		name: "Code Goblin",
 		script: "./dist/index.js",
 		max_memory_restart: "400",
 		env_production: {
