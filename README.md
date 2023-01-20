@@ -4,7 +4,8 @@ A programmers best friend.
 
 ## Links
 
--   [Discord Server](https://discord.gg/MSTrBrNaGn).
+-   [Discord Server](https://discord.gg/MSTrBrNaGn)
+-   [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=1055671501870874634&permissions=148981992464&scope=applications.commands%20bot)
 
 ## Commands
 
