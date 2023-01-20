@@ -51,10 +51,10 @@ export default CreateCommand({
 						.setRequired(true);
 				})
 				.addOption('event start', ApplicationCommandOptionTypes.STRING, (option) => {
-					option.setName('create-event-start').setDescription('The start date of the Code Jam').setRequired(true);
+					option.setName('create-event-start').setDescription('The start date of the Code Jam. Eg: 1/1/21').setRequired(true);
 				})
 				.addOption('event end', ApplicationCommandOptionTypes.STRING, (option) => {
-					option.setName('create-event-end').setDescription('The end date of the Code Jam').setRequired(true);
+					option.setName('create-event-end').setDescription('The end date of the Code Jam. Eg: 1/2/21').setRequired(true);
 				})
 				.addOption('event image', ApplicationCommandOptionTypes.STRING, (option) => {
 					option.setName('create-event-image').setDescription('The image of the Code Jam');

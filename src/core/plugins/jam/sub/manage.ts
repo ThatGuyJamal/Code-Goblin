@@ -3,7 +3,7 @@ import { constants } from '../../../../utils/index.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
-	await interaction.defer();
+	await interaction.defer(64);
 
 	const { utils } = instance;
 
@@ -29,14 +29,14 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	}
 
 	// Check
-	if (!interaction.member?.permissions.has('MANAGE_GUILD') || jam.event_managers_ids?.includes(interaction.member!.id)) {
+	if (!interaction.member?.permissions.has('MANAGE_GUILD') || !jam.event_managers_ids?.includes(interaction.member!.id)) {
 		return await interaction.createFollowup({
 			embeds: [
 				{
 					description: instance.utils.stripIndents(
 						`
 \`\`\`asciidoc
-• Error :: You do not have the MANAGE_GUILD permission!
+• Error :: You do not have the MANAGE_GUILD permission or are not a Code Jam manager!
 \`\`\`
 `
 					),
@@ -110,7 +110,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 						description: instance.utils.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: You cannot add yourself to the Code Jam as a participant!
+• Error :: Please use the </jam join> command to join the Code Jam!
 \`\`\`
 `
 						),
@@ -260,15 +260,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		changes.push(`Updated the event end date to ${format}`);
 	}
 
-	await interaction.createFollowup({
-		content: `Successfully updated the Code Jam!\n\n**Changes:**\n${changes.map((change, index) => `${index + 1}. ${change}`).join('\n')}`,
-		flags: MessageFlags.EPHEMERAL,
-		allowedMentions: {
-			users: false,
-			roles: false,
-			repliedUser: true
-		}
-	});
+	let cString = changes.map((change, index) => `${index + 1}. ${change}`).join('\n')
 
 	return await interaction.createFollowup({
 		embeds: [
@@ -279,7 +271,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 • Success :: Successfully updated the Code Jam!
 \`\`\`
 **Changes:**
-${instance.utils.codeBlock(changes.map((change, index) => `${index + 1}. ${change}`).join('\n'))}
+${cString}
 `
 				),
 				color: constants.numbers.colors.secondary,

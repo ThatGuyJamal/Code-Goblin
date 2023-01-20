@@ -9,6 +9,8 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 
 	const noTags: boolean = tags.length === 0;
 
+	let tString = noTags ? '• Error :: No tags to list in this server' : tags.map((tag) => `• Tag :: ${tag.name}`).join('\n')
+
 	await interaction
 		.createFollowup({
 			embeds: [
@@ -16,9 +18,12 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 					description: instance.utils.stripIndents(
 						`
 \`\`\`asciidoc
-${noTags ? '• Error :: No tags to list in this server' : `${tags.map((tag) => `• Tag :: ${tag.name}`).join('\n')}}`}}
+${tString}
 \`\`\`
 `
+							// todo - fix this hack
+							// hack to remove }} from the end of the embed description.
+							// .slice(0, -2)
 					),
 					color: constants.numbers.colors.secondary,
 					timestamp: new Date().toISOString()

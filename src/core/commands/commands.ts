@@ -28,7 +28,7 @@ export default CreateCommand({
 							instance.utils.stripIndents(
 								`
 						\`\`\`asciidoc
-						• Command :: ${cmd.name}
+						• Command :: /${cmd.name}
 						\`\`\`
 						`
 							)

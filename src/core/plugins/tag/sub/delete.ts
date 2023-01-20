@@ -3,7 +3,8 @@ import { constants } from '../../../../utils/index.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
-	await interaction.defer();
+	await interaction.defer(64);
+	
 	if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
 		return await interaction.createFollowup({
 			embeds: [
@@ -25,10 +26,9 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 
 	const name = interaction.data.options.getString('name', true);
 
-	// Check if the tag exists
-	const tagExists = instance.collections.controllers.tags.GetTag(interaction.guild!.id, name);
+	let result = await instance.collections.controllers.tags.DeleteTag(interaction.guild!.id, name);
 
-	if (!tagExists) {
+	if (!result) {
 		return await interaction.createFollowup({
 			embeds: [
 				{
@@ -46,8 +46,6 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 			flags: MessageFlags.EPHEMERAL
 		});
 	}
-
-	await instance.collections.controllers.tags.DeleteTag(interaction.guild!.id, name);
 
 	return await interaction.createFollowup({
 		embeds: [

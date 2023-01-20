@@ -103,7 +103,7 @@ export class GoodbyeCommandController {
 	 * @param guildId
 	 */
 	public async DeleteGoodbye(guildId: string): Promise<boolean> {
-		if (!this.GetGoodbye(guildId)) return false;
+		if (! await this.GetGoodbye(guildId)) return false;
 
 		if (!this.cachingDisabled) this.cache.delete(guildId);
 		await this.query.deleteOne({ guild_id: guildId });

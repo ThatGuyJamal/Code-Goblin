@@ -62,18 +62,18 @@ export default CreateCommand({
 					description: instance.utils.stripIndents(`
 **Bot Information**
 \`\`\`asciidoc
-• CPU Usage :: ${getCpuUsage().usage}/100%
-• Memory Usage :: ${getMemoryUsage().usage}/${getMemoryUsage().total}%
-• Guilds Cached :: ${guilds.size}
-• Users Cached  :: ${users.size}
-• Bot API Library :: Oceanic.js-v1.4.1
-• Bot Language :: TypeScript
-• Bot Developer :: ${config.DeveloperTag}
+• CPU Usage         :: ${getCpuUsage().usage}/100%
+• Memory Usage      :: ${getMemoryUsage().usage}/${getMemoryUsage().total}%
+• Guilds Cached     :: ${guilds.size}
+• Users Cached      :: ${users.size}
+• Bot API Library   :: Oceanic.js-v1.4.1
+• Bot Language      :: TypeScript
+• Bot Developer     :: ${config.DeveloperTag}
 \`\`\`
 **Global Information**
 \`\`\`asciidoc
-• Guilds Joined :: ${global.guilds_joined}
-• Guilds Left   :: ${global.guilds_left}
+• Guilds Joined     :: ${global.guilds_joined}
+• Guilds Left       :: ${global.guilds_left}
 • Commands Executed :: ${global.commands_executed}
 • Commands Failed   :: ${global.commands_failed}
 • Plugins Loaded    :: ${pluginSize}

@@ -106,7 +106,7 @@ export class WelcomeCommandController {
 	 * @param guildId
 	 */
 	public async DeleteWelcome(guildId: string): Promise<boolean> {
-		if (!this.GetWelcome(guildId)) return false;
+		if (!await this.GetWelcome(guildId)) return false;
 
 		if (!this.cachingDisabled) this.cache.delete(guildId);
 

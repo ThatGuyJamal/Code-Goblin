@@ -8,28 +8,25 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 
 	const jam = await instance.collections.controllers.jam.getCodeJam(interaction.guild!.id);
 
-	if (!jam) return await interaction.createFollowup({ content: `No current Code Jam found in __${interaction.guild!.name}__` });
-
-	const embed = new EmbedBuilder()
-		.setTitle(`${jam.name} Code Jam`)
-		.setDescription(jam.description)
-		.setColor(constants.numbers.colors.secondary)
-		.setTimestamp(new Date().toISOString())
-		.setThumbnail(interaction.guild?.iconURL('png') ?? instance.DiscordClient.user.avatarURL('png'));
-
-	if (jam.event_image_url) embed.setImage(jam.event_image_url);
-
-	embed.addField('Created by ', `${instance.utils.userMention(jam.created_by_id)} | ${jam.created_at.toDateString()}`);
-
-	embed.addField('Start Time', `${jam.event_scheduled_start_time}`, true);
-	embed.addField('End Time', `${jam.event_scheduled_end_time}`, true);
-
-	embed.addField('Event Role', `${instance.utils.roleMention(jam.event_role_id!)}`, true);
-	embed.addField('Event Manager Role', `${instance.utils.roleMention(jam.event_managers_role_id!)}`, true);
-
-	if (jam.event_channel) {
-		embed.addField('Event Channel', `${instance.utils.channelMention(jam.event_channel)}`, true);
+	if (!jam) {
+		return await interaction.createFollowup({
+			embeds: [
+				{
+					description: instance.utils.stripIndents(
+						`
+\`\`\`asciidoc
+• Error :: Code Jam has not been configured!
+\`\`\`
+`
+					),
+					color: constants.numbers.colors.secondary,
+					timestamp: new Date().toISOString()
+				}
+			]
+		});
 	}
+
+	const embed = new EmbedBuilder();
 
 	const managers = await instance.collections.controllers.jam.getJamManagers(interaction.guild!.id);
 
@@ -59,5 +56,32 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		}
 	}
 
-	await interaction.createFollowup({ embeds: [embed.toJSON()] });
+	await interaction.createFollowup({
+		embeds: [
+			{
+				...embed.toJSON(),
+				description: instance.utils.stripIndents(
+					`
+Configured Code Jam:
+\`\`\`asciidoc
+• Name               :: ${jam.name}
+• Description        :: ${jam.description}
+• Created At         :: ${jam.created_at.toDateString()} 
+\`\`\`
+> Created By         :: ${instance.utils.userMention(jam.created_by_id)}
+> Start Time         :: ${jam.event_scheduled_start_time}
+> End Time           :: ${jam.event_scheduled_end_time}
+> Event Role         :: ${instance.utils.roleMention(jam.event_role_id!)}
+> Event Manager Role :: ${instance.utils.roleMention(jam.event_managers_role_id!)}
+> Event Channel      :: ${instance.utils.channelMention(jam.event_channel!)}
+`
+				),
+				thumbnail: {
+					url: interaction.guild?.iconURL('png') ?? instance.DiscordClient.user.avatarURL('png')
+				},
+				color: constants.numbers.colors.secondary,
+				timestamp: new Date().toISOString()
+			}
+		]
+	});
 }

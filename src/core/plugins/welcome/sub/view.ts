@@ -3,7 +3,7 @@ import { constants } from '../../../../utils/index.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
-	await interaction.defer();
+	await interaction.defer(64);
 
 	const data = await instance.collections.controllers.welcome.GetWelcome(interaction.guild!.id);
 
@@ -21,7 +21,8 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 					color: constants.numbers.colors.secondary,
 					timestamp: new Date().toISOString()
 				}
-			]
+			],
+			flags: 64
 		});
 	}
 
@@ -31,13 +32,13 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 				description: instance.utils.stripIndents(
 					`
 \`\`\`asciidoc
-• Data :: Viewing welcome plugin data!
+• Data :: Showing welcome plugin data!
 \`\`\`
 `
 				),
 				fields: [
 					{
-						name: 'raw view',
+						name: 'Config:',
 						value: `\`\`\`${data.content}\`\`\``,
 						inline: false
 					}

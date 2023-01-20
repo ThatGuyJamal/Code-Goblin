@@ -3,7 +3,7 @@ import { constants, logger } from '../../../../utils/index.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
-	await interaction.defer();
+	await interaction.defer(64);
 
 	// Check if the user has the MANAGE_GUILD permission
 	if (!interaction.member?.permissions.has('MANAGE_GUILD')) {
@@ -82,12 +82,14 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 						`
 \`\`\`asciidoc
 • Success :: Successfully created a new Code Jam!
+
 • Name :: ${createName}
 • Description :: ${createDescription}
 \`\`\`
 __What now?__
-\`\`\`asciidoc
-As its creator you can manage the Code Jam with the </jam manage> command. You can also add more managers and participants with the </jam add> command.
+${instance.utils.codeBlock(
+	'As its creator you can manage the Code Jam with the </jam manage> command. You can also add more managers and participants with the </jam add> command.'
+)}
 `
 					),
 					color: constants.numbers.colors.secondary,

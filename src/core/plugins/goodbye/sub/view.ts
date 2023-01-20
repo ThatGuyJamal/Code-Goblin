@@ -3,7 +3,7 @@ import { constants } from '../../../../utils/index.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
-	await interaction.defer();
+	await interaction.defer(64);
 
 	const data = await instance.collections.controllers.goodbye.GetGoodbye(interaction.guild!.id);
 
@@ -32,13 +32,13 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 				description: instance.utils.stripIndents(
 					`
 \`\`\`asciidoc
-• Success :: Goodbye plugin has been configured!
+• Success :: Showing goodbye plugin data!
 \`\`\`
 `
 				),
 				fields: [
 					{
-						name: 'raw view',
+						name: 'Config:',
 						value: `\`\`\`${data.content}\`\`\``,
 						inline: false
 					}

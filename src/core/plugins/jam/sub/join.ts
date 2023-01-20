@@ -3,7 +3,7 @@ import { constants } from '../../../../utils/index.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
-	await interaction.defer();
+	await interaction.defer(64);
 
 	const jam = await instance.collections.controllers.jam.getCodeJam(interaction.guild!.id);
 
@@ -76,7 +76,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 				description: instance.utils.stripIndents(
 					`
 \`\`\`asciidoc
-• Error :: You have joined the Code Jam!
+• Success :: You have joined the Code Jam!
 \`\`\`
 `
 				),

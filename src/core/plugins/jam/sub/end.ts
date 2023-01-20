@@ -3,7 +3,7 @@ import { constants, logger } from '../../../../utils/index.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
-	await interaction.defer();
+	await interaction.defer(64);
 
 	await interaction.createFollowup({
 		content: `Ending the Code Jam...`
@@ -31,7 +31,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 			});
 		}
 
-		if (!interaction.member?.permissions.has('MANAGE_GUILD') || jam.event_managers_ids?.includes(interaction.member!.id)) {
+		if (!interaction.member?.permissions.has('MANAGE_GUILD') || !jam.event_managers_ids?.includes(interaction.member!.id)) {
 			return await interaction.createFollowup({
 				embeds: [
 					{
@@ -62,7 +62,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 						description: instance.utils.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: The event role and event managers role is not set! Please check the data with <jam manage> command
+• Error :: The event role and event managers role is not set! Please check the data with </jam manage> command
 \`\`\`
 `
 						),
@@ -80,7 +80,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 					description: instance.utils.stripIndents(
 						`
 \`\`\`asciidoc
-• Success :: Removing all participants from the event...
+• Loading :: Removing all participants from the event...
 \`\`\`
 `
 					),
@@ -143,7 +143,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 					description: instance.utils.stripIndents(
 						`
 \`\`\`asciidoc
-• Success :: Removing all managers from the event...
+• loading :: Removing all managers from the event...
 \`\`\`
 `
 					),
@@ -168,7 +168,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 					description: instance.utils.stripIndents(
 						`
 \`\`\`asciidoc
-• Success :: Deleting Event Data...
+• Loading :: Deleting Event Data...
 \`\`\`
 `
 					),

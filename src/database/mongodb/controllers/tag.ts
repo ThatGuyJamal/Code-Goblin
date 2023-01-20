@@ -131,7 +131,10 @@ export class TagCommandController {
 	 * @param guildId
 	 * @param name
 	 */
-	public async DeleteTag(guildId: string, name: string): Promise<void> {
+	public async DeleteTag(guildId: string, name: string): Promise<boolean> {
+
+		if(!await this.GetTag(guildId, name)) return false
+
 		await this.query.findOneAndDelete({
 			guild_id: guildId,
 			name: name
@@ -152,6 +155,8 @@ export class TagCommandController {
 				this.cache.set(guildId, []);
 			}
 		}
+
+		return true;
 	}
 
 	public async GetTags(guildId: string): Promise<TagSchema[]> {

@@ -3,7 +3,7 @@ import { constants } from '../../../../utils/index.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
-	await interaction.defer();
+	await interaction.defer(64);
 
 	let result = await instance.collections.controllers.welcome.DeleteWelcome(interaction.guild!.id);
 
@@ -21,7 +21,8 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 					color: constants.numbers.colors.secondary,
 					timestamp: new Date().toISOString()
 				}
-			]
+			],
+			flags: 64
 		});
 	}
 
@@ -38,6 +39,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 				color: constants.numbers.colors.secondary,
 				timestamp: new Date().toISOString()
 			}
-		]
+		],
+		flags: 64
 	});
 }

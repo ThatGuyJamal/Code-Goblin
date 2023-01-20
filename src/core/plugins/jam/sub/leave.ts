@@ -3,7 +3,7 @@ import constants from '../../../../utils/constants.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
-	await interaction.defer();
+	await interaction.defer(64);
 
 	const jam = await instance.collections.controllers.jam.getCodeJam(interaction.guild!.id);
 
