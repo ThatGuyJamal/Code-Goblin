@@ -11,5 +11,5 @@ export async function bootstrapCore() {
 
 	await Main.init();
 
-	console.log('Process Online');
+	console.log('Node Process Online');
 }
