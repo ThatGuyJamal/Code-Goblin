@@ -3,7 +3,7 @@ import { logger } from './index.js';
 import { stripIndents } from 'common-tags';
 import config from '../config/config.js';
 import type Main from '../core/main.js';
-import type { Command, CommandDataProp } from '../core/structures/command.js';
+import type { Command, CommandDataProp } from '../typings/core/types.js';
 
 export default class Utils {
 	private instance: Main;
@@ -60,6 +60,10 @@ export default class Utils {
 		try {
 			// if the command is disabled, don't add it to the command store
 			if (!cmd.props.disabled) {
+				if (!cmd.props.requiredBotPermissions) cmd.props.requiredBotPermissions = ['SEND_MESSAGES', 'EMBED_LINKS'];
+				if (!cmd.props.requiredUserPermissions) cmd.props.requiredUserPermissions = ['SEND_MESSAGES'];
+				if (!cmd.props.disabled) cmd.props.disabled = false;
+
 				this.instance.collections.commands.commandStoreMap.set(cmd.props.trigger, cmd.props);
 
 				if (cmd.props.register === 'global') {

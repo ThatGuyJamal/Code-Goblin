@@ -20,6 +20,7 @@ export default {
 				// Support Server
 				'991449362246934648'
 		  ],
+	DeveloperTag: 'ThatGuyJamal#2695',
 	DevelopmentServerInviteUrl: 'https://discord.gg/MSTrBrNaGn',
 	IsInDevelopmentMode: true,
 	BotApiLogChannelId: isCanary ? '' : '1056292297756639342',

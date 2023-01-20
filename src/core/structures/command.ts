@@ -1,40 +1,9 @@
 import { ApplicationCommandBuilder } from '@oceanicjs/builders';
-import type { ApplicationCommandTypes, Client, CommandInteraction, CreateApplicationCommandOptions, Permission, PermissionName } from 'oceanic.js';
+import type { Client } from 'oceanic.js';
 import { logger } from '../../utils/index.js';
 import { Main } from '../index.js';
 import config from '../../config/config.js';
-
-export interface CommandDataProp {
-	props: Command;
-	toJson: () => CreateApplicationCommandOptions;
-}
-
-export type CommandRegisterType = 'global' | 'guild' | 'both';
-
-/**
- * The type structure for a command
- */
-export interface Command {
-	/** The name of the command interaction data */
-	trigger: string;
-	description: string;
-	type: ApplicationCommandTypes;
-	options?: (opts: ApplicationCommandBuilder) => void;
-	run: (instance: typeof Main, interaction: CommandInteraction) => Promise<any> | any;
-	register?: CommandRegisterType;
-	requiredUserPermissions?: PermissionName[];
-	requiredBotPermissions?: PermissionName[];
-	defaultMemberPermissions?: bigint | string | Permission | Array<PermissionName>;
-	descriptionLocalizations?: Record<string, string>;
-	dmPermission?: boolean;
-	nameLocalizations?: Record<string, string>;
-	toJson?: CreateApplicationCommandOptions;
-	superUserOnly?: boolean;
-	helperUserOnly?: boolean;
-	disabled?: boolean;
-	nsfw?: boolean;
-	premiumOnly?: boolean;
-}
+import type { Command, CommandDataProp } from '../../typings/core/types.js';
 
 /**
  * Creates a new command
