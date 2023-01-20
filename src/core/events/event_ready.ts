@@ -14,7 +14,5 @@ export default async function () {
 
 	logger.info(`Ready As ${Main.DiscordClient.user.tag} (${Main.DiscordClient.user.id})`);
 
-	await Main.utils.sendToLogChannel('api', {
-		content: `Ready as ${Main.DiscordClient.user.tag} (${Main.DiscordClient.user.id})`
-	});
+	await Main.utils.sendToLogChannel('api', `Ready as ${Main.DiscordClient.user.tag} (${Main.DiscordClient.user.id})`);
 }

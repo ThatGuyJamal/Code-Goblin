@@ -65,17 +65,13 @@ export async function CreateGuildCommands(client: Client) {
 			logger.info(`Successfully created ${commandsArray.length} commands in guild ${guilds}`);
 		}
 
-		await Main.utils.sendToLogChannel('api', {
-			content: `Successfully created ${commandsArray.length} commands in all guilds!`
-		});
+		await Main.utils.sendToLogChannel('api', `Successfully created ${commandsArray.length} commands in all guilds!`);
 
 		logger.info(`Successfully created ${commandsArray.length} commands in all guilds`);
 	} catch (err) {
 		logger.error(`Failed to create guild commands`, err);
 
-		await Main.utils.sendToLogChannel('error', {
-			content: `Failed to create guild commands!\n ${err}`
-		});
+		await Main.utils.sendToLogChannel('error', `Failed to create guild commands!`);
 	}
 
 	logger.info('Created Guild Commands');
@@ -93,15 +89,11 @@ export async function CreateGlobalCommands(client: Client) {
 
 		logger.info(`Successfully created ${commandsArray.length} commands globally`);
 
-		await Main.utils.sendToLogChannel('api', {
-			content: `Successfully created ${commandsArray.length} commands globally!`
-		});
+		await Main.utils.sendToLogChannel('api', `Successfully created ${commandsArray.length} commands globally!`);
 	} catch (err) {
 		logger.error(`Failed to create global commands`, err);
 
-		await Main.utils.sendToLogChannel('error', {
-			content: `Failed to create global commands!\n ${err}`
-		});
+		await Main.utils.sendToLogChannel('error', `Failed to create global commands`);
 	}
 }
 
@@ -114,13 +106,9 @@ export async function deleteGuildCommands(client: Client) {
 	for (const guild of config.DevelopmentServerId) {
 		await client.application.bulkEditGuildCommands(guild, []).catch((err) => {
 			logger.error(err);
-			Main.utils.sendToLogChannel('error', {
-				content: `Failed to delete commands in guild ${guild}!\n ${err}`
-			});
-		});
+			Main.utils.sendToLogChannel('error', `Failed to delete commands in guild ${guild}!`);
 
-		await Main.utils.sendToLogChannel('api', {
-			content: `Successfully deleted all commands in guild ${guild}!`
+		Main.utils.sendToLogChannel('api', `Successfully deleted all commands in guild ${guild}!`)
 		});
 	}
 }
@@ -133,12 +121,8 @@ export async function deleteGlobalCommands(client: Client) {
 	// Delete Commands from the API
 	await client.application.bulkEditGlobalCommands([]).catch((err) => {
 		logger.error(err);
-		Main.utils.sendToLogChannel('error', {
-			content: `Failed to delete commands globally!\n ${err}`
-		});
+		Main.utils.sendToLogChannel('error', `Failed to delete commands globally!`);
 	});
 
-	await Main.utils.sendToLogChannel('api', {
-		content: `Successfully deleted all commands globally!`
-	});
+	await Main.utils.sendToLogChannel('api', `Successfully deleted all commands globally!`);
 }

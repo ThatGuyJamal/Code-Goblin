@@ -28,23 +28,9 @@ ${noTags ? '• Error :: No tags to list in this server' : `${tags.map((tag) => 
 		})
 		.catch((err) => {
 			logger.error(err);
-			instance.utils.sendToLogChannel('error', {
-				embeds: [
-					{
-						title: 'Tag List Command Error',
-						description: `Error sending tag list to ${interaction.user.tag} (${interaction.user.id}) in ${interaction.guild!.name} (${
-							interaction.guild!.id
-						})`,
-						color: 0xff0000,
-						fields: [
-							{
-								name: 'Error',
-								value: `\`\`\`${err}\`\`\``
-							}
-						]
-					}
-				],
-				flags: MessageFlags.EPHEMERAL
-			});
+			instance.utils.sendToLogChannel(
+				'error',
+				`Error sending tag list to ${interaction.user.tag} (${interaction.user.id}) in ${interaction.guild!.name} (${interaction.guild!.id})`
+			);
 		});
 }

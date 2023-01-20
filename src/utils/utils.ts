@@ -1,5 +1,5 @@
-import type { CreateMessageOptions, Member, TextChannel } from 'oceanic.js';
-import { logger } from './index.js';
+import { CreateMessageOptions, Member, MessageFlags, TextChannel } from 'oceanic.js';
+import { constants, logger } from './index.js';
 import { stripIndents } from 'common-tags';
 import config from '../config/config.js';
 import type Main from '../core/main.js';
@@ -18,12 +18,46 @@ export default class Utils {
 	 * @param options
 	 * @returns
 	 */
-	public sendToLogChannel(type: 'error' | 'api', options: CreateMessageOptions) {
+	public async sendToLogChannel(type: 'error' | 'api', message: string, options?: CreateMessageOptions) {
 		const log = this.instance.DiscordClient.getChannel(type === 'error' ? config.BotErrorLogChannelId : config.BotApiLogChannelId) as TextChannel;
 
 		if (!log) return;
 
-		return log.createMessage(options);
+		if(type === "error") {
+			await log.createMessage({
+				embeds: [
+					{
+						description: this.instance.utils.stripIndents(
+							`
+\`\`\`asciidoc
+• Error Log :: ${message}
+\`\`\`
+`
+						),
+						color: constants.numbers.colors.tertiary,
+						timestamp: new Date().toISOString()
+					}
+				],
+				flags: MessageFlags.EPHEMERAL
+			});
+		} else {
+			await log.createMessage({
+				embeds: [
+					{
+						description: this.instance.utils.stripIndents(
+							`
+\`\`\`asciidoc
+• Info Log :: ${message}
+\`\`\`
+`
+						),
+						color: constants.numbers.colors.secondary,
+						timestamp: new Date().toISOString()
+					}
+				],
+				flags: MessageFlags.EPHEMERAL
+			});
+		}
 	}
 
 	/**
