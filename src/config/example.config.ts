@@ -12,6 +12,7 @@ export default {
 	BotPrefix: 'c!',
 	BotActivityType: ActivityTypes.LISTENING as BotActivityTypes,
 	BotActivityMessage: `to the console`,
+	BotActivityStatus: 'online',
 	GithubRepository: 'https://github.com/ThatGuyJamal/Code-Goblin',
 	GithubContributionUrl: '',
 	DevelopmentServerId: isCanary

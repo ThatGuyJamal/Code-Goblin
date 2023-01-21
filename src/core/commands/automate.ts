@@ -83,16 +83,16 @@ export default CreateCommand({
 
 		const subCommand = interaction.data.options.getSubCommand(true);
 
-		if (subCommand.find((name) => name === 'welcome-configure')) await handleWelcomeConfigure(instance, interaction);
+		if (subCommand.find((name) => name === 'welcome-configure'))return await handleWelcomeConfigure(instance, interaction);
 
-		if (subCommand.find((name) => name === 'welcome-delete')) await handleWelcomeDelete(instance, interaction);
+		if (subCommand.find((name) => name === 'welcome-delete'))return await handleWelcomeDelete(instance, interaction);
 
-		if (subCommand.find((name) => name === 'welcome-view')) await handleWelcomeView(instance, interaction);
+		if (subCommand.find((name) => name === 'welcome-view'))return await handleWelcomeView(instance, interaction);
 
-		if (subCommand.find((name) => name === 'goodbye-configure')) await handleGoodbyeConfigure(instance, interaction);
+		if (subCommand.find((name) => name === 'goodbye-configure'))return await handleGoodbyeConfigure(instance, interaction);
 
-		if (subCommand.find((name) => name === 'goodbye-delete')) await handleGoodbyeDelete(instance, interaction);
+		if (subCommand.find((name) => name === 'goodbye-delete'))return await handleGoodbyeDelete(instance, interaction);
 
-		if (subCommand.find((name) => name === 'goodbye-view')) await handleGoodbyeView(instance, interaction);
+		if (subCommand.find((name) => name === 'goodbye-view'))return await handleGoodbyeView(instance, interaction);
 	}
 });

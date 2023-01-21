@@ -4,6 +4,6 @@ import { logger } from '../../utils/index.js';
 
 export default async function debugEvent(_this: Client, info: string, id?: number) {
 	if (isCanary) {
-		logger.debug(`[Debug${id === undefined ? '' : `/${id}`}]:`, info);
+		logger.debug(`[Debug${id === undefined ? '' : `/${id}`}]:${info}`);
 	}
 }

@@ -4,6 +4,7 @@
         "guildleave",
         "logform",
         "oceanicjs",
-        "pino"
+        "pino",
+        "ratelimits"
     ]
 }

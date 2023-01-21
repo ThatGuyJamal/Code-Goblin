@@ -2,6 +2,8 @@ import { Client, Guild, User } from 'oceanic.js';
 import config from '../../config/config.js';
 import type { Main } from '../index.js';
 
+import type { CommandDataProp, LegacyCommand } from '../../typings/core/types.js';
+
 import event_debug from '../events/event_debug.js';
 import event_goodbye from '../events/event_goodbye.js';
 import event_guildcreate from '../events/event_guildcreate.js';
@@ -9,7 +11,6 @@ import event_guildleave from '../events/event_guildleave.js';
 import event_interactionCreate from '../events/event_interactionCreate.js';
 import event_messageCreate from '../events/event_messageCreate.js';
 import event_welcome from '../events/event_welcome.js';
-import type { CommandDataProp, LegacyCommand } from '../../typings/core/types.js';
 import event_ready from '../events/event_ready.js';
 
 export class DiscordClient extends Client {
@@ -31,14 +32,14 @@ export class DiscordClient extends Client {
 				autoReconnect: true,
 				concurrency: 1,
 				connectionProperties: {
-					browser: 'Oceanic',
-					device: 'Oceanic',
-					os: 'Android'
+					browser: 'Code Goblin',
+					device: 'Code Goblin',
+					os: 'Linux'
 				},
 				connectionTimeout: 30000,
 				firstShardID: 0,
 				getAllUsers: false,
-				guildCreateTimeout: 5000,
+				guildCreateTimeout: 10000,
 				intents: [
 					'GUILDS',
 					'GUILD_MEMBERS',
@@ -48,13 +49,13 @@ export class DiscordClient extends Client {
 					'GUILD_EMOJIS_AND_STICKERS',
 					'GUILD_SCHEDULED_EVENTS'
 				],
-				largeThreshold: 1000,
+				largeThreshold: 500,
 				maxReconnectAttempts: Infinity,
 				maxResumeAttempts: 10,
 				maxShards: 1,
 				presence: {
 					activities: [{ type: config.BotActivityType, name: config.BotActivityMessage }],
-					status: 'online'
+					status: config.BotActivityStatus
 				},
 				seedVoiceConnections: false
 			}
@@ -110,11 +111,9 @@ export class DiscordClient extends Client {
 		this.instance.utils.addCommand((await import('../commands/embed.js')).default as CommandDataProp);
 		this.instance.utils.addCommand((await import('../commands/info.js')).default as CommandDataProp);
 		this.instance.utils.addCommand((await import('../commands/commands.js')).default as CommandDataProp);
-		this.instance.utils.addCommand((await import('../plugins/welcome/cmd.js')).default as CommandDataProp);
-		this.instance.utils.addCommand((await import('../plugins/goodbye/cmd.js')).default as CommandDataProp);
 		this.instance.utils.addCommand((await import('../plugins/tag/cmd.js')).default as CommandDataProp);
 		this.instance.utils.addCommand((await import('../plugins/jam/cmd.js')).default as CommandDataProp);
-		this.instance.utils.addLegacyCommand((await import('../commands//legacy/test.js')).default as LegacyCommand);
+		this.instance.utils.addLegacyCommand((await import('../commands/legacy/test_plugin.js')).default as LegacyCommand);
 		this.instance.utils.addLegacyCommand((await import('../commands//legacy/commands.js')).default as LegacyCommand);
 	}
 }

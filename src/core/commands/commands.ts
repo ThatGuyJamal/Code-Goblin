@@ -17,23 +17,13 @@ export default CreateCommand({
 				description: command.description,
 				options: command.options
 			};
-		});
+		}).map((command) => command.name).join(', ');
 
 		await interaction.createMessage({
 			embeds: [
 				{
 					title: 'Commands',
-					description: `${filteredCmdProps
-						.map((cmd) =>
-							instance.utils.stripIndents(
-								`
-						\`\`\`asciidoc
-						• Command :: /${cmd.name}
-						\`\`\`
-						`
-							)
-						)
-						.join('\n')}`,
+					description: `${instance.utils.codeBlock(filteredCmdProps)}`,
 					color: constants.numbers.colors.primary,
 					timestamp: new Date().toISOString(),
 					thumbnail: {
