@@ -39,7 +39,7 @@ export function CreateCommand(props: Command): CommandDataProp {
  * @returns The legacy command
  */
 export function CreateLegacyCommand(prop: LegacyCommand): LegacyCommand {
-	return prop
+	return prop;
 }
 
 /**
@@ -117,7 +117,7 @@ export async function deleteGuildCommands(client: Client) {
 			logger.error(err);
 			Main.utils.sendToLogChannel('error', `Failed to delete commands in guild ${guild}!`);
 
-		Main.utils.sendToLogChannel('api', `Successfully deleted all commands in guild ${guild}!`)
+			Main.utils.sendToLogChannel('api', `Successfully deleted all commands in guild ${guild}!`);
 		});
 	}
 }

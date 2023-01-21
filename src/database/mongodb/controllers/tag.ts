@@ -132,8 +132,7 @@ export class TagCommandController {
 	 * @param name
 	 */
 	public async DeleteTag(guildId: string, name: string): Promise<boolean> {
-
-		if(!await this.GetTag(guildId, name)) return false
+		if (!(await this.GetTag(guildId, name))) return false;
 
 		await this.query.findOneAndDelete({
 			guild_id: guildId,

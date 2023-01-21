@@ -23,7 +23,7 @@ export default class Utils {
 
 		if (!log) return;
 
-		if(type === "error") {
+		if (type === 'error') {
 			await log.createMessage({
 				embeds: [
 					{
@@ -120,7 +120,7 @@ export default class Utils {
 
 	/**
 	 * Adds a legacy command to the command store
-	 * @param cmd 
+	 * @param cmd
 	 */
 	public async addLegacyCommand(cmd: LegacyCommand) {
 		try {

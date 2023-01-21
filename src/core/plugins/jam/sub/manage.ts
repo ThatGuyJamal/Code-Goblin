@@ -260,7 +260,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		changes.push(`Updated the event end date to ${format}`);
 	}
 
-	let cString = changes.map((change, index) => `${index + 1}. ${change}`).join('\n')
+	let cString = changes.map((change, index) => `${index + 1}. ${change}`).join('\n');
 
 	return await interaction.createFollowup({
 		embeds: [

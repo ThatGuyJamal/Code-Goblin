@@ -17,47 +17,67 @@ export default async function (message: Message) {
 
 	// Reply with the list of test commands if the bot is mentioned in a message
 	if (message.content.startsWith(botMention)) {
-		return await message.channel.createMessage({
-			content: `*Legacy Commands Information*`,
-			embeds: [
-				{
-					description: Main.utils.stripIndents(
-						`
+		if (isOwners) {
+			const legacyCommands = Main.collections.commands.legacyCommandStoreMap.map((cmd) => `• Command :: ${config.BotPrefix}${cmd.trigger}`).join('\n');
+
+			await message.channel?.createMessage({
+				embeds: [
+					{
+						title: 'Legacy Commands',
+						description: Main.utils.stripIndents(
+							`
+							\`\`\`asciidoc
+							${legacyCommands}
+							\`\`\`
+							`
+						),
+						color: constants.numbers.colors.primary
+					}
+				]
+			});
+		} else {
+			return await message.channel.createMessage({
+				content: `*Legacy Commands Information*`,
+				embeds: [
+					{
+						description: Main.utils.stripIndents(
+							`
 						\`\`\`asciidoc
 						• Info :: Please use my slash command </commands> to see a list of commands!
 						\`\`\`
 						`
-					),
-					color: constants.numbers.colors.tertiary
-				}
-			],
-			components: [
-				{
-					type: ComponentTypes.ACTION_ROW,
-					components: [
-						{
-							type: ComponentTypes.BUTTON,
-							style: ButtonStyles.LINK,
-							label: 'Invite Bot',
-							url: config.BotClientOAuth2Url
-						},
-						{
-							type: ComponentTypes.BUTTON,
-							style: ButtonStyles.LINK,
-							label: 'Code Repository',
-							url: config.GithubRepository
-						},
-						{
-							type: ComponentTypes.BUTTON,
-							style: ButtonStyles.LINK,
-							label: 'Website',
-							url: config.whisper_room.url,
-							disabled: true
-						}
-					]
-				}
-			]
-		});
+						),
+						color: constants.numbers.colors.tertiary
+					}
+				],
+				components: [
+					{
+						type: ComponentTypes.ACTION_ROW,
+						components: [
+							{
+								type: ComponentTypes.BUTTON,
+								style: ButtonStyles.LINK,
+								label: 'Invite Bot',
+								url: config.BotClientOAuth2Url
+							},
+							{
+								type: ComponentTypes.BUTTON,
+								style: ButtonStyles.LINK,
+								label: 'Code Repository',
+								url: config.GithubRepository
+							},
+							{
+								type: ComponentTypes.BUTTON,
+								style: ButtonStyles.LINK,
+								label: 'Website',
+								url: config.whisper_room.url,
+								disabled: true
+							}
+						]
+					}
+				]
+			});
+		}
 	}
 
 	const command = Main.collections.commands.legacyCommandStoreMap.find((command) => {
@@ -141,11 +161,7 @@ async function processLegacyCommand(message: Message, command: LegacyCommand | u
 		}
 	}
 
-	if (
-		command?.helperUserOnly &&
-		!Main.collections.keys.helper_users.has(message.author.id) &&
-		!Main.collections.keys.super_users.has(message.author.id)
-	) {
+	if (command?.helperUserOnly && !Main.collections.keys.helper_users.has(message.author.id)) {
 		return await message.channel?.createMessage({
 			embeds: [
 				{
@@ -224,7 +240,7 @@ async function processLegacyCommand(message: Message, command: LegacyCommand | u
 
 	if (command.argsRequired) {
 		if (args.length < command.argsRequired) {
-			let missingString = command.argsRequired ? `Correct usage: ${command.argsUsage}` : 'Missing arguments';
+			let missingString = command.argsRequired ? `Correct usage: ${command.trigger} ${command.argsUsage}` : 'Missing arguments';
 
 			return await message.channel?.createMessage({
 				embeds: [

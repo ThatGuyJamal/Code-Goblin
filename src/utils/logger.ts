@@ -13,9 +13,9 @@ export class ILogger {
 			format: winston.format.json(),
 			defaultMeta: { service: 'logger-service' },
 			transports: [
-				new winston.transports.File({ dirname: '../logs', filename: 'combined.log' }),
-				new winston.transports.File({ dirname: '../logs', filename: 'error.log', level: 'error' }),
-				new winston.transports.File({ dirname: '../logs', filename: 'debug.log', level: 'debug' })
+				new winston.transports.File({ filename: './logs/combined.log' }),
+				new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
+				new winston.transports.File({ filename: './logs/debug.log', level: 'debug' })
 			]
 		});
 
@@ -52,8 +52,8 @@ export class ILogger {
 
 	/**
 	 * Log a message at the 'info' level
-	 * @param message 
-	 * @param args 
+	 * @param message
+	 * @param args
 	 */
 	public info(message: string, ...args: any[]) {
 		if (this.IsInDevelopmentMode) this.instance.info(message, ...args);

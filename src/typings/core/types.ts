@@ -74,7 +74,7 @@ export interface Command {
 }
 
 interface LegacyCommandRunArgs {
-	instance: Main
+	instance: Main;
 	message: Message;
 	args: string[];
 }
@@ -82,7 +82,7 @@ interface LegacyCommandRunArgs {
 export interface LegacyCommand {
 	trigger: string;
 	description: string;
-	argsRequired?: number
+	argsRequired?: number;
 	argsUsage?: string;
 	devOnly?: boolean;
 	requiredUserPermissions?: PermissionName[];

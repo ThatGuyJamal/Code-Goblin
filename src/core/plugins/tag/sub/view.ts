@@ -3,7 +3,7 @@ import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
 	await interaction.defer();
-	
+
 	const name = interaction.data.options.getString('name', true);
 	const mention = interaction.data.options.getUser('mention', false);
 	const tag = await instance.collections.controllers.tags.GetTag(interaction.guild!.id, name);

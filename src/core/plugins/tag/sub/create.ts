@@ -5,7 +5,7 @@ import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
 	await interaction.defer(64);
-	
+
 	if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
 		return await interaction.createFollowup({
 			embeds: [

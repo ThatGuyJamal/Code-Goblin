@@ -50,31 +50,81 @@ export default async function (interaction: AnyInteractionGateway) {
  * @param interaction The interaction to handle
  */
 async function processCommandInteraction(interaction: CommandInteraction): Promise<void> {
-	if (!interaction.guild) throw new Error('Guild not found');
+	if (!interaction.guild) return
 
 	const command = Main.collections.commands.commandStoreMap.get(interaction.data.name);
 
-	if (command?.disabled && !Main.collections.keys.super_users.has(interaction.user.id)) {
-		return interaction.createMessage({ content: constants.strings.events.interactionProcess.commandDisabled, flags: MessageFlags.EPHEMERAL });
+	const isOwner = Main.utils.isOwner(interaction.user.id);
+
+	if (command?.disabled && !isOwner) {
+		return await interaction.createMessage({
+			embeds: [
+				{
+					description: Main.utils.stripIndents(
+						`
+						\`\`\`asciidoc
+						• Error :: This command is currently disabled.
+						\`\`\`
+						`
+					),
+					color: constants.numbers.colors.primary
+				}
+			],
+			flags: MessageFlags.EPHEMERAL
+		});
 	}
 
-	if (command?.superUserOnly && !Main.collections.keys.super_users.has(interaction.user.id)) {
-		return interaction.createMessage({ content: constants.strings.events.interactionProcess.superUsersOnly, flags: MessageFlags.EPHEMERAL });
+	if (command?.superUserOnly && !isOwner) {
+		return await interaction.createMessage({
+			embeds: [
+				{
+					description: Main.utils.stripIndents(
+						`
+						\`\`\`asciidoc
+						• Error :: This command is only available to the bot owner.
+						\`\`\`
+						`
+					),
+					color: constants.numbers.colors.primary
+				}
+			],
+			flags: MessageFlags.EPHEMERAL
+		});
 	}
 
-	if (
-		command?.helperUserOnly &&
-		!Main.collections.keys.helper_users.has(interaction.user.id) &&
-		!Main.collections.keys.super_users.has(interaction.user.id)
-	) {
-		return interaction.createMessage({ content: constants.strings.events.interactionProcess.helpersOnly, flags: MessageFlags.EPHEMERAL });
+	if (command?.helperUserOnly && !isOwner) {
+		return await interaction.createMessage({
+			embeds: [
+				{
+					description: Main.utils.stripIndents(
+						`
+						\`\`\`asciidoc
+						• Error :: This command is only available to helper users.
+						\`\`\`
+						`
+					),
+					color: constants.numbers.colors.primary
+				}
+			],
+			flags: MessageFlags.EPHEMERAL
+		});
 	}
 
 	if (command?.requiredBotPermissions) {
 		if (!interaction.appPermissions?.has(...command.requiredBotPermissions)) {
 			return await interaction.createMessage({
-				content: `I need the following permissions: \`${command.requiredBotPermissions}\` to execute this command.`,
-				flags: MessageFlags.EPHEMERAL
+				embeds: [
+					{
+						description: Main.utils.stripIndents(
+							`
+						\`\`\`asciidoc
+						• Error :: Missing Permissions: ${command.requiredBotPermissions}
+						\`\`\`
+						`
+						),
+						color: constants.numbers.colors.primary
+					}
+				]
 			});
 		}
 	}
@@ -82,7 +132,18 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 	if (command?.requiredUserPermissions) {
 		if (!interaction.member?.permissions.has(...command.requiredUserPermissions)) {
 			return await interaction.createMessage({
-				content: `You need the following permissions: \`${command.requiredUserPermissions}\` to execute this command.`,
+				embeds: [
+					{
+						description: Main.utils.stripIndents(
+							`
+						\`\`\`asciidoc
+						• Error :: Missing Permissions: ${command.requiredUserPermissions}
+						\`\`\`
+						`
+						),
+						color: constants.numbers.colors.primary
+					}
+				],
 				flags: MessageFlags.EPHEMERAL
 			});
 		}
@@ -90,5 +151,19 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 
 	await (command
 		? command.run.call(Main, Main, interaction)
-		: interaction.createMessage({ content: "I couldn't figure out how to execute that command.", flags: MessageFlags.EPHEMERAL }));
+		: await interaction.createMessage({
+				embeds: [
+					{
+						description: Main.utils.stripIndents(
+							`
+						\`\`\`asciidoc
+						• Error :: Command could not be found.
+						\`\`\`
+						`
+						),
+						color: constants.numbers.colors.primary
+					}
+				],
+				flags: MessageFlags.EPHEMERAL
+		  }));
 }
