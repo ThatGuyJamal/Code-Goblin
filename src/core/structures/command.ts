@@ -3,12 +3,12 @@ import type { Client } from 'oceanic.js';
 import { logger } from '../../utils/index.js';
 import { Main } from '../index.js';
 import config from '../../config/config.js';
-import type { Command, CommandDataProp } from '../../typings/core/types.js';
+import type { Command, CommandDataProp, LegacyCommand } from '../../typings/core/types.js';
 
 /**
  * Creates a new command
  * @param props The command properties
- * @returns
+ * @returns The command
  */
 export function CreateCommand(props: Command): CommandDataProp {
 	return {
@@ -31,6 +31,15 @@ export function CreateCommand(props: Command): CommandDataProp {
 			return builder.toJSON();
 		}
 	};
+}
+
+/**
+ * Creates a new legacy command
+ * @param prop The legacy command properties
+ * @returns The legacy command
+ */
+export function CreateLegacyCommand(prop: LegacyCommand): LegacyCommand {
+	return prop
 }
 
 /**
@@ -60,7 +69,7 @@ export async function CreateGuildCommands(client: Client) {
 	try {
 		const commandsArray = Main.collections.commands.commandStoreArrayJsonGuild;
 
-		for (const guilds of config.DevelopmentServerId) {
+		for (const guilds of config.DevelopmentServerIds) {
 			await client.application.bulkEditGuildCommands(guilds, commandsArray);
 			logger.info(`Successfully created ${commandsArray.length} commands in guild ${guilds}`);
 		}
@@ -103,7 +112,7 @@ export async function CreateGlobalCommands(client: Client) {
  */
 export async function deleteGuildCommands(client: Client) {
 	// Delete Commands from the API
-	for (const guild of config.DevelopmentServerId) {
+	for (const guild of config.DevelopmentServerIds) {
 		await client.application.bulkEditGuildCommands(guild, []).catch((err) => {
 			logger.error(err);
 			Main.utils.sendToLogChannel('error', `Failed to delete commands in guild ${guild}!`);

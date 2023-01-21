@@ -9,7 +9,7 @@ import event_guildleave from '../events/event_guildleave.js';
 import event_interactionCreate from '../events/event_interactionCreate.js';
 import event_messageCreate from '../events/event_messageCreate.js';
 import event_welcome from '../events/event_welcome.js';
-import type { CommandDataProp } from '../../typings/core/types.js';
+import type { CommandDataProp, LegacyCommand } from '../../typings/core/types.js';
 import event_ready from '../events/event_ready.js';
 
 export class DiscordClient extends Client {
@@ -114,5 +114,7 @@ export class DiscordClient extends Client {
 		this.instance.utils.addCommand((await import('../plugins/goodbye/cmd.js')).default as CommandDataProp);
 		this.instance.utils.addCommand((await import('../plugins/tag/cmd.js')).default as CommandDataProp);
 		this.instance.utils.addCommand((await import('../plugins/jam/cmd.js')).default as CommandDataProp);
+		this.instance.utils.addLegacyCommand((await import('../commands//legacy/test.js')).default as LegacyCommand);
+		this.instance.utils.addLegacyCommand((await import('../commands//legacy/commands.js')).default as LegacyCommand);
 	}
 }

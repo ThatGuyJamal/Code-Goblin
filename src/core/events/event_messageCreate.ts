@@ -1,10 +1,9 @@
 import { ButtonStyles, ComponentTypes, Message } from 'oceanic.js';
-import { getGoodbyeResults } from './event_goodbye.js';
-import { getWelcomeResults } from './event_welcome.js';
 import config from '../../config/config.js';
+import { GlobalStatsModel } from '../../database/index.js';
+import type { LegacyCommand } from '../../typings/core/types.js';
+import { constants, logger } from '../../utils/index.js';
 import { Main } from '../index.js';
-
-const test_command_names = ['test-help', 'test-welcome', 'test-goodbye', 'test-guild-create', 'test-guild-delete'];
 
 export default async function (message: Message) {
 	if (!message.guild) return;
@@ -12,105 +11,237 @@ export default async function (message: Message) {
 	if (message.author.bot) return;
 	if (!message.member) return;
 
-	const isOwners = Main.collections.keys.super_users.has(message.author.id);
-
 	const botMention = `<@${Main.DiscordClient.user.id}>`;
 
-	if (isOwners) {
-		// Read arguments for prefix and the command
-		const args = message.content.slice(config.BotPrefix.length).trim().split(/ +/g);
-		const command = args.shift()?.toLowerCase();
+	const isOwners = Main.utils.isOwner(message.author.id);
 
-		// Reply with the list of test commands if the bot is mentioned in a message
-		if (message.content.startsWith(botMention)) {
-			return await message.channel.createMessage({
-				content: `Prefix: ${config.BotPrefix} | Test commands: ${test_command_names.join(',')}`
-			});
+	// Reply with the list of test commands if the bot is mentioned in a message
+	if (message.content.startsWith(botMention)) {
+		return await message.channel.createMessage({
+			content: `*Legacy Commands Information*`,
+			embeds: [
+				{
+					description: Main.utils.stripIndents(
+						`
+						\`\`\`asciidoc
+						• Info :: Please use my slash command </commands> to see a list of commands!
+						\`\`\`
+						`
+					),
+					color: constants.numbers.colors.tertiary
+				}
+			],
+			components: [
+				{
+					type: ComponentTypes.ACTION_ROW,
+					components: [
+						{
+							type: ComponentTypes.BUTTON,
+							style: ButtonStyles.LINK,
+							label: 'Invite Bot',
+							url: config.BotClientOAuth2Url
+						},
+						{
+							type: ComponentTypes.BUTTON,
+							style: ButtonStyles.LINK,
+							label: 'Code Repository',
+							url: config.GithubRepository
+						},
+						{
+							type: ComponentTypes.BUTTON,
+							style: ButtonStyles.LINK,
+							label: 'Website',
+							url: config.whisper_room.url,
+							disabled: true
+						}
+					]
+				}
+			]
+		});
+	}
+
+	const command = Main.collections.commands.legacyCommandStoreMap.find((command) => {
+		if (command.devOnly) if (!isOwners) return false;
+
+		if (message.content.startsWith(`${config.BotPrefix}${command.trigger}`)) return true;
+		if (message.content.startsWith(`${botMention} ${command.trigger}` || `${botMention}${command.trigger}`)) return true;
+		return false;
+	});
+
+	if (!command) return;
+
+	try {
+		if (config.IsInDevelopmentMode) {
+			logger.debug(`[${new Date().toISOString()}][command/${command.trigger}]: ${message.author.tag} (${message.author.id})`);
 		}
 
-		if (command === 'test-help') {
-			return await message.channel.createMessage({
-				content: `Test commands: ${test_command_names.join(', ')}`
-			});
-		}
-
-		if (command === 'test-welcome') {
-			Main.DiscordClient.emit('guildMemberAdd', message.member);
-
-			let data = await getWelcomeResults(message.member);
-
-			await message.channel.createMessage({
-				content: 'Test welcome plugin ran!',
+		await GlobalStatsModel.findOneAndUpdate(
+			{ find_id: 'global' },
+			{ $inc: { commands_executed: 1 } },
+			{
+				upsert: true,
+				new: true
+			}
+		);
+		await processLegacyCommand(message, command);
+	} catch (error) {
+		logger.error(error);
+		await message.channel
+			?.createMessage({
 				embeds: [
 					{
-						description: `Sending to...<#${data?.welcomeChannel.id}>\n\n${data?.welcomeMessage}`
+						description: Main.utils.stripIndents(
+							`
+						\`\`\`asciidoc
+						• Error :: An error occurred while executing the command.
+						\`\`\`
+						`
+						),
+						color: constants.numbers.colors.primary
 					}
 				]
-			});
-		}
+			})
+			.catch(() => {});
 
-		if (command === 'test-goodbye') {
-			Main.DiscordClient.emit('guildMemberRemove', message.member, message.member.guild);
+		await GlobalStatsModel.findOneAndUpdate(
+			{ find_id: 'global' },
+			{ $inc: { commands_failed: 1 } },
+			{
+				new: true,
+				upsert: true
+			}
+		);
+	}
+}
 
-			let data = await getGoodbyeResults(message.member);
+async function processLegacyCommand(message: Message, command: LegacyCommand | undefined) {
+	if (!message.guild) return;
+	if (!command) return;
 
-			await message.channel.createMessage({
-				content: 'Test goodbye plugin ran!',
+	const isOwners = Main.utils.isOwner(message.author.id);
+
+	const args = message.content.split(' ').slice(1);
+
+	if (command.devOnly && !isOwners) {
+		if (!Main.collections.keys.super_users.has(message.author.id)) {
+			return await message.channel?.createMessage({
 				embeds: [
 					{
-						description: `Sending to...<#${data?.GoodbyeChannel.id}>\n\n${data?.GoodbyeMessage}`
-					}
-				]
-			});
-		}
-
-		if (command === 'test-guild-create') {
-			Main.DiscordClient.emit('guildCreate', message.member.guild);
-
-			await message.channel.createMessage({
-				content: 'Test guild create plugin ran!'
-			});
-		}
-
-		if (command === 'test-guild-delete') {
-			Main.DiscordClient.emit('guildDelete', message.member.guild);
-
-			await message.channel.createMessage({
-				content: 'Test guild delete plugin ran!'
-			});
-		}
-	} else {
-		// Reply with the list of test commands if the bot is mentioned in a message
-		if (message.content.startsWith(botMention)) {
-			return await message.channel.createMessage({
-				content: `Please use my slash command \`/commands\` to see a list of commands!`,
-				components: [
-					{
-						type: ComponentTypes.ACTION_ROW,
-						components: [
-							{
-								type: ComponentTypes.BUTTON,
-								style: ButtonStyles.LINK,
-								label: 'Invite Bot',
-								url: config.BotClientOAuth2Url
-							},
-							{
-								type: ComponentTypes.BUTTON,
-								style: ButtonStyles.LINK,
-								label: 'Code Repository',
-								url: config.GithubRepository
-							},
-							{
-								type: ComponentTypes.BUTTON,
-								style: ButtonStyles.LINK,
-								label: 'Website',
-								url: config.whisper_room.url,
-								disabled: true
-							}
-						]
+						description: Main.utils.stripIndents(
+							`
+						\`\`\`asciidoc
+						• Error :: You are not allowed to use this command.
+						\`\`\`
+						`
+						),
+						color: constants.numbers.colors.primary
 					}
 				]
 			});
 		}
 	}
+
+	if (
+		command?.helperUserOnly &&
+		!Main.collections.keys.helper_users.has(message.author.id) &&
+		!Main.collections.keys.super_users.has(message.author.id)
+	) {
+		return await message.channel?.createMessage({
+			embeds: [
+				{
+					description: Main.utils.stripIndents(
+						`
+						\`\`\`asciidoc
+						• Error :: You are not allowed to use this command.
+						\`\`\`
+						`
+					),
+					color: constants.numbers.colors.primary
+				}
+			]
+		});
+	}
+
+	if (command.guildLock && command.guildLock.length > 0 && !isOwners) {
+		if (!command.guildLock.includes(message.guild.id))
+			return await message.channel?.createMessage({
+				embeds: [
+					{
+						description: Main.utils.stripIndents(
+							`
+						\`\`\`asciidoc
+						• Error :: This command can't be used in this server.
+						\`\`\`
+						`
+						),
+						color: constants.numbers.colors.primary
+					}
+				]
+			});
+	}
+
+	if (command?.requiredBotPermissions) {
+		let hasPerms = message.guild.clientMember.permissions.has(...command.requiredBotPermissions);
+
+		if (!hasPerms) {
+			return await message.channel?.createMessage({
+				embeds: [
+					{
+						description: Main.utils.stripIndents(
+							`
+						\`\`\`asciidoc
+						• Error :: I need the following permissions: ${command.requiredBotPermissions} to execute this command.
+						\`\`\`
+						`
+						),
+						color: constants.numbers.colors.primary
+					}
+				]
+			});
+		}
+	}
+
+	if (command?.requiredUserPermissions) {
+		let hasPerms = message.member?.permissions.has(...command.requiredUserPermissions);
+
+		if (!hasPerms) {
+			return await message.channel?.createMessage({
+				embeds: [
+					{
+						description: Main.utils.stripIndents(
+							`
+						\`\`\`asciidoc
+						• Error :: You need the following permissions: ${command.requiredUserPermissions} to execute this command.
+						\`\`\`
+						`
+						),
+						color: constants.numbers.colors.primary
+					}
+				]
+			});
+		}
+	}
+
+	if (command.argsRequired) {
+		if (args.length < command.argsRequired) {
+			let missingString = command.argsRequired ? `Correct usage: ${command.argsUsage}` : 'Missing arguments';
+
+			return await message.channel?.createMessage({
+				embeds: [
+					{
+						description: Main.utils.stripIndents(
+							`
+						\`\`\`asciidoc
+						• Error :: ${missingString}
+						\`\`\`
+						`
+						),
+						color: constants.numbers.colors.primary
+					}
+				]
+			});
+		}
+	}
+
+	await command.run({ instance: Main, message: message, args: args });
 }

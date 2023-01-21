@@ -6,21 +6,18 @@ export class ILogger {
 	private instance;
 	private IsInDevelopmentMode: boolean;
 	public constructor() {
+		this.IsInDevelopmentMode = config.IsInDevelopmentMode;
+
 		this.instance = winston.createLogger({
 			level: 'info',
 			format: winston.format.json(),
 			defaultMeta: { service: 'logger-service' },
 			transports: [
-				//
-				// - Write all logs with importance level of `error` or less to `error.log`
-				// - Write all logs with importance level of `info` or less to `combined.log`
-				//
-				new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
-				new winston.transports.File({ filename: './logs/combined.log' })
+				new winston.transports.File({ dirname: '../logs', filename: 'combined.log' }),
+				new winston.transports.File({ dirname: '../logs', filename: 'error.log', level: 'error' }),
+				new winston.transports.File({ dirname: '../logs', filename: 'debug.log', level: 'debug' })
 			]
 		});
-
-		this.IsInDevelopmentMode = config.IsInDevelopmentMode;
 
 		if (this.IsInDevelopmentMode) {
 			this.instance.add(
@@ -53,6 +50,11 @@ export class ILogger {
         }
      */
 
+	/**
+	 * Log a message at the 'info' level
+	 * @param message 
+	 * @param args 
+	 */
 	public info(message: string, ...args: any[]) {
 		if (this.IsInDevelopmentMode) this.instance.info(message, ...args);
 	}

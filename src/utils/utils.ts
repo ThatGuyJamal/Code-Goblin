@@ -3,7 +3,7 @@ import { constants, logger } from './index.js';
 import { stripIndents } from 'common-tags';
 import config from '../config/config.js';
 import type Main from '../core/main.js';
-import type { Command, CommandDataProp } from '../typings/core/types.js';
+import type { Command, CommandDataProp, LegacyCommand } from '../typings/core/types.js';
 
 export default class Utils {
 	private instance: Main;
@@ -108,7 +108,7 @@ export default class Utils {
 					this.instance.collections.commands.commandStoreArrayJsonGlobal.push(cmd.toJson());
 					this.instance.collections.commands.commandStoreArrayJsonGuild.push(cmd.toJson());
 				}
-				logger.info(`Loaded ${cmd.props.trigger} into memory.`);
+				logger.info(`Loaded ${cmd.props.trigger} command into memory.`);
 			} else {
 				logger.info(`${cmd.props.trigger} was not loaded into memory because it is disabled.`);
 			}
@@ -116,6 +116,33 @@ export default class Utils {
 			logger.error(`[ERROR] Failed to load command ${cmd.props.trigger} into memory.`, err);
 			logger.error(err);
 		}
+	}
+
+	/**
+	 * Adds a legacy command to the command store
+	 * @param cmd 
+	 */
+	public async addLegacyCommand(cmd: LegacyCommand) {
+		try {
+			// if the command is disabled, don't add it to the command store
+			if (!cmd.disabled) {
+				if (!cmd.requiredBotPermissions) cmd.requiredBotPermissions = ['SEND_MESSAGES', 'EMBED_LINKS'];
+				if (!cmd.requiredUserPermissions) cmd.requiredUserPermissions = ['SEND_MESSAGES'];
+				if (!cmd.disabled) cmd.disabled = false;
+
+				this.instance.collections.commands.legacyCommandStoreMap.set(cmd.trigger, cmd);
+				logger.info(`Loaded ${cmd.trigger} legacy command into memory.`);
+			} else {
+				logger.info(`${cmd.trigger} was not loaded into memory because it is disabled.`);
+			}
+		} catch (err) {
+			logger.error(`[ERROR] Failed to load legacy command ${cmd.trigger} into memory.`, err);
+			logger.error(err);
+		}
+	}
+
+	public isOwner(id: string): boolean {
+		return this.instance.collections.keys.super_users.has(id);
 	}
 
 	/**

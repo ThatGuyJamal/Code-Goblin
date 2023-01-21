@@ -29,7 +29,8 @@ export default class Main {
 			commands: {
 				commandStoreMap: new Collection(),
 				commandStoreArrayJsonGuild: [],
-				commandStoreArrayJsonGlobal: []
+				commandStoreArrayJsonGlobal: [],
+				legacyCommandStoreMap: new Collection()
 			},
 			controllers: {
 				tags: new TagCommandController(this),

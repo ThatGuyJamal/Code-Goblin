@@ -1,5 +1,5 @@
 import type { ApplicationCommandBuilder } from '@oceanicjs/builders';
-import type { ApplicationCommandTypes, Collection, CommandInteraction, Permission, PermissionName } from 'oceanic.js';
+import type { ApplicationCommandTypes, Collection, CommandInteraction, Message, Permission, PermissionName } from 'oceanic.js';
 import type { CreateApplicationCommandOptions } from 'oceanic.js';
 import type config from '../../config/config.js';
 import type Main from '../../core/main.js';
@@ -30,6 +30,8 @@ interface MainCollectionCommands {
 	commandStoreArrayJsonGuild: CreateApplicationCommandOptions[];
 	/** An array of all commands as Json Data for the discord api global application commands */
 	commandStoreArrayJsonGlobal: CreateApplicationCommandOptions[];
+
+	legacyCommandStoreMap: Collection<string, LegacyCommand>;
 }
 
 interface MainCollectionControllers {
@@ -69,4 +71,28 @@ export interface Command {
 	disabled?: boolean;
 	nsfw?: boolean;
 	premiumOnly?: boolean;
+}
+
+interface LegacyCommandRunArgs {
+	instance: Main
+	message: Message;
+	args: string[];
+}
+
+export interface LegacyCommand {
+	trigger: string;
+	description: string;
+	argsRequired?: number
+	argsUsage?: string;
+	devOnly?: boolean;
+	requiredUserPermissions?: PermissionName[];
+	requiredBotPermissions?: PermissionName[];
+	superUserOnly?: boolean;
+	helperUserOnly?: boolean;
+	disabled?: boolean;
+	nsfw?: boolean;
+	premiumOnly?: boolean;
+	/** Locks the command to only run these array of guilds */
+	guildLock?: string[];
+	run: ({ instance, message, args }: LegacyCommandRunArgs) => Promise<any> | any;
 }
