@@ -3,6 +3,9 @@ import config from '../../config/config.js';
 import { GlobalStatsModel } from '../../database/index.js';
 import { logger, constants } from '../../utils/index.js';
 import { Main } from '../index.js';
+import { DurationFormatter  } from '@sapphire/duration'
+
+const formatter = new DurationFormatter();
 
 export default async function (interaction: AnyInteractionGateway) {
 	if (interaction.type === InteractionTypes.APPLICATION_COMMAND) {
@@ -27,7 +30,7 @@ export default async function (interaction: AnyInteractionGateway) {
 				})
 				.catch(() => {});
 
-			if(!config.IsInDevelopmentMode) {
+			if (!config.IsInDevelopmentMode) {
 				await GlobalStatsModel.findOneAndUpdate(
 					{ find_id: 'global' },
 					{ $inc: { commands_failed: 1 } },
@@ -148,6 +151,85 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 				],
 				flags: MessageFlags.EPHEMERAL
 			});
+		}
+	}
+
+	if (command?.ratelimit) {
+		if (command.ratelimit.global) {
+			let manager = command.ratelimit.global;
+
+			let ratelimit = manager.acquire(interaction.guild.id);
+
+			if (ratelimit.limited) {
+				return await interaction.createMessage({
+					embeds: [
+						{
+							description: Main.utils.stripIndents(
+								`
+							\`\`\`asciidoc
+							• Error :: This command is currently rate-limited globally. Please try again in ${formatter.format(ratelimit.remainingTime)}
+							\`\`\`
+							`
+							),
+							color: constants.numbers.colors.primary
+						}
+					],
+					flags: MessageFlags.EPHEMERAL
+				});
+			}
+
+			ratelimit.consume();
+		}
+
+		if (command.ratelimit.guild) {
+			let manager = command.ratelimit.guild;
+
+			let ratelimit = manager.acquire(interaction.guild.id);
+
+			if (ratelimit.limited) {
+				return await interaction.createMessage({
+					embeds: [
+						{
+							description: Main.utils.stripIndents(
+								`
+							\`\`\`asciidoc
+							• Error :: This command is currently rate-limited in this guild. Please try again in ${formatter.format(ratelimit.remainingTime)}
+							\`\`\`
+							`
+							),
+							color: constants.numbers.colors.primary
+						}
+					],
+					flags: MessageFlags.EPHEMERAL
+				});
+			}
+
+			ratelimit.consume();
+		}
+		if (command.ratelimit.user) {
+			let manager = command.ratelimit.user;
+
+			let ratelimit = manager.acquire(interaction.user.id);
+
+			if (ratelimit.limited) {
+				return await interaction.createMessage({
+					embeds: [
+						{
+							description: Main.utils.stripIndents(
+								`
+							\`\`\`asciidoc
+							• Error :: This command is currently rate-limited for you. Please try again in ${formatter.format(ratelimit.remainingTime)}
+							\`\`\`
+							`
+							),
+							color: constants.numbers.colors.primary
+						}
+					],
+					flags: MessageFlags.EPHEMERAL
+				});
+			}
+
+			ratelimit.consume();
 		}
 	}
 

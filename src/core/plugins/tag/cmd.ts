@@ -69,7 +69,7 @@ export default CreateCommand({
 			option.setName('clear').setDescription('Delete all tags in this server');
 		}).setDMPermission(false);
 	},
-	run: async ({instance, interaction}) => {
+	run: async ({ instance, interaction }) => {
 		const subCommand = interaction.data.options.getSubCommand(true);
 
 		if (subCommand.find((name) => name === 'create')) return await handleCreate(instance, interaction);

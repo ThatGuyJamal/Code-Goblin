@@ -778,6 +778,11 @@
   resolved "https://registry.yarnpkg.com/@oceanicjs/builders/-/builders-1.1.7.tgz#99d48ec708c33525caae0e9c881e963cbddfd49e"
   integrity sha512-pF7tL9vzkHfLWO7IBKHm4uHl2M28VkWXhiV5Ap8t4DMpM3ZrxkQnFjJ60w3SFikpxQ9jDc5x5eVvbDwUWq7yqA==
 
+"@sapphire/duration@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@sapphire/duration/-/duration-1.0.0.tgz#baec4898ee71099093580db774474b25167150ff"
+  integrity sha512-B+6nKYnBmIlqqbamcR4iBvbQHz6/Kq2JUVM0rA3lQ+aYUYDdcA1Spt66CKtPWwdTYEtSv0VY6Jv27WCtFNYTUg==
+
 "@sapphire/prettier-config@^1.4.4":
   version "1.4.5"
   resolved "https://registry.yarnpkg.com/@sapphire/prettier-config/-/prettier-config-1.4.5.tgz#9b74035193fd69a4eeeb3cc437d5b41978f0a868"

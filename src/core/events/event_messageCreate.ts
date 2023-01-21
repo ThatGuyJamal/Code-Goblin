@@ -4,6 +4,10 @@ import { GlobalStatsModel } from '../../database/index.js';
 import type { LegacyCommand } from '../../typings/core/types.js';
 import { constants, logger } from '../../utils/index.js';
 import { Main } from '../index.js';
+import { DurationFormatter } from '@sapphire/duration';
+
+const formatter = new DurationFormatter();
+
 
 export default async function (message: Message) {
 	if (!message.guild) return;
@@ -107,7 +111,7 @@ export default async function (message: Message) {
 				}
 			);
 		}
-		
+
 		await processLegacyCommand(message, command);
 	} catch (error) {
 		logger.error(error);
@@ -242,6 +246,82 @@ async function processLegacyCommand(message: Message, command: LegacyCommand | u
 					}
 				]
 			});
+		}
+	}
+
+	if (command?.ratelimit) {
+		if (command.ratelimit.global) {
+			let manager = command.ratelimit.global;
+
+			let ratelimit = manager.acquire(message.guild.id);
+
+			if (ratelimit.limited) {
+				return await message.channel?.createMessage({
+					embeds: [
+						{
+							description: Main.utils.stripIndents(
+								`
+							\`\`\`asciidoc
+							• Error :: This command is currently rate-limited globally. Please try again in ${formatter.format(ratelimit.remainingTime)}
+							\`\`\`
+							`
+							),
+							color: constants.numbers.colors.primary
+						}
+					]
+				});
+			}
+
+			ratelimit.consume();
+		}
+
+		if (command.ratelimit.guild) {
+			let manager = command.ratelimit.guild;
+
+			let ratelimit = manager.acquire(message.guild.id);
+
+			if (ratelimit.limited) {
+				return await message.channel?.createMessage({
+					embeds: [
+						{
+							description: Main.utils.stripIndents(
+								`
+							\`\`\`asciidoc
+							• Error :: This command is currently rate-limited in this guild. Please try again in ${formatter.format(ratelimit.remainingTime)}
+							\`\`\`
+							`
+							),
+							color: constants.numbers.colors.primary
+						}
+					]
+				});
+			}
+
+			ratelimit.consume();
+		}
+		if (command.ratelimit.user) {
+			let manager = command.ratelimit.user;
+
+			let ratelimit = manager.acquire(message.author.id);
+
+			if (ratelimit.limited) {
+				return await message.channel?.createMessage({
+					embeds: [
+						{
+							description: Main.utils.stripIndents(
+								`
+							\`\`\`asciidoc
+							• Error :: This command is currently rate-limited for you. Please try again in ${formatter.format(ratelimit.remainingTime)}
+							\`\`\`
+							`
+							),
+							color: constants.numbers.colors.primary
+						}
+					]
+				});
+			}
+
+			ratelimit.consume();
 		}
 	}
 

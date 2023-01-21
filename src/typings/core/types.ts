@@ -7,7 +7,7 @@ import type { GoodbyeCommandController } from '../../database/mongodb/controller
 import type { CodeJamCommandController } from '../../database/mongodb/controllers/jam.js';
 import type { TagCommandController } from '../../database/mongodb/controllers/tag.js';
 import type { WelcomeCommandController } from '../../database/mongodb/controllers/welcome.js';
-import type { Milliseconds } from '../../utils/constants.js';
+import type { RateLimitManager } from '@sapphire/ratelimits';
 
 export interface MainCollections {
 	/** A Collection of all command information and data */
@@ -108,26 +108,12 @@ interface LegacyCommandRunArgs {
 	args: string[];
 }
 
+/** Command ratelimit config */
 export interface CommandRateLimit {
 	/** The limits for users on the command */
-	user: {
-		/** Amount of uses before the command will be limited */
-		uses: number;
-		/** The time to block the command for */
-		blockAfter: Milliseconds;
-	};
+	user?: RateLimitManager;
 	/** The limits for the guild on the command */
-	guild: {
-		/** Amount of uses before the command will be limited */
-		uses: number;
-		/** The time to block the command for */
-		blockAfter: Milliseconds;
-	};
+	guild?: RateLimitManager;
 	/** The limits for the whole bot */
-	global: {
-		/** Amount of uses before the command will be limited */
-		uses: number;
-		/** The time to block the command for */
-		blockAfter: Milliseconds;
-	};
+	global?: RateLimitManager;
 }

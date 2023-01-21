@@ -1,6 +1,8 @@
 import { EmbedBuilder } from '@oceanicjs/builders';
+import { RateLimitManager } from '@sapphire/ratelimits';
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ChannelTypes, TextChannel } from 'oceanic.js';
 import { isCanary } from '../../config/config.js';
+import { Milliseconds } from '../../utils/constants.js';
 import { logger } from '../../utils/index.js';
 import { CreateCommand } from '../structures/command.js';
 
@@ -9,7 +11,10 @@ export default CreateCommand({
 	description: `Create simple message embeds`,
 	type: ApplicationCommandTypes.CHAT_INPUT,
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
-	requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_MESSAGES'],
+	requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_MESSAGES', 'MANAGE_MESSAGES'],
+	ratelimit: {
+		user: new RateLimitManager(Milliseconds.SECOND * 7, 1)
+	},
 	options: (opt) => {
 		opt.setName('embed-generate')
 			.setDescription('Generate an embed')
@@ -58,7 +63,7 @@ export default CreateCommand({
 			});
 	},
 	register: isCanary ? 'guild' : 'global',
-	run: async ({instance, interaction}) => {
+	run: async ({ instance, interaction }) => {
 		try {
 			const title = interaction.data.options.getString('title');
 			const description = interaction.data.options.getString('description');

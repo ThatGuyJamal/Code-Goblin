@@ -10,6 +10,8 @@ import handleWelcomeDelete from '../plugins/welcome/sub/delete.js';
 import handleGoodbyeConfigure from '../plugins/goodbye/sub/configure.js';
 import handleGoodbyeView from '../plugins/goodbye/sub/view.js';
 import handleGoodbyeDelete from '../plugins/goodbye/sub/delete.js';
+import { RateLimitManager } from '@sapphire/ratelimits';
+import { Milliseconds } from '../../utils/constants.js';
 
 export default CreateCommand({
 	trigger: 'automate',
@@ -17,6 +19,9 @@ export default CreateCommand({
 	type: ApplicationCommandTypes.CHAT_INPUT,
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	requiredUserPermissions: ['SEND_MESSAGES', 'MANAGE_GUILD'],
+	ratelimit: {
+		user: new RateLimitManager(Milliseconds.SECOND * 5, 1)
+	},
 	options: (opt) => {
 		opt
 			.addOption('goodbye', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
@@ -78,7 +83,7 @@ export default CreateCommand({
 				.setDMPermission(false);
 	},
 	register: isCanary ? 'guild' : 'global',
-	run: async ({instance, interaction}) => {
+	run: async ({ instance, interaction }) => {
 		if (!interaction.guild) return;
 
 		const subCommand = interaction.data.options.getSubCommand(true);

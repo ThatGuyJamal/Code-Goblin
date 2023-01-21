@@ -7,6 +7,8 @@ import { CreateCommand } from '../structures/command.js';
 import { constants } from '../../utils/index.js';
 import { GlobalStatsModel } from '../../database/index.js';
 import type { GlobalStatistics } from '../../typings/database/types.js';
+import { RateLimitManager } from '@sapphire/ratelimits';
+import { Milliseconds } from '../../utils/constants.js';
 
 function getCpuUsage() {
 	const cpus = os.cpus();
@@ -43,8 +45,10 @@ export default CreateCommand({
 	register: isCanary ? 'guild' : 'global',
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	requiredUserPermissions: ['SEND_MESSAGES'],
-	options: (opts) => {},
-	run: async ({instance, interaction}) => {
+	ratelimit: {
+		user: new RateLimitManager(Milliseconds.SECOND * 10, 1)
+	},
+	run: async ({ instance, interaction }) => {
 		const global = (await GlobalStatsModel.findOne({ find_id: 'global' })) as GlobalStatistics;
 		let dbStatus = instance.database.network_status();
 

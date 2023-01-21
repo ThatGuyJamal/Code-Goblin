@@ -1,5 +1,7 @@
+import { RateLimitManager } from '@sapphire/ratelimits';
 import { ApplicationCommandTypes, ComponentTypes, ButtonStyles } from 'oceanic.js';
 import config, { isCanary } from '../../config/config.js';
+import { Milliseconds } from '../../utils/constants.js';
 import { constants } from '../../utils/index.js';
 import { CreateCommand } from '../structures/command.js';
 
@@ -10,7 +12,10 @@ export default CreateCommand({
 	register: isCanary ? 'guild' : 'global',
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	requiredUserPermissions: ['SEND_MESSAGES'],
-	run: async ({instance, interaction}) => {
+	ratelimit: {
+		user: new RateLimitManager(Milliseconds.SECOND * 10, 1)
+	},
+	run: async ({ instance, interaction }) => {
 		const filteredCmdProps = instance.collections.commands.commandStoreMap
 			.map((command) => {
 				return {

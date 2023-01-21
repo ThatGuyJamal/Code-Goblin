@@ -121,7 +121,7 @@ export default CreateCommand({
 		});
 	},
 	register: isCanary ? 'guild' : 'global',
-	run: async ({instance, interaction}) => {
+	run: async ({ instance, interaction }) => {
 		const subcommand = interaction.data.options.getSubCommand();
 
 		if (subcommand?.find((name) => name === 'create')) return await handleCreate(instance, interaction);
