@@ -58,7 +58,7 @@ export default CreateCommand({
 			});
 	},
 	register: isCanary ? 'guild' : 'global',
-	run: async (instance, interaction) => {
+	run: async ({instance, interaction}) => {
 		try {
 			const title = interaction.data.options.getString('title');
 			const description = interaction.data.options.getString('description');

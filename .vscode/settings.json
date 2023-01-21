@@ -5,6 +5,7 @@
         "logform",
         "oceanicjs",
         "pino",
+        "ratelimit",
         "ratelimits"
     ]
 }

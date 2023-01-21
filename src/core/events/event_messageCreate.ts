@@ -97,14 +97,17 @@ export default async function (message: Message) {
 			logger.debug(`[${new Date().toISOString()}][command/${command.trigger}]: ${message.author.tag} (${message.author.id})`);
 		}
 
-		await GlobalStatsModel.findOneAndUpdate(
-			{ find_id: 'global' },
-			{ $inc: { commands_executed: 1 } },
-			{
-				upsert: true,
-				new: true
-			}
-		);
+		if (!config.IsInDevelopmentMode) {
+			await GlobalStatsModel.findOneAndUpdate(
+				{ find_id: 'global' },
+				{ $inc: { commands_executed: 1 } },
+				{
+					upsert: true,
+					new: true
+				}
+			);
+		}
+		
 		await processLegacyCommand(message, command);
 	} catch (error) {
 		logger.error(error);
@@ -125,14 +128,16 @@ export default async function (message: Message) {
 			})
 			.catch(() => {});
 
-		await GlobalStatsModel.findOneAndUpdate(
-			{ find_id: 'global' },
-			{ $inc: { commands_failed: 1 } },
-			{
-				new: true,
-				upsert: true
-			}
-		);
+		if (!config.IsInDevelopmentMode) {
+			await GlobalStatsModel.findOneAndUpdate(
+				{ find_id: 'global' },
+				{ $inc: { commands_failed: 1 } },
+				{
+					new: true,
+					upsert: true
+				}
+			);
+		}
 	}
 }
 

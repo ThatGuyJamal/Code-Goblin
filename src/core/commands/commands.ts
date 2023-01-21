@@ -10,7 +10,7 @@ export default CreateCommand({
 	register: isCanary ? 'guild' : 'global',
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	requiredUserPermissions: ['SEND_MESSAGES'],
-	run: async (instance, interaction) => {
+	run: async ({instance, interaction}) => {
 		const filteredCmdProps = instance.collections.commands.commandStoreMap
 			.map((command) => {
 				return {

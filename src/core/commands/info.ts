@@ -44,7 +44,7 @@ export default CreateCommand({
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	requiredUserPermissions: ['SEND_MESSAGES'],
 	options: (opts) => {},
-	run: async (instance, interaction) => {
+	run: async ({instance, interaction}) => {
 		const global = (await GlobalStatsModel.findOne({ find_id: 'global' })) as GlobalStatistics;
 		let dbStatus = instance.database.network_status();
 

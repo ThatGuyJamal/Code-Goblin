@@ -7,6 +7,7 @@ import type { GoodbyeCommandController } from '../../database/mongodb/controller
 import type { CodeJamCommandController } from '../../database/mongodb/controllers/jam.js';
 import type { TagCommandController } from '../../database/mongodb/controllers/tag.js';
 import type { WelcomeCommandController } from '../../database/mongodb/controllers/welcome.js';
+import type { Milliseconds } from '../../utils/constants.js';
 
 export interface MainCollections {
 	/** A Collection of all command information and data */
@@ -56,8 +57,9 @@ export interface Command {
 	trigger: string;
 	description: string;
 	type: ApplicationCommandTypes;
+	ratelimit?: CommandRateLimit;
 	options?: (opts: ApplicationCommandBuilder) => void;
-	run: (instance: Main, interaction: CommandInteraction) => Promise<any> | any;
+	run: ({ instance, interaction }: CommandRunArgs) => Promise<unknown> | unknown;
 	register: CommandRegisterType;
 	requiredUserPermissions?: PermissionName[];
 	requiredBotPermissions?: PermissionName[];
@@ -73,18 +75,20 @@ export interface Command {
 	premiumOnly?: boolean;
 }
 
-interface LegacyCommandRunArgs {
+/** Arguments for Commands */
+interface CommandRunArgs {
 	instance: Main;
-	message: Message;
-	args: string[];
+	interaction: CommandInteraction;
 }
 
+/** Legacy Command Interface */
 export interface LegacyCommand {
 	trigger: string;
 	description: string;
 	argsRequired?: number;
 	argsUsage?: string;
 	devOnly?: boolean;
+	ratelimit?: CommandRateLimit;
 	requiredUserPermissions?: PermissionName[];
 	requiredBotPermissions?: PermissionName[];
 	superUserOnly?: boolean;
@@ -95,4 +99,35 @@ export interface LegacyCommand {
 	/** Locks the command to only run these array of guilds */
 	guildLock?: string[];
 	run: ({ instance, message, args }: LegacyCommandRunArgs) => Promise<any> | any;
+}
+
+/** Arguments for Legacy Commands */
+interface LegacyCommandRunArgs {
+	instance: Main;
+	message: Message;
+	args: string[];
+}
+
+export interface CommandRateLimit {
+	/** The limits for users on the command */
+	user: {
+		/** Amount of uses before the command will be limited */
+		uses: number;
+		/** The time to block the command for */
+		blockAfter: Milliseconds;
+	};
+	/** The limits for the guild on the command */
+	guild: {
+		/** Amount of uses before the command will be limited */
+		uses: number;
+		/** The time to block the command for */
+		blockAfter: Milliseconds;
+	};
+	/** The limits for the whole bot */
+	global: {
+		/** Amount of uses before the command will be limited */
+		uses: number;
+		/** The time to block the command for */
+		blockAfter: Milliseconds;
+	};
 }

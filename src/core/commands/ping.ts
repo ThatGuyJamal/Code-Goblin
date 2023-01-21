@@ -11,7 +11,7 @@ export default CreateCommand({
 	requiredUserPermissions: ['SEND_MESSAGES'],
 	options: (opt) => {},
 	register: isCanary ? 'guild' : 'global',
-	run: async (instance, interaction) => {
+	run: async ({ instance, interaction }) => {
 		await interaction.defer(MessageFlags.LOADING + MessageFlags.EPHEMERAL);
 
 		const defer = await interaction.getOriginal();

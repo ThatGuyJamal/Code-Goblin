@@ -27,14 +27,16 @@ export default async function (interaction: AnyInteractionGateway) {
 				})
 				.catch(() => {});
 
-			await GlobalStatsModel.findOneAndUpdate(
-				{ find_id: 'global' },
-				{ $inc: { commands_failed: 1 } },
-				{
-					new: true,
-					upsert: true
-				}
-			);
+			if(!config.IsInDevelopmentMode) {
+				await GlobalStatsModel.findOneAndUpdate(
+					{ find_id: 'global' },
+					{ $inc: { commands_failed: 1 } },
+					{
+						new: true,
+						upsert: true
+					}
+				);
+			}
 		}
 	}
 
@@ -150,7 +152,7 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 	}
 
 	await (command
-		? command.run.call(Main, Main, interaction)
+		? command.run({ interaction: interaction, instance: Main })
 		: await interaction.createMessage({
 				embeds: [
 					{

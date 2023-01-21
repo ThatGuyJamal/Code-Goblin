@@ -78,7 +78,7 @@ export default CreateCommand({
 				.setDMPermission(false);
 	},
 	register: isCanary ? 'guild' : 'global',
-	run: async (instance, interaction) => {
+	run: async ({instance, interaction}) => {
 		if (!interaction.guild) return;
 
 		const subCommand = interaction.data.options.getSubCommand(true);
