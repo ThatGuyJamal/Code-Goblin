@@ -11,13 +11,16 @@ export default CreateCommand({
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	requiredUserPermissions: ['SEND_MESSAGES'],
 	run: async (instance, interaction) => {
-		const filteredCmdProps = instance.collections.commands.commandStoreMap.map((command) => {
-			return {
-				name: command.trigger,
-				description: command.description,
-				options: command.options
-			};
-		}).map((command) => command.name).join(', ');
+		const filteredCmdProps = instance.collections.commands.commandStoreMap
+			.map((command) => {
+				return {
+					name: command.trigger,
+					description: command.description,
+					options: command.options
+				};
+			})
+			.map((command) => `/${command.name}`)
+			.join(', ');
 
 		await interaction.createMessage({
 			embeds: [
