@@ -43,12 +43,6 @@ export function CreateLegacyCommand(prop: LegacyCommand): LegacyCommand {
 }
 
 /**
- * 
- * 
- * import { ApplicationCommandTypes } from 'oceanic.js';
-import { CreateCommand } from '../cmd/command.js';
-import { isCanary } from '../config/config.js';
-
 export default CreateCommand({
 	trigger: '',
 	description: ``,
@@ -56,8 +50,8 @@ export default CreateCommand({
 	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
 	requiredUserPermissions: ['SEND_MESSAGES'],
 	options: (opt) => {},
-	register: isCanary ? "guild" : "global",
-	run: async (_instance, interaction) => {}
+	register: isCanary ? 'guild' : 'global',
+	run: async ({ instance, interaction}) => {}
 });
  */
 

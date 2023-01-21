@@ -4,6 +4,7 @@
         "guildleave",
         "logform",
         "oceanicjs",
+        "openai",
         "pino",
         "ratelimit",
         "ratelimits"

@@ -1,4 +1,4 @@
-- Add command ratelimits using https://github.com/sapphiredev/utilities/tree/main/packages/ratelimits. [Global, Guild, User]
+<!-- - Add command ratelimits using https://github.com/sapphiredev/utilities/tree/main/packages/ratelimits. [Global, Guild, User] -->
 - add https://github.com/aiko-chan-ai/Discord-Markdown (maybe)
 - add https://beta.openai.com/docs/guides/images/usage
 - add https://beta.openai.com/docs/guides/fine-tuning
