@@ -1,3 +1,5 @@
 - Add command cooldowns using https://github.com/sapphiredev/utilities/tree/main/packages/ratelimits. [Global, Guild, User]
 - Implement https://github.com/jaredwray/keyv as the cache provider (making it easy to extend the cache later)
 - add https://github.com/aiko-chan-ai/Discord-Markdown (maybe)
+- add https://beta.openai.com/docs/guides/images/usage
+- add https://beta.openai.com/docs/guides/fine-tuning

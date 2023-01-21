@@ -4,7 +4,7 @@ import { getWelcomeResults } from './event_welcome.js';
 import config from '../../config/config.js';
 import { Main } from '../index.js';
 
-const test_command_names = ['test-help', 'test-welcome', 'test-goodbye'];
+const test_command_names = ['test-help', 'test-welcome', 'test-goodbye', 'test-guild-create', 'test-guild-delete'];
 
 export default async function (message: Message) {
 	if (!message.guild) return;
@@ -61,6 +61,22 @@ export default async function (message: Message) {
 						description: `Sending to...<#${data?.GoodbyeChannel.id}>\n\n${data?.GoodbyeMessage}`
 					}
 				]
+			});
+		}
+
+		if (command === 'test-guild-create') {
+			Main.DiscordClient.emit('guildCreate', message.member.guild);
+
+			await message.channel.createMessage({
+				content: 'Test guild create plugin ran!'
+			});
+		}
+
+		if (command === 'test-guild-delete') {
+			Main.DiscordClient.emit('guildDelete', message.member.guild);
+
+			await message.channel.createMessage({
+				content: 'Test guild delete plugin ran!'
 			});
 		}
 	} else {
