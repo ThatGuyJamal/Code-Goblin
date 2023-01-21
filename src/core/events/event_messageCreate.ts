@@ -18,7 +18,9 @@ export default async function (message: Message) {
 	// Reply with the list of test commands if the bot is mentioned in a message
 	if (message.content.startsWith(botMention)) {
 		if (isOwners) {
-			const legacyCommands = Main.collections.commands.legacyCommandStoreMap.map((cmd) => `• Command :: ${config.BotPrefix}${cmd.trigger}`).join('\n');
+			const legacyCommands = Main.collections.commands.legacyCommandStoreMap
+				.map((cmd) => `• Command :: ${config.BotPrefix}${cmd.trigger}`)
+				.join('\n');
 
 			await message.channel?.createMessage({
 				embeds: [

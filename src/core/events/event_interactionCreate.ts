@@ -50,7 +50,7 @@ export default async function (interaction: AnyInteractionGateway) {
  * @param interaction The interaction to handle
  */
 async function processCommandInteraction(interaction: CommandInteraction): Promise<void> {
-	if (!interaction.guild) return
+	if (!interaction.guild) return;
 
 	const command = Main.collections.commands.commandStoreMap.get(interaction.data.name);
 
