@@ -48,8 +48,7 @@ class OpenAPIImageWrapper {
 	 * @returns
 	 */
 	public async GetBufferFromURL(URL: string): Promise<ImageBuffer> {
-        // TODO - Remove type assertion any
-		const ArrayBuffer = await(await fetch<any>(URL), FetchResultTypes.Buffer)
+		const ArrayBuffer = await(await fetch(URL), FetchResultTypes.Buffer)
 		const ConvertedBuffer = Buffer.from(ArrayBuffer) as ImageBuffer;
 		const FinalBuffer = ConvertedBuffer;
 		FinalBuffer.name = "image.png";
