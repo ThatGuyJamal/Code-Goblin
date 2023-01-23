@@ -16,7 +16,7 @@ import constants, { Milliseconds } from '../../../utils/constants.js';
 import type Main from '../../main.js';
 import { CreateCommand } from '../../structures/command.js';
 
-const variationCache = new Set();
+const variationCache = new Set<string>();
 
 export default CreateCommand({
 	trigger: 'imagine',
@@ -52,30 +52,31 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 	await interaction.defer();
 
 	try {
-		if (variationCache.has(interaction.user.id)) {
-			return await interaction.editOriginal({
-				embeds: [
-					{
-						description: instance.utils.stripIndents(
-							`
-					\`\`\`asciidoc
-					• Error :: You cant create another ${Variation ? 'variation' : 'image'}! Please wait...
-					\`\`\`
-					`
-						),
-						color: constants.numbers.colors.primary,
-						footer: {
-							text: `Requested by ${interaction.user.tag}`
-						},
-						timestamp: new Date().toISOString()
-					}
-				],
-				flags: 64,
-				allowedMentions: {
-					repliedUser: true
-				}
-			});
-		}
+
+		// if (variationCache.has(interaction.user.id)) {
+		// 	return await interaction.editOriginal({
+		// 		embeds: [
+		// 			{
+		// 				description: instance.utils.stripIndents(
+		// 					`
+		// 			\`\`\`asciidoc
+		// 			• Error :: You can only create one ${Variation ? 'variation' : 'image'} per command! Please re-run /imagine.
+		// 			\`\`\`
+		// 			`
+		// 				),
+		// 				color: constants.numbers.colors.primary,
+		// 				footer: {
+		// 					text: `Requested by ${interaction.user.tag}`
+		// 				},
+		// 				timestamp: new Date().toISOString()
+		// 			}
+		// 		],
+		// 		flags: 64,
+		// 		allowedMentions: {
+		// 			repliedUser: true
+		// 		}
+		// 	});
+		// }
 
 		await interaction.editOriginal({
 			embeds: [
@@ -197,7 +198,20 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 			interactionType: InteractionTypes.MESSAGE_COMPONENT,
 			componentType: ComponentTypes.BUTTON,
 			idle: CollectorValues.variationExpiresAfter,
-			filter: (i) => i.user.id === interaction.user.id
+			time: CollectorValues.variationRunTime,
+			max: 1,
+			// todo - create some response message to a rejection
+			filter: (i) => {
+				// If the user that clicked the button is the same as the user that created the interaction
+				// and the user is in the variation cache, they cant create a new variation
+				if(i.user.id === interaction.user.id && variationCache.has(interaction.user.id)) return false
+
+				// If the user clicked the button for the first time, add them to the variation cache
+				if (i.user.id === interaction.user.id && !variationCache.has(interaction.user.id)) variationCache.add(i.user.id);
+
+				// The user has access to create a variation
+				return true;
+			}
 		});
 
 		collector.on('collect', async (i) => {
@@ -206,19 +220,10 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 				Prompt,
 				i,
 				imageURL
-			).then(() => {
-				// Adding user to variation cache to prevent spamming
-				// todo - fix bug where users can spam the button and create multiple variations even if they are in the cache
-				variationCache.add(interaction.user.id);
-				instance.logger.info('Variation cache added user: ' + interaction.user.id);
-			});
+			)
 		});
 
 		collector.on('end', async (i) => {
-			if (variationCache.has(interaction.user.id)) {
-				variationCache.delete(interaction.user.id);
-				instance.logger.info('Variation cache removed user: ' + interaction.user.id);
-			}
 			await interaction.editOriginal({
 				components: [
 					{
