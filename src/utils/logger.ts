@@ -11,12 +11,12 @@ export class ILogger {
 		this.instance = winston.createLogger({
 			level: 'info',
 			format: winston.format.json(),
-			defaultMeta: { service: 'logger-service' },
+			defaultMeta: { service: 'bot' },
 			transports: [
-				new winston.transports.File({ filename: './logs/info.log', level: 'info' }),
-				new winston.transports.File({ filename: './logs/error.log', level: 'error' }),
-				new winston.transports.File({ filename: './logs/debug.log', level: 'debug' }),
-				new winston.transports.File({ filename: './logs/warn.log', level: 'warn' })
+				new winston.transports.File({ filename: './logs/info.log', level: 'info', maxsize: 10_000, maxFiles: 1 }),
+				new winston.transports.File({ filename: './logs/error.log', level: 'error', maxsize: 100_000, maxFiles: 2 }),
+				new winston.transports.File({ filename: './logs/debug.log', level: 'debug', maxsize: 100_000, maxFiles: 2 }),
+				new winston.transports.File({ filename: './logs/warn.log', level: 'warn', maxsize: 1_000, maxFiles: 1})
 			]
 		});
 
