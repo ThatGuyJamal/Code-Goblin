@@ -29,7 +29,6 @@ export default CreateCommand({
 			opt.setName('prompt').setDescription('The prompt to generate').setRequired(true).setMinMax(1, 1024);
 		}).setDMPermission(false);
 	},
-	// todo - setup premium system
 	premiumOnly: true,
 	ratelimit: {
 		user: new RateLimitManager(Milliseconds.MINUTE * 5, 2),
@@ -204,7 +203,7 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 		collector.on('collect', async (i) => {
 			await CreateImage(
 				instance,
-				'/imagine prompt: A desert Sea of skulls and sand. The sky is black and no sighs of life. The clouds have a dark and ominousness feel. No hope left.',
+				Prompt,
 				i,
 				imageURL
 			).then(() => {
