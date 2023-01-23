@@ -59,10 +59,10 @@ export default CreateCommand({
 				.addOption('event image', ApplicationCommandOptionTypes.STRING, (option) => {
 					option.setName('create-event-image').setDescription('The image of the Code Jam');
 				});
-		});
+		}).setDMPermission(false);
 		opt.addOption('jam-2', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 			option.setName('delete').setDescription('Delete the current Code Jam');
-		});
+		}).setDMPermission(false);
 		opt.addOption('jam-3', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 			option
 				.setName('manage')
@@ -106,19 +106,19 @@ export default CreateCommand({
 				.addOption('update event end', ApplicationCommandOptionTypes.STRING, (option) => {
 					option.setName('manage-event-end').setDescription('Update the end date of the Code Jam');
 				});
-		});
+		}).setDMPermission(false);
 		opt.addOption('jam-4', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 			option.setName('join').setDescription('Join a Code Jam');
-		});
+		}).setDMPermission(false);
 		opt.addOption('jam-5', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 			option.setName('leave').setDescription('Leave a Code Jam');
-		});
+		}).setDMPermission(false);
 		opt.addOption('jam-6', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 			option.setName('info').setDescription('Current Code Jam Info');
-		});
+		}).setDMPermission(false);
 		opt.addOption('jam-7', ApplicationCommandOptionTypes.SUB_COMMAND, (option) => {
 			option.setName('end').setDescription('End Current Code Jam Info');
-		});
+		}).setDMPermission(false);
 	},
 	register: isCanary ? 'guild' : 'global',
 	run: async ({ instance, interaction }) => {

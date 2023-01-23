@@ -60,7 +60,8 @@ export default CreateCommand({
 			})
 			.addOption('channel', ApplicationCommandOptionTypes.CHANNEL, (option) => {
 				option.setName('channel').setDescription('The channel to send the embed to').setChannelTypes([ChannelTypes.GUILD_TEXT]);
-			});
+			})
+			.setDMPermission(false);
 	},
 	register: isCanary ? 'guild' : 'global',
 	run: async ({ instance, interaction }) => {

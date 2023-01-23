@@ -55,8 +55,6 @@ export default async function (interaction: AnyInteractionGateway) {
  * @param interaction The interaction to handle
  */
 async function processCommandInteraction(interaction: CommandInteraction): Promise<void> {
-	if (!interaction.guild) return;
-
 	const command = Main.collections.commands.commandStoreMap.get(interaction.data.name);
 
 	const isOwner = Main.utils.isOwner(interaction.user.id);
@@ -181,8 +179,8 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		let guildManager = command.ratelimit.guild;
 		let userManager = command.ratelimit.user;
 
-		let GlobalRateLimit = globalManager?.acquire(interaction.guild.id);
-		let GuildRateLimit = guildManager?.acquire(interaction.guild.id);
+		let GlobalRateLimit = globalManager?.acquire(interaction.data.name);
+
 		let UserRateLimit = userManager?.acquire(interaction.user.id);
 
 		if (command.ratelimit.global) {
@@ -207,26 +205,29 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 			GlobalRateLimit?.consume();
 		}
 
-		if (command.ratelimit.guild) {
-			if (GuildRateLimit?.limited) {
-				return await interaction.createMessage({
-					embeds: [
-						{
-							description: Main.utils.stripIndents(
-								`
+		if (interaction.guild) {
+			let GuildRateLimit = guildManager?.acquire(interaction.guild.id);
+			if (command.ratelimit.guild) {
+				if (GuildRateLimit?.limited) {
+					return await interaction.createMessage({
+						embeds: [
+							{
+								description: Main.utils.stripIndents(
+									`
 							\`\`\`asciidoc
 							• Error :: This command is currently rate-limited in this guild. Please try again in ${formatter.format(GuildRateLimit.remainingTime)}
 							\`\`\`
 							`
-							),
-							color: constants.numbers.colors.primary
-						}
-					],
-					flags: MessageFlags.EPHEMERAL
-				});
+								),
+								color: constants.numbers.colors.primary
+							}
+						],
+						flags: MessageFlags.EPHEMERAL
+					});
+				}
+			} else {
+				GuildRateLimit?.consume();
 			}
-		} else {
-			GuildRateLimit?.consume();
 		}
 		if (command.ratelimit.user) {
 			if (UserRateLimit?.limited) {
