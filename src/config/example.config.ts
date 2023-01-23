@@ -8,6 +8,7 @@ export default {
 	BotClientId: '1055671501870874634',
 	BotClientOAuth2Url:
 		'https://discord.com/api/oauth2/authorize?client_id=1055671501870874634&permissions=148981992464&scope=bot%20applications.commands',
+	BotClientOAuth2UrlShort: 'http://bit.ly/3Wvqk5u',
 	BotName: 'Code Goblin',
 	BotPrefix: 'c!',
 	BotActivityType: ActivityTypes.LISTENING as BotActivityTypes,

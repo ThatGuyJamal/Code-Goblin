@@ -50,15 +50,18 @@ export default CreateCommand({
 	},
 	run: async ({ instance, interaction }) => {
 		const global = (await GlobalStatsModel.findOne({ find_id: 'global' })) as GlobalStatistics;
+		
 		let dbStatus = instance.database.network_status();
 
 		const { guilds, users } = instance.DiscordClient;
 
-		let pluginSize =
+		let pluginSize: number =
 			instance.collections.controllers.goodbye.cache.size +
 			instance.collections.controllers.welcome.cache.size +
 			instance.collections.controllers.tags.cache.size +
-			instance.collections.controllers.jam.cache.size;
+			instance.collections.controllers.jam.cache.size +
+			instance.collections.controllers.premiumUsers.cache.size;
+
 
 		await interaction.createMessage({
 			embeds: [

@@ -35,3 +35,5 @@ These commands are only available to premium users. The main reason is because t
 `Code Goblin` is an open source bot dedicated to helping programmers make learning easier within discord. We are always looking for support in the form of code contributions, bug reports, and feature requests. If you would like to contribute to the project, please clone the repository and submit a pull request.
 
 ## `Self Hosting`
+
+Information coming later.
