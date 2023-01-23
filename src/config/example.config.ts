@@ -27,6 +27,7 @@ export default {
 	IsInDevelopmentMode: true,
 	BotApiLogChannelId: isCanary ? '' : '1056292297756639342',
 	BotErrorLogChannelId: isCanary ? '' : '1056339397194297384',
+	BotPremiumLogChannelId: isCanary ? '' : '1064732671399432202',
 	SuperUsers: [
 		// ThatGuyJamal
 		'370637638820036608'

@@ -31,8 +31,10 @@ export default class Utils {
 	 * @param options
 	 * @returns
 	 */
-	public async sendToLogChannel(type: 'error' | 'api', message: string, custom?: boolean, name?: string, options?: CreateMessageOptions) {
-		const log = this.instance.DiscordClient.getChannel(type === 'error' ? config.BotErrorLogChannelId : config.BotApiLogChannelId) as TextChannel;
+	public async sendToLogChannel(type: 'error' | 'api' | "premium", message: string, custom?: boolean, name?: string, options?: CreateMessageOptions) {
+		const log = this.instance.DiscordClient.getChannel(
+			type === 'error' ? config.BotErrorLogChannelId : type === 'api' ? config.BotApiLogChannelId : config.BotPremiumLogChannelId
+		) as TextChannel;
 
 		if (!log) return;
 

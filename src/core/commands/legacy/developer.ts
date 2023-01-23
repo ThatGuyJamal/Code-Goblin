@@ -288,7 +288,7 @@ export default CreateLegacyCommand({
 							});
 
 							await instance.utils.sendToLogChannel(
-								'api',
+								"premium",
 								utils.stripIndents(`
 							Premium user added.
 
@@ -409,7 +409,7 @@ export default CreateLegacyCommand({
 							});
 
 							await instance.utils.sendToLogChannel(
-								'api',
+								'premium',
 								utils.stripIndents(`
 							Premium user Removed.
 
