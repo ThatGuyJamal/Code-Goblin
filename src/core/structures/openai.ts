@@ -7,6 +7,7 @@ import { logger } from '../../utils/index.js';
 import { Collection } from 'oceanic.js';
 import { Queue } from '../../utils/queue.js';
 import { CDN } from '../../utils/cdn.js';
+import { Milliseconds } from '../../utils/constants.js';
 
 /**
  * The OpenAI Wrapper class
@@ -23,6 +24,8 @@ export class OpenAPIImageWrapper {
 	public constructor(configuration: Configuration) {
 		this.openAI = new OpenAIApi(configuration);
 		logger.info('OpenAI API Wrapper initialized');
+
+		this.clearImagesCache();
 	}
 
 	/**
@@ -162,5 +165,11 @@ export class OpenAPIImageWrapper {
 	// todo - implement this
 	public GetDiscordCDNAttachment(file: string) {
 		// const cnd_url = "https://cdn.discordapp.com/attachments/";
+	}
+
+	private clearImagesCache() {
+		setInterval(() => {
+			this.Images.clear();
+		}, Milliseconds.HOUR * 1);
 	}
 }
