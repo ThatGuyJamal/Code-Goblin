@@ -194,8 +194,8 @@ export default class Utils {
 
 	/**
 	 * Checks if a string is a user id
-	 * @param str 
-	 * @returns 
+	 * @param str
+	 * @returns
 	 */
 	public isUserId(str: string): boolean {
 		return str.match(/^[0-9]{17,19}$/) !== null;

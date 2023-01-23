@@ -16,7 +16,7 @@ export class ILogger {
 				new winston.transports.File({ filename: './logs/info.log', level: 'info', maxsize: 10_000, maxFiles: 1 }),
 				new winston.transports.File({ filename: './logs/error.log', level: 'error', maxsize: 100_000, maxFiles: 2 }),
 				new winston.transports.File({ filename: './logs/debug.log', level: 'debug', maxsize: 100_000, maxFiles: 2 }),
-				new winston.transports.File({ filename: './logs/warn.log', level: 'warn', maxsize: 1_000, maxFiles: 1})
+				new winston.transports.File({ filename: './logs/warn.log', level: 'warn', maxsize: 1_000, maxFiles: 1 })
 			]
 		});
 

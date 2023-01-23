@@ -52,7 +52,6 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 	await interaction.defer();
 
 	try {
-
 		// if (variationCache.has(interaction.user.id)) {
 		// 	return await interaction.editOriginal({
 		// 		embeds: [
@@ -204,7 +203,7 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 			filter: (i) => {
 				// If the user that clicked the button is the same as the user that created the interaction
 				// and the user is in the variation cache, they cant create a new variation
-				if(i.user.id === interaction.user.id && variationCache.has(interaction.user.id)) return false
+				if (i.user.id === interaction.user.id && variationCache.has(interaction.user.id)) return false;
 
 				// If the user clicked the button for the first time, add them to the variation cache
 				if (i.user.id === interaction.user.id && !variationCache.has(interaction.user.id)) variationCache.add(i.user.id);
@@ -215,12 +214,7 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 		});
 
 		collector.on('collect', async (i) => {
-			await CreateImage(
-				instance,
-				Prompt,
-				i,
-				imageURL
-			)
+			await CreateImage(instance, Prompt, i, imageURL);
 		});
 
 		collector.on('end', async (i) => {

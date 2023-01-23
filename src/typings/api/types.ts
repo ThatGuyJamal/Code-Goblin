@@ -34,5 +34,5 @@ export interface StringFile extends File {
 /** Time values for the interaction collector */
 export enum CollectorValues {
 	variationRunTime = Milliseconds.MINUTE * 2,
-	variationExpiresAfter = Milliseconds.MINUTE * 1,
+	variationExpiresAfter = Milliseconds.MINUTE * 1
 }

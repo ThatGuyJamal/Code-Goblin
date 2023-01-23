@@ -132,19 +132,19 @@ export class PremiumUserCommandController {
 	}
 
 	public async getAllPremiumUsers(): Promise<PremiumUserSchema[] | null> {
-		if(!this.cachingDisabled) {
+		if (!this.cachingDisabled) {
 			// Loop through cache and return all premium users
 			const premiumUsers: PremiumUserSchema[] = [];
 
-			for(const user of this.cache.values()) {
-				if(user.activated) premiumUsers.push(user);
+			for (const user of this.cache.values()) {
+				if (user.activated) premiumUsers.push(user);
 			}
 
-			if(premiumUsers.length === 0 ) return null
+			if (premiumUsers.length === 0) return null;
 
 			return premiumUsers;
 		}
 
-		return await this.query.find({ activated: true }) ?? null;
+		return (await this.query.find({ activated: true })) ?? null;
 	}
 }

@@ -418,9 +418,11 @@ export default CreateLegacyCommand({
 								});
 							}
 
-							const users = premiumUsers.map((user: PremiumUserSchema) => {
-								return `> ${instance.utils.userMention(user.user_id)} (ID:${user.user_id})`;
-							}).join('\n');
+							const users = premiumUsers
+								.map((user: PremiumUserSchema) => {
+									return `> ${instance.utils.userMention(user.user_id)} (ID:${user.user_id})`;
+								})
+								.join('\n');
 
 							return await message.channel?.createMessage({
 								embeds: [
@@ -436,9 +438,7 @@ export default CreateLegacyCommand({
 										color: constants.numbers.colors.primary
 									}
 								]
-							})
-
-							
+							});
 						} catch (error) {
 							message.channel?.createMessage({
 								embeds: [
