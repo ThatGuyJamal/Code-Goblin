@@ -11,6 +11,7 @@ import { WelcomeCommandController } from '../database/mongodb/controllers/welcom
 import type { MainCollections } from '../typings/core/types.js';
 import { logger as ILogger, Utils } from '../utils/index.js';
 import { DiscordClient as IDiscordClient } from './structures/client.js';
+import { PremiumUserCommandController } from '../database/mongodb/controllers/premium.js';
 
 /**
  * The main instance of the application. This is the entry point for the bot.
@@ -45,7 +46,8 @@ export default class Main {
 				tags: new TagCommandController(this),
 				welcome: new WelcomeCommandController(this),
 				goodbye: new GoodbyeCommandController(this),
-				jam: new CodeJamCommandController(this)
+				jam: new CodeJamCommandController(this),
+				premiumUsers: new PremiumUserCommandController(this)
 			},
 			keys: {
 				super_users: new Set(config.SuperUsers),

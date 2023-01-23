@@ -114,7 +114,7 @@ export class DiscordClient extends Client {
 		this.instance.utils.addCommand((await import('../commands/openai/imagine.js')).default as CommandDataProp);
 		this.instance.utils.addCommand((await import('../plugins/tag/cmd.js')).default as CommandDataProp);
 		this.instance.utils.addCommand((await import('../plugins/jam/cmd.js')).default as CommandDataProp);
-		this.instance.utils.addLegacyCommand((await import('../commands/legacy/test_plugin.js')).default as LegacyCommand);
-		this.instance.utils.addLegacyCommand((await import('../commands//legacy/commands.js')).default as LegacyCommand);
+		this.instance.utils.addLegacyCommand((await import('../commands/legacy/developer.js')).default as LegacyCommand);
+		this.instance.utils.addLegacyCommand((await import('../commands/legacy/commands.js')).default as LegacyCommand);
 	}
 }

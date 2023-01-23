@@ -11,13 +11,10 @@ import {
 } from 'oceanic.js';
 import type { CreateImageRequest } from 'openai';
 import { isCanary } from '../../../config/config.js';
+import { CollectorValues } from '../../../typings/api/types.js';
 import constants, { Milliseconds } from '../../../utils/constants.js';
 import type Main from '../../main.js';
 import { CreateCommand } from '../../structures/command.js';
-
-enum CollectFor {
-	time = Milliseconds.SECOND * 30
-}
 
 const variationCache = new Set();
 
@@ -35,8 +32,8 @@ export default CreateCommand({
 	// todo - setup premium system
 	premiumOnly: true,
 	ratelimit: {
-		user: new RateLimitManager(Milliseconds.MINUTE * 10, 2),
-		guild: new RateLimitManager(Milliseconds.HOUR * 1, 10)
+		user: new RateLimitManager(Milliseconds.MINUTE * 5, 2),
+		guild: new RateLimitManager(Milliseconds.HOUR * 1, 20)
 	},
 	register: isCanary ? 'guild' : 'global',
 	run: async ({ instance, interaction }) => {
@@ -200,7 +197,7 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 			message: message,
 			interactionType: InteractionTypes.MESSAGE_COMPONENT,
 			componentType: ComponentTypes.BUTTON,
-			idle: CollectFor.time,
+			idle: CollectorValues.variationExpiresAfter,
 			filter: (i) => i.user.id === interaction.user.id
 		});
 

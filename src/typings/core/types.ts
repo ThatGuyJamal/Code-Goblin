@@ -9,6 +9,7 @@ import type { TagCommandController } from '../../database/mongodb/controllers/ta
 import type { WelcomeCommandController } from '../../database/mongodb/controllers/welcome.js';
 import type { RateLimitManager } from '@sapphire/ratelimits';
 import type { OpenAPIImageWrapper } from '../../core/structures/openai.js';
+import type { PremiumUserCommandController } from '../../database/mongodb/controllers/premium.js';
 
 export interface MainCollections {
 	/** A Collection of all command information and data */
@@ -45,6 +46,7 @@ interface MainCollectionControllers {
 	welcome: WelcomeCommandController;
 	goodbye: GoodbyeCommandController;
 	jam: CodeJamCommandController;
+	premiumUsers: PremiumUserCommandController;
 }
 
 export interface CommandDataProp {

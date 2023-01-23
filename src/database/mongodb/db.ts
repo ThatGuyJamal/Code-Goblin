@@ -4,6 +4,7 @@ import type { Main } from '../../core/index.js';
 import type { DatabaseSchemas, NetworkStatusReturnTypes } from '../../typings/database/types.js';
 import { GoodbyeModel } from './models/goodbye.js';
 import { CodeJamModel } from './models/jam.js';
+import { PremiumUserModel } from './models/premium.js';
 import { TagModel } from './models/tag.js';
 import { WelcomeModel } from './models/welcome.js';
 
@@ -19,7 +20,8 @@ export class Database {
 			welcome: WelcomeModel,
 			goodbye: GoodbyeModel,
 			tag: TagModel,
-			jam: CodeJamModel
+			jam: CodeJamModel,
+			premiumUser: PremiumUserModel
 		};
 	}
 

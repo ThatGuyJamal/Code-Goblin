@@ -21,6 +21,7 @@ export interface DatabaseSchemas {
 	welcome: Model<WelcomeSchema, {}, {}, {}, any>;
 	tag: Model<TagSchema, {}, {}, {}, any>;
 	jam: Model<CodeJamSchema, {}, {}, {}, any>;
+	premiumUser: Model<PremiumUserSchema, {}, {}, {}, any>;
 }
 
 export interface WelcomeSchema {
@@ -85,4 +86,19 @@ export interface CodeJamSchema {
 	created_by_name: string;
 	created_by_id: string;
 	created_at: Date;
+}
+
+export interface PremiumUserSchema {
+	user_id: string;
+	activated: boolean;
+	activated_at: number | null;
+	/** Some users can have life time access */
+	expires_at: Date | null;
+	level: PremiumUserLevels | null;
+}
+
+export enum PremiumUserLevels {
+	LIFE_TIME = 'lifetime',
+	MONTHLY = 'monthly',
+	YEARLY = 'yearly'
 }

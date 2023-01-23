@@ -49,6 +49,7 @@ export default {
 		tags: true,
 		welcome: false,
 		goodbye: false,
-		jam: false
+		jam: false,
+		premium_users: false
 	}
 };

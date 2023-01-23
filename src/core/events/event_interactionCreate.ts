@@ -97,7 +97,7 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		});
 	}
 
-	if (command?.premiumOnly && !isOwner) {
+	if (command?.premiumOnly && !Main.collections.controllers.premiumUsers.isPremiumUser(interaction.user.id) && !isOwner) {
 		return await interaction.createMessage({
 			embeds: [
 				{

@@ -173,6 +173,35 @@ export default class Utils {
 	}
 
 	/**
+	 * Creates a discord id from a mention
+	 * @param mention
+	 * @returns
+	 */
+	public parseUserIdFromMention(mention: string): string {
+		return mention.replace(/[<@!>]/g, '');
+	}
+
+	/**
+	 * Checks if a string is a user mention
+	 * @param str
+	 * @returns
+	 */
+	public isUserMention(str: string): boolean {
+		// Check if the string is a mention
+		if (!str.startsWith('<@') || !str.endsWith('>')) return false;
+		return true;
+	}
+
+	/**
+	 * Checks if a string is a user id
+	 * @param str 
+	 * @returns 
+	 */
+	public isUserId(str: string): boolean {
+		return str.match(/^[0-9]{17,19}$/) !== null;
+	}
+
+	/**
 	 * Converts a date string to a discord timestamp
 	 * @example 1d => <t:86400:d>
 	 * @param date

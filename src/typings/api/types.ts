@@ -1,5 +1,6 @@
 import type { ImagesResponseDataInner } from 'openai';
 import type { AxiosRequestConfig } from 'axios';
+import { Milliseconds } from '../../utils/constants.js';
 
 export interface ImageBuffer extends Buffer {
 	name: string;
@@ -28,4 +29,9 @@ export interface ImageVariationOptions {
 
 export interface StringFile extends File {
 	name: string;
+}
+
+/** Time values for the interaction collector */
+export enum CollectorValues {
+	variationExpiresAfter = Milliseconds.SECOND * 90
 }

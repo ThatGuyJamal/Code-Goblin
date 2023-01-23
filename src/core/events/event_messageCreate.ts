@@ -150,6 +150,7 @@ async function processLegacyCommand(message: Message, command: LegacyCommand | u
 
 	const isOwners = Main.utils.isOwner(message.author.id);
 
+	// Creates the args array
 	const args = message.content.split(' ').slice(1);
 
 	if (command.devOnly && !isOwners) {
