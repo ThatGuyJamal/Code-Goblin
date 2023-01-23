@@ -295,7 +295,7 @@ export default CreateLegacyCommand({
 							• User ID      = ${instance.utils.userMention(Data!.user_id)} (ID:${Data!.user_id})
 							• Level        = ${Data!.level}
 							• Activated    = ${Data!.activated ? 'Yes' : 'No'}
-							• Activated At = ${formatter.format(Data!.activated_at!)}
+							• Activated At = ${formatter.format(Data!.activated_at! - Date.now())}
 							• Expires At   = ${Data!.expires_at ?? 'Never'}
 							`),
 								true,
