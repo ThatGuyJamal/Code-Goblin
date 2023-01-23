@@ -52,31 +52,6 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 	await interaction.defer();
 
 	try {
-		// if (variationCache.has(interaction.user.id)) {
-		// 	return await interaction.editOriginal({
-		// 		embeds: [
-		// 			{
-		// 				description: instance.utils.stripIndents(
-		// 					`
-		// 			\`\`\`asciidoc
-		// 			• Error :: You can only create one ${Variation ? 'variation' : 'image'} per command! Please re-run /imagine.
-		// 			\`\`\`
-		// 			`
-		// 				),
-		// 				color: constants.numbers.colors.primary,
-		// 				footer: {
-		// 					text: `Requested by ${interaction.user.tag}`
-		// 				},
-		// 				timestamp: new Date().toISOString()
-		// 			}
-		// 		],
-		// 		flags: 64,
-		// 		allowedMentions: {
-		// 			repliedUser: true
-		// 		}
-		// 	});
-		// }
-
 		await interaction.editOriginal({
 			embeds: [
 				{
