@@ -4,6 +4,9 @@ import { getWelcomeResults } from '../../events/event_welcome.js';
 import { getGoodbyeResults } from '../../events/event_goodbye.js';
 import config from '../../../config/config.js';
 import { PremiumUserLevels, PremiumUserSchema } from '../../../typings/database/types.js';
+import { DurationFormatter } from '@sapphire/duration';
+
+const formatter = new DurationFormatter();
 
 export default CreateLegacyCommand({
 	trigger: 'dev',
@@ -185,7 +188,7 @@ export default CreateLegacyCommand({
 											description: instance.utils.stripIndents(
 												`
 						\`\`\`asciidoc
-						• Error :: Invalid user ID provided. Please mention the user.
+						• Error :: Invalid user ID provided.
 						\`\`\`
 						`
 											),
@@ -233,34 +236,42 @@ export default CreateLegacyCommand({
 								});
 							}
 
+							let Data: PremiumUserSchema;
+
 							if (args[3].toLowerCase() === 'lifetime' || args[3].toLowerCase() === 'l') {
-								await instance.collections.controllers.premiumUsers.CreatePremiumUser({
-									user_id: args[2],
-									activated: true,
-									activated_at: Date.now(),
-									expires_at: null,
-									level: PremiumUserLevels.LIFE_TIME
-								});
+								await instance.collections.controllers.premiumUsers
+									.CreatePremiumUser({
+										user_id: args[2],
+										activated: true,
+										activated_at: Date.now(),
+										expires_at: null,
+										level: PremiumUserLevels.LIFE_TIME
+									})
+									.then((data) => (Data = data));
 							}
 
 							if (args[3].toLowerCase() === 'yearly' || args[3].toLowerCase() === 'y') {
-								await instance.collections.controllers.premiumUsers.CreatePremiumUser({
-									user_id: args[2],
-									activated: true,
-									activated_at: Date.now(),
-									expires_at: null,
-									level: PremiumUserLevels.YEARLY
-								});
+								await instance.collections.controllers.premiumUsers
+									.CreatePremiumUser({
+										user_id: args[2],
+										activated: true,
+										activated_at: Date.now(),
+										expires_at: null,
+										level: PremiumUserLevels.YEARLY
+									})
+									.then((data) => (Data = data));
 							}
 
 							if (args[3].toLowerCase() === 'monthly' || args[3].toLowerCase() === 'm') {
-								await instance.collections.controllers.premiumUsers.CreatePremiumUser({
-									user_id: args[2],
-									activated: true,
-									activated_at: Date.now(),
-									expires_at: null,
-									level: PremiumUserLevels.MONTHLY
-								});
+								await instance.collections.controllers.premiumUsers
+									.CreatePremiumUser({
+										user_id: args[2],
+										activated: true,
+										activated_at: Date.now(),
+										expires_at: null,
+										level: PremiumUserLevels.MONTHLY
+									})
+									.then((data) => (Data = data));
 							}
 
 							await message.channel?.createMessage({
@@ -275,6 +286,21 @@ export default CreateLegacyCommand({
 									}
 								]
 							});
+
+							await instance.utils.sendToLogChannel(
+								'api',
+								utils.stripIndents(`
+							Premium user added.
+
+							• User ID      = ${instance.utils.userMention(Data!.user_id)} (ID:${Data!.user_id})
+							• Level        = ${Data!.level}
+							• Activated    = ${Data!.activated ? 'Yes' : 'No'}
+							• Activated At = ${formatter.format(Data!.activated_at!)}
+							• Expires At   = ${Data!.expires_at ?? 'Never'}
+							`),
+								true,
+								'Premium'
+							);
 						} catch (error) {
 							message.channel?.createMessage({
 								embeds: [
@@ -312,7 +338,7 @@ export default CreateLegacyCommand({
 								});
 							}
 
-							if (!args[2]) {
+							if (!utils.isUserId(args[2])) {
 								return await message.channel?.createMessage({
 									embeds: [
 										{
@@ -381,6 +407,17 @@ export default CreateLegacyCommand({
 									}
 								]
 							});
+
+							await instance.utils.sendToLogChannel(
+								'api',
+								utils.stripIndents(`
+							Premium user Removed.
+
+							User = ${instance.utils.userMention(args[2])} (ID:${args[2]})
+							`),
+								true,
+								'Premium'
+							);
 						} catch (error) {
 							message.channel?.createMessage({
 								embeds: [
@@ -432,7 +469,8 @@ export default CreateLegacyCommand({
 						\`\`\`asciidoc
 						• Success :: Premium users listed.
 						\`\`\`
-						**Users:** ${users}
+						**Users:**
+						${users}
 						`
 										),
 										color: constants.numbers.colors.primary

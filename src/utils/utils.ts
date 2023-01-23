@@ -23,50 +23,79 @@ export default class Utils {
 	}
 
 	/**
-	 * Sends logs to the log channels
-	 * @param type
+	 * Sends a message to the log channels
+	 * @param type of log channel
+	 * @param message to send
+	 * @param custom if the message input needs custom formatting
+	 * @param name of the log
 	 * @param options
 	 * @returns
 	 */
-	public async sendToLogChannel(type: 'error' | 'api', message: string, options?: CreateMessageOptions) {
+	public async sendToLogChannel(type: 'error' | 'api', message: string, custom?: boolean, name?: string, options?: CreateMessageOptions) {
 		const log = this.instance.DiscordClient.getChannel(type === 'error' ? config.BotErrorLogChannelId : config.BotApiLogChannelId) as TextChannel;
 
 		if (!log) return;
 
 		if (type === 'error') {
-			await log.createMessage({
-				embeds: [
-					{
-						description: this.instance.utils.stripIndents(
-							`
+			if (custom) {
+				await log.createMessage({
+					embeds: [
+						{
+							description: message,
+							color: constants.numbers.colors.tertiary,
+							timestamp: new Date().toISOString()
+						}
+					],
+					flags: MessageFlags.EPHEMERAL
+				});
+			} else {
+				await log.createMessage({
+					embeds: [
+						{
+							description: this.instance.utils.stripIndents(
+								`
 \`\`\`asciidoc
-• Error Log :: ${message}
+• ${name ?? 'Error'} Log :: ${message}
 \`\`\`
 `
-						),
-						color: constants.numbers.colors.tertiary,
-						timestamp: new Date().toISOString()
-					}
-				],
-				flags: MessageFlags.EPHEMERAL
-			});
+							),
+							color: constants.numbers.colors.tertiary,
+							timestamp: new Date().toISOString()
+						}
+					],
+					flags: MessageFlags.EPHEMERAL
+				});
+			}
 		} else {
-			await log.createMessage({
-				embeds: [
-					{
-						description: this.instance.utils.stripIndents(
-							`
+			if (custom) {
+				await log.createMessage({
+					embeds: [
+						{
+							description: message,
+							color: constants.numbers.colors.secondary,
+							timestamp: new Date().toISOString()
+						}
+					],
+					flags: MessageFlags.EPHEMERAL
+				});
+			} else {
+				await log.createMessage({
+					embeds: [
+						{
+							description: this.instance.utils.stripIndents(
+								`
 \`\`\`asciidoc
-• Info Log :: ${message}
+• ${name ?? 'Info'} Log :: ${message}
 \`\`\`
 `
-						),
-						color: constants.numbers.colors.secondary,
-						timestamp: new Date().toISOString()
-					}
-				],
-				flags: MessageFlags.EPHEMERAL
-			});
+							),
+							color: constants.numbers.colors.secondary,
+							timestamp: new Date().toISOString()
+						}
+					],
+					flags: MessageFlags.EPHEMERAL
+				});
+			}
 		}
 	}
 
