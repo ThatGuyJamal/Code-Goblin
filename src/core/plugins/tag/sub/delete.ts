@@ -1,11 +1,11 @@
-import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, MessageFlags, Permissions } from 'oceanic.js';
+import { CommandInteraction, AnyTextChannelWithoutGroup, Uncached, MessageFlags } from 'oceanic.js';
 import { constants } from '../../../../utils/index.js';
 import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
 	await interaction.defer(64);
 
-	if (!interaction.member?.permissions.has(Permissions.MANAGE_MESSAGES)) {
+	if (!instance.utils.hasPermissions(interaction, 'MANAGE_MESSAGES')) {
 		return await interaction.createFollowup({
 			embeds: [
 				{

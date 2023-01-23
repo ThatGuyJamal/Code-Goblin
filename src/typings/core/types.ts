@@ -8,7 +8,7 @@ import type { CodeJamCommandController } from '../../database/mongodb/controller
 import type { TagCommandController } from '../../database/mongodb/controllers/tag.js';
 import type { WelcomeCommandController } from '../../database/mongodb/controllers/welcome.js';
 import type { RateLimitManager } from '@sapphire/ratelimits';
-import type { OpenAPIImageWrapper } from '../../api/openai_wapper.js';
+import type { OpenAPIImageWrapper } from '../../core/structures/openai.js';
 
 export interface MainCollections {
 	/** A Collection of all command information and data */
@@ -52,6 +52,7 @@ export interface CommandDataProp {
 	toJson: () => CreateApplicationCommandOptions;
 }
 
+/** The type of command to register */
 export type CommandRegisterType = 'global' | 'guild' | 'both';
 
 /**
@@ -121,4 +122,16 @@ export interface CommandRateLimit {
 	guild?: RateLimitManager;
 	/** The limits for the whole bot */
 	global?: RateLimitManager;
+}
+
+/** Values for the client */
+export enum ClientLimits {
+	/** Max Users to cache */
+	MAX_USERS_TO_CACHE = 100000,
+	/** Max messages to cache */
+	MAX_MESSAGES_TO_CACHE = 0,
+	/** Max members to cache */
+	MAX_MEMBERS_TO_CACHE = 1_000,
+	/** The largeThreshold for the cache */
+	LARGE_THRESHOLD = 250
 }

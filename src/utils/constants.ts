@@ -22,6 +22,8 @@ export default {
 	}
 };
 
+export const API_VERSION = 10;
+
 /**
  * A collection of all the milliseconds in a year
  */

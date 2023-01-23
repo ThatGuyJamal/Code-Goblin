@@ -1,11 +1,12 @@
 import { Configuration, CreateImageRequest, OpenAIApi } from 'openai';
 import type { AxiosRequestConfig } from 'axios';
 import { randomUUID } from 'node:crypto';
-import type { ImageBuffer, ImageResult, ImageVariationOptions } from '../typings/api/types.js';
+import type { ImageBuffer, ImageResult, ImageVariationOptions } from '../../typings/api/types.js';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
-import { logger } from '../utils/index.js';
+import { logger } from '../../utils/index.js';
 import { Collection } from 'oceanic.js';
-import { Queue } from '../utils/queue.js';
+import { Queue } from '../../utils/queue.js';
+import { CDN } from '../../utils/cdn.js';
 
 /**
  * The OpenAI Wrapper class
@@ -15,7 +16,9 @@ import { Queue } from '../utils/queue.js';
 export class OpenAPIImageWrapper {
 	private openAI: OpenAIApi;
 	private Images = new Collection<string, string>();
+	// todo implement this
 	public queue = new Queue<ImageResult[]>();
+	public cdn = new CDN();
 
 	public constructor(configuration: Configuration) {
 		this.openAI = new OpenAIApi(configuration);

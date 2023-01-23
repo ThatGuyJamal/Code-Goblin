@@ -9,6 +9,20 @@ import type { Command, CommandDataProp, LegacyCommand } from '../../typings/core
  * Creates a new command
  * @param props The command properties
  * @returns The command
+ * 
+ * @example
+ * ```ts
+ * export default CreateCommand({
+	trigger: '',
+	description: ``,
+	type: ApplicationCommandTypes.CHAT_INPUT,
+	requiredBotPermissions: ['SEND_MESSAGES', 'EMBED_LINKS'],
+	requiredUserPermissions: ['SEND_MESSAGES'],
+	options: (opt) => {},
+	register: isCanary ? 'guild' : 'global',
+	run: async ({ instance, interaction}) => {}
+});
+```
  */
 export function CreateCommand(props: Command): CommandDataProp {
 	return {

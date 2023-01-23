@@ -2,7 +2,7 @@ import { Client, Guild, User } from 'oceanic.js';
 import config from '../../config/config.js';
 import type { Main } from '../index.js';
 
-import type { CommandDataProp, LegacyCommand } from '../../typings/core/types.js';
+import { ClientLimits, CommandDataProp, LegacyCommand } from '../../typings/core/types.js';
 
 import event_debug from '../events/event_debug.js';
 import event_goodbye from '../events/event_goodbye.js';
@@ -19,9 +19,9 @@ export class DiscordClient extends Client {
 		super({
 			auth: `Bot ${config.BotToken}`,
 			collectionLimits: {
-				members: 2_000,
-				messages: 0,
-				users: 1_000
+				members: ClientLimits.MAX_MEMBERS_TO_CACHE,
+				messages: ClientLimits.MAX_MESSAGES_TO_CACHE,
+				users: ClientLimits.MAX_USERS_TO_CACHE
 			},
 			allowedMentions: {
 				everyone: false
@@ -49,7 +49,7 @@ export class DiscordClient extends Client {
 					'GUILD_EMOJIS_AND_STICKERS',
 					'GUILD_SCHEDULED_EVENTS'
 				],
-				largeThreshold: 500,
+				largeThreshold: ClientLimits.LARGE_THRESHOLD,
 				maxReconnectAttempts: Infinity,
 				maxResumeAttempts: 10,
 				maxShards: 1,
@@ -96,8 +96,8 @@ export class DiscordClient extends Client {
 			.on('messageCreate', async (message) => {
 				await event_messageCreate(message);
 			})
-			.on('debug', (info) => {
-				event_debug(this, info);
+			.on('debug', async (info) => {
+				await event_debug(this, info);
 			})
 			.on('error', (err) => {
 				logger.error(err);

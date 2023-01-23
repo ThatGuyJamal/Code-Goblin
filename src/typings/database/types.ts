@@ -5,6 +5,7 @@ export interface NetworkStatusReturnTypes {
 	status: ConnectionStates;
 }
 
+/** The global statistics types */
 export interface GlobalStatistics {
 	/** The id to find on the query */
 	find_id: string;
@@ -14,6 +15,7 @@ export interface GlobalStatistics {
 	commands_failed: number;
 }
 
+/** The database schemas */
 export interface DatabaseSchemas {
 	goodbye: Model<GoodbyeSchema, {}, {}, {}, any>;
 	welcome: Model<WelcomeSchema, {}, {}, {}, any>;

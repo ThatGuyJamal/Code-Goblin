@@ -1,9 +1,19 @@
-import { CreateMessageOptions, Member, MessageFlags, TextChannel } from 'oceanic.js';
+import {
+	AnyTextChannelWithoutGroup,
+	CommandInteraction,
+	CreateMessageOptions,
+	PermissionName,
+	Member,
+	MessageFlags,
+	TextChannel,
+	Uncached
+} from 'oceanic.js';
 import { constants, logger } from './index.js';
 import { stripIndents } from 'common-tags';
 import config from '../config/config.js';
 import type Main from '../core/main.js';
 import type { Command, CommandDataProp, LegacyCommand } from '../typings/core/types.js';
+import type { TimestampStylesString } from '../typings/utils/types.js';
 
 export default class Utils {
 	private instance: Main;
@@ -141,6 +151,23 @@ export default class Utils {
 		}
 	}
 
+	/**
+	 * Checks if a user has the required permissions
+	 * @param i The interaction
+	 * @param permissions The permissions to check for
+	 * @returns
+	 */
+	public hasPermissions(i: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>, permissions: PermissionName): boolean {
+		if (this.instance.collections.keys.super_users.has(i.user.id)) return true;
+		if (i.member?.permissions.has(permissions)) return true;
+		return false;
+	}
+
+	/**
+	 * Checks if the user is a bot owner
+	 * @param id The user id
+	 * @returns
+	 */
 	public isOwner(id: string): boolean {
 		return this.instance.collections.keys.super_users.has(id);
 	}
@@ -378,66 +405,4 @@ export default class Utils {
 
 		return typeof style === 'string' ? `<t:${timeOrSeconds}:${style}>` : `<t:${timeOrSeconds}>`;
 	}
-}
-
-/**
- * The possible values, see {@link TimestampStyles} for more information
- */
-export type TimestampStylesString = (typeof TimestampStyles)[keyof typeof TimestampStyles];
-
-/**
- * The {@link https://discord.com/developers/docs/reference#message-formatting-timestamp-styles | message formatting timestamp styles} supported by Discord
- */
-export const TimestampStyles = {
-	/**
-	 * Short time format, consisting of hours and minutes, e.g. 16:20
-	 */
-	ShortTime: 't',
-
-	/**
-	 * Long time format, consisting of hours, minutes, and seconds, e.g. 16:20:30
-	 */
-	LongTime: 'T',
-
-	/**
-	 * Short date format, consisting of day, month, and year, e.g. 20/04/2021
-	 */
-	ShortDate: 'd',
-
-	/**
-	 * Long date format, consisting of day, month, and year, e.g. 20 April 2021
-	 */
-	LongDate: 'D',
-
-	/**
-	 * Short date-time format, consisting of short date and short time formats, e.g. 20 April 2021 16:20
-	 */
-	ShortDateTime: 'f',
-
-	/**
-	 * Long date-time format, consisting of long date and short time formats, e.g. Tuesday, 20 April 2021 16:20
-	 */
-	LongDateTime: 'F',
-
-	/**
-	 * Relative time format, consisting of a relative duration format, e.g. 2 months ago
-	 */
-	RelativeTime: 'R'
-} as const satisfies Record<string, string>;
-
-export enum Faces {
-	/**
-	 * ¯\\_(ツ)\\_/¯
-	 */
-	Shrug = '¯\\_(ツ)\\_/¯',
-
-	/**
-	 * (╯°□°）╯︵ ┻━┻
-	 */
-	Tableflip = '(╯°□°）╯︵ ┻━┻',
-
-	/**
-	 * ┬─┬ ノ( ゜-゜ノ)
-	 */
-	Unflip = '┬─┬ ノ( ゜-゜ノ)'
 }

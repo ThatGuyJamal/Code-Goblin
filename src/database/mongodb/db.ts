@@ -10,6 +10,7 @@ import { WelcomeModel } from './models/welcome.js';
 export class Database {
 	instance: typeof Main;
 
+	/** Access core methods for the database */
 	public schemas: DatabaseSchemas;
 
 	public constructor(m: typeof Main) {

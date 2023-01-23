@@ -219,8 +219,10 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 		});
 
 		collector.on('end', async (i) => {
-			variationCache.delete(interaction.user.id);
-			instance.logger.info('Variation cache removed user: ' + interaction.user.id);
+			if (variationCache.has(interaction.user.id)) {
+				variationCache.delete(interaction.user.id);
+				instance.logger.info('Variation cache removed user: ' + interaction.user.id);
+			}
 			await interaction.editOriginal({
 				components: [
 					{

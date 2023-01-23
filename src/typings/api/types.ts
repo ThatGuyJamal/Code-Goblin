@@ -10,9 +10,6 @@ export interface ImageResult {
 	UUID: string;
 	Response: ImagesResponseDataInner;
 }
-export interface ImageBuffer extends Buffer {
-	name: string;
-}
 
 /** The results sent to the api buffer */
 export interface ImageResult {
@@ -20,6 +17,7 @@ export interface ImageResult {
 	Response: ImagesResponseDataInner;
 }
 
+/** The data used to create variations  */
 export interface ImageVariationOptions {
 	image: StringFile;
 	n?: number;

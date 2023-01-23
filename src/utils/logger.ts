@@ -60,22 +60,49 @@ export class ILogger {
 		if (this.IsInDevelopmentMode) this.instance.info(message, ...args);
 	}
 
+	/**
+	 * Log a message at the 'error' level
+	 * @param message
+	 * @param args
+	 * @returns
+	 */
 	public error(message: any, ...args: any[]) {
 		if (this.IsInDevelopmentMode) this.instance.error(message, ...args);
 	}
 
+	/**
+	 * Log a message at the 'error' level
+	 * @param message
+	 * @param args
+	 * @returns
+	 */
 	public warn(message: string, ...args: any[]) {
 		if (this.IsInDevelopmentMode) this.instance.warn(message, ...args);
 	}
-
+	/**
+	 * Log a message at the 'debug' level
+	 * @param message
+	 * @param args
+	 * @returns
+	 */
 	public debug(message: string, ...args: any[]) {
 		if (this.IsInDevelopmentMode) this.instance.debug(message, ...args);
 	}
-
+	/**
+	 * Log a message at the 'crit' level
+	 * @param message
+	 * @param args
+	 * @returns
+	 */
 	public crit(message: string, ...args: any[]) {
 		if (this.IsInDevelopmentMode) this.instance.crit(message, ...args);
 	}
-
+	/**
+	 * Log a message at the 'notice' level
+	 * @param message
+	 * @param args
+	 * @returns
+	 */
 	public notice(message: string, ...args: any[]) {
 		if (this.IsInDevelopmentMode) this.instance.notice(message, ...args);
 	}

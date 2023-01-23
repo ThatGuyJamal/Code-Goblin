@@ -10,3 +10,5 @@
 - Make it so caching is always enabled, but if no cache has been called in the last 30min by the collection then it will be deleted from cache we would need to make a cache manager for this and have it run every 30min. 
 
 - Improve the ai image command. We need to send the new image to discord and use its cdn. This will save the url then send it back to users in the embed. This is because the image api used by open ai deletes the image after 1 hour where as discord's cdn will keep it forever.
+
+- add premium managing commands like add, remove, list users for dev only legacy commands

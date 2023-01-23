@@ -1,6 +1,6 @@
 import { Collection } from 'oceanic.js';
 import { Configuration } from 'openai';
-import { OpenAPIImageWrapper } from '../api/openai_wapper.js';
+import { OpenAPIImageWrapper } from './structures/openai.js';
 
 import config from '../config/config.js';
 import { Database } from '../database/index.js';
@@ -12,6 +12,13 @@ import type { MainCollections } from '../typings/core/types.js';
 import { logger as ILogger, Utils } from '../utils/index.js';
 import { DiscordClient as IDiscordClient } from './structures/client.js';
 
+/**
+ * The main instance of the application. This is the entry point for the bot.
+ *
+ * All smaller components are initialized here.
+ *
+ * @class Main
+ */
 export default class Main {
 	/** The Discord Api Client */
 	public DiscordClient: IDiscordClient;
