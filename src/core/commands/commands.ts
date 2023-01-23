@@ -35,7 +35,7 @@ export default CreateCommand({
 					color: constants.numbers.colors.primary,
 					timestamp: new Date().toISOString(),
 					thumbnail: {
-						url: interaction.guild?.iconURL('png') ?? interaction.user.avatarURL('png')
+						url: instance.DiscordClient.user.avatarURL('png')
 					},
 					footer: {
 						text: `Requested by ${interaction.user.tag}`

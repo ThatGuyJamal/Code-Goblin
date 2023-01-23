@@ -1,27 +1,25 @@
 import { Configuration, CreateImageRequest, OpenAIApi } from 'openai';
 import type { AxiosRequestConfig } from 'axios';
 import { randomUUID } from 'node:crypto';
-import config from '../config/config.js';
 import type { ImageBuffer, ImageResult, ImageVariationOptions } from '../typings/api/types.js';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
 import { logger } from '../utils/index.js';
 import { Collection } from 'oceanic.js';
-
-const configuration = new Configuration({
-	apiKey: config.openai.api_key
-});
+import { Queue } from '../utils/queue.js';
 
 /**
  * The OpenAI Wrapper class
  * @class
  * @see https://beta.openai.com/docs/api-reference/images
  */
-class OpenAPIImageWrapper {
+export class OpenAPIImageWrapper {
 	private openAI: OpenAIApi;
 	private Images = new Collection<string, string>();
+	public queue = new Queue<ImageResult[]>();
+
 	public constructor(configuration: Configuration) {
 		this.openAI = new OpenAIApi(configuration);
-        logger.info('OpenAI API Wrapper initialized');
+		logger.info('OpenAI API Wrapper initialized');
 	}
 
 	/**
@@ -48,10 +46,10 @@ class OpenAPIImageWrapper {
 	 * @returns
 	 */
 	public async GetBufferFromURL(URL: string): Promise<ImageBuffer> {
-		const ArrayBuffer = await(await fetch(URL), FetchResultTypes.Buffer)
+		const ArrayBuffer = await fetch(URL, FetchResultTypes.Buffer);
 		const ConvertedBuffer = Buffer.from(ArrayBuffer) as ImageBuffer;
 		const FinalBuffer = ConvertedBuffer;
-		FinalBuffer.name = "image.png";
+		FinalBuffer.name = 'image.png';
 		return FinalBuffer;
 	}
 
@@ -61,15 +59,12 @@ class OpenAPIImageWrapper {
 	 * @param AxiosOptions
 	 * @returns
 	 */
-	public async GenerateImage(
-		OpenAIOptions: CreateImageRequest,
-		AxiosOptions?: AxiosRequestConfig
-	): Promise<ImageResult[]> {
+	public async GenerateImage(OpenAIOptions: CreateImageRequest, AxiosOptions?: AxiosRequestConfig): Promise<ImageResult[]> {
 		const Images = await this.openAI
 			.createImage(
 				{
 					...OpenAIOptions,
-					response_format: "url",
+					response_format: 'url'
 				},
 				AxiosOptions
 			)
@@ -92,7 +87,7 @@ class OpenAPIImageWrapper {
 			this.SetImage(UUID, Image.url as string);
 			result.push({
 				UUID: UUID,
-				Response: Image,
+				Response: Image
 			});
 		}
 
@@ -130,7 +125,7 @@ class OpenAPIImageWrapper {
 				VariationOptions.image,
 				VariationOptions.n,
 				VariationOptions.size,
-				"url",
+				'url',
 				VariationOptions.user,
 				VariationOptions.options
 			)
@@ -154,17 +149,15 @@ class OpenAPIImageWrapper {
 			this.SetImage(UUID, variation.url as string);
 			result.push({
 				UUID: UUID,
-				Response: variation,
+				Response: variation
 			});
 		}
 
 		return result;
 	}
 
-  // todo - implement this
-	public GetDiscordCDNAttachment(file:string) {
-    // const cnd_url = "https://cdn.discordapp.com/attachments/";
-  }
+	// todo - implement this
+	public GetDiscordCDNAttachment(file: string) {
+		// const cnd_url = "https://cdn.discordapp.com/attachments/";
+	}
 }
-
-export const openai = new OpenAPIImageWrapper(configuration);

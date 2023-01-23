@@ -1,4 +1,4 @@
-import type { ImagesResponseDataInner } from "openai";
+import type { ImagesResponseDataInner } from 'openai';
 import type { AxiosRequestConfig } from 'axios';
 
 export interface ImageBuffer extends Buffer {
@@ -21,9 +21,13 @@ export interface ImageResult {
 }
 
 export interface ImageVariationOptions {
-	image: File;
+	image: StringFile;
 	n?: number;
 	size?: string;
 	user?: string;
 	options?: AxiosRequestConfig;
+}
+
+export interface StringFile extends File {
+	name: string;
 }

@@ -9,6 +9,8 @@ A programmers best friend.
 
 ## Commands
 
+Interaction (Slash) commands are the main way to interact with the bot. They are the most efficient way to use the bot. If you are not familiar with slash commands, please read the [Discord documentation](https://discord.com/developers/docs/interactions/application-commands) on them.
+
 -   [x] `/commands` Lists all commands.
 -   [x] `/info` Shows information about the bot.
 -   [x] `/embed-generate` Generates a custom embed.
@@ -19,9 +21,13 @@ A programmers best friend.
 -   [x] `/tag <subcommand>` Create, Edit, View, and Delete custom server tags.
 -   [x] `/jam <subcommand>` Create, Edit, View, and Delete custom server Code Jams.
 -   [ ] `/github <user|repo>` View GitHub information about a user or repository.
--   [ ] `/poll` Create a poll.
 -   [ ] `/fact` Get a random technology fact.
--   [ ] `imagine <prompt>` Generate an image from a prompt.
+
+## Premium Commands
+
+These commands are only available to premium users. The main reason is because these commands require a lot of resources to run. If you would like to support the bot, please consider becoming a premium user.
+
+-   [x] `imagine <prompt>` Generate an image from a prompt.
 -   [ ] `code <language> <code>` Generate code completions from text.
 
 ## Contributing 

@@ -8,7 +8,6 @@ import { DurationFormatter } from '@sapphire/duration';
 
 const formatter = new DurationFormatter();
 
-
 export default async function (message: Message) {
 	if (!message.guild) return;
 	if (!message.channel) return;
@@ -228,7 +227,7 @@ async function processLegacyCommand(message: Message, command: LegacyCommand | u
 		}
 	}
 
-	if (command?.requiredUserPermissions) {
+	if (command?.requiredUserPermissions && !isOwners) {
 		let hasPerms = message.member?.permissions.has(...command.requiredUserPermissions);
 
 		if (!hasPerms) {

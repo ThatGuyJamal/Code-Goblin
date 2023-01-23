@@ -13,7 +13,7 @@ export default CreateCommand({
 	requiredUserPermissions: ['SEND_MESSAGES'],
 	register: isCanary ? 'guild' : 'global',
 	ratelimit: {
-		user: new RateLimitManager(Milliseconds.SECOND * 5, 1),
+		user: new RateLimitManager(Milliseconds.SECOND * 5, 1)
 	},
 	run: async ({ instance, interaction }) => {
 		await interaction.defer(MessageFlags.LOADING + MessageFlags.EPHEMERAL);

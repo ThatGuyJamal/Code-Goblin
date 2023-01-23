@@ -8,6 +8,7 @@ import type { CodeJamCommandController } from '../../database/mongodb/controller
 import type { TagCommandController } from '../../database/mongodb/controllers/tag.js';
 import type { WelcomeCommandController } from '../../database/mongodb/controllers/welcome.js';
 import type { RateLimitManager } from '@sapphire/ratelimits';
+import type { OpenAPIImageWrapper } from '../../api/openai_wapper.js';
 
 export interface MainCollections {
 	/** A Collection of all command information and data */
@@ -16,6 +17,10 @@ export interface MainCollections {
 	controllers: MainCollectionControllers;
 	/** A Collection of keys used throughout the bot */
 	keys: MainCollectionKeys;
+
+	openai: {
+		image: OpenAPIImageWrapper;
+	};
 }
 
 export interface MainCollectionKeys {

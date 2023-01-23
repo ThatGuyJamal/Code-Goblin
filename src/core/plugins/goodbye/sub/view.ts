@@ -7,11 +7,13 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 
 	const data = await instance.collections.controllers.goodbye.GetGoodbye(interaction.guild!.id);
 
+	const { utils } = instance;
+
 	if (!data) {
 		return await interaction.createFollowup({
 			embeds: [
 				{
-					description: instance.utils.stripIndents(
+					description: utils.stripIndents(
 						`
 \`\`\`asciidoc
 • Error :: Goodbye plugin has not been configured!
@@ -29,7 +31,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	return await interaction.createFollowup({
 		embeds: [
 			{
-				description: instance.utils.stripIndents(
+				description: utils.stripIndents(
 					`
 \`\`\`asciidoc
 • Success :: Showing goodbye plugin data!
@@ -39,7 +41,14 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 				fields: [
 					{
 						name: 'Config:',
-						value: `\`\`\`${data.content}\`\`\``,
+						value: utils.stripIndents(`
+**Channel:** __${utils.channelMention(data.channel_id)}__
+
+**Content:**
+\`\`\`
+${data.content}
+\`\`\`
+`),
 						inline: false
 					}
 				],

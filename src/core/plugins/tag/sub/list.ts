@@ -21,9 +21,6 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 ${tString}
 \`\`\`
 `
-						// todo - fix this hack
-						// hack to remove }} from the end of the embed description.
-						// .slice(0, -2)
 					),
 					color: constants.numbers.colors.secondary,
 					timestamp: new Date().toISOString()

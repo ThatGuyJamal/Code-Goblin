@@ -1,4 +1,6 @@
 import { Collection } from 'oceanic.js';
+import { Configuration } from 'openai';
+import { OpenAPIImageWrapper } from '../api/openai_wapper.js';
 
 import config from '../config/config.js';
 import { Database } from '../database/index.js';
@@ -42,6 +44,13 @@ export default class Main {
 				super_users: new Set(config.SuperUsers),
 				helper_users: new Set(config.HelperUsers),
 				config: config
+			},
+			openai: {
+				image: new OpenAPIImageWrapper(
+					new Configuration({
+						apiKey: config.openai.api_key
+					})
+				)
 			}
 		};
 		this.logger = ILogger;

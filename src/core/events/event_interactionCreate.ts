@@ -3,7 +3,7 @@ import config from '../../config/config.js';
 import { GlobalStatsModel } from '../../database/index.js';
 import { logger, constants } from '../../utils/index.js';
 import { Main } from '../index.js';
-import { DurationFormatter  } from '@sapphire/duration'
+import { DurationFormatter } from '@sapphire/duration';
 
 const formatter = new DurationFormatter();
 
@@ -97,6 +97,28 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		});
 	}
 
+	if (command?.premiumOnly && !isOwner) {
+		return await interaction.createMessage({
+			embeds: [
+				{
+					description: Main.utils.stripIndents(
+						`
+						\`\`\`asciidoc
+						• Error :: This command is only available to premium users. 
+						\`\`\`
+
+						\`\`\`
+						You can get premium by contacting the developers in the support server.
+						\`\`\`
+						`
+					),
+					color: constants.numbers.colors.primary
+				}
+			],
+			flags: MessageFlags.EPHEMERAL
+		});
+	}
+
 	if (command?.helperUserOnly && !isOwner) {
 		return await interaction.createMessage({
 			embeds: [
@@ -134,7 +156,7 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		}
 	}
 
-	if (command?.requiredUserPermissions) {
+	if (command?.requiredUserPermissions && !isOwner) {
 		if (!interaction.member?.permissions.has(...command.requiredUserPermissions)) {
 			return await interaction.createMessage({
 				embeds: [
@@ -154,20 +176,24 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		}
 	}
 
-	if (command?.ratelimit) {
+	if (command?.ratelimit && !isOwner) {
+		let globalManager = command.ratelimit.global;
+		let guildManager = command.ratelimit.guild;
+		let userManager = command.ratelimit.user;
+
+		let GlobalRateLimit = globalManager?.acquire(interaction.guild.id);
+		let GuildRateLimit = guildManager?.acquire(interaction.guild.id);
+		let UserRateLimit = userManager?.acquire(interaction.user.id);
+
 		if (command.ratelimit.global) {
-			let manager = command.ratelimit.global;
-
-			let ratelimit = manager.acquire(interaction.guild.id);
-
-			if (ratelimit.limited) {
+			if (GlobalRateLimit?.limited) {
 				return await interaction.createMessage({
 					embeds: [
 						{
 							description: Main.utils.stripIndents(
 								`
 							\`\`\`asciidoc
-							• Error :: This command is currently rate-limited globally. Please try again in ${formatter.format(ratelimit.remainingTime)}
+							• Error :: This command is currently rate-limited globally. Please try again in ${formatter.format(GlobalRateLimit.remainingTime)}
 							\`\`\`
 							`
 							),
@@ -177,23 +203,19 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 					flags: MessageFlags.EPHEMERAL
 				});
 			}
-
-			ratelimit.consume();
+		} else {
+			GlobalRateLimit?.consume();
 		}
 
 		if (command.ratelimit.guild) {
-			let manager = command.ratelimit.guild;
-
-			let ratelimit = manager.acquire(interaction.guild.id);
-
-			if (ratelimit.limited) {
+			if (GuildRateLimit?.limited) {
 				return await interaction.createMessage({
 					embeds: [
 						{
 							description: Main.utils.stripIndents(
 								`
 							\`\`\`asciidoc
-							• Error :: This command is currently rate-limited in this guild. Please try again in ${formatter.format(ratelimit.remainingTime)}
+							• Error :: This command is currently rate-limited in this guild. Please try again in ${formatter.format(GuildRateLimit.remainingTime)}
 							\`\`\`
 							`
 							),
@@ -203,22 +225,18 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 					flags: MessageFlags.EPHEMERAL
 				});
 			}
-
-			ratelimit.consume();
+		} else {
+			GuildRateLimit?.consume();
 		}
 		if (command.ratelimit.user) {
-			let manager = command.ratelimit.user;
-
-			let ratelimit = manager.acquire(interaction.user.id);
-
-			if (ratelimit.limited) {
+			if (UserRateLimit?.limited) {
 				return await interaction.createMessage({
 					embeds: [
 						{
 							description: Main.utils.stripIndents(
 								`
 							\`\`\`asciidoc
-							• Error :: This command is currently rate-limited for you. Please try again in ${formatter.format(ratelimit.remainingTime)}
+							• Error :: This command is currently rate-limited for you. Please try again in ${formatter.format(UserRateLimit.remainingTime)}
 							\`\`\`
 							`
 							),
@@ -228,8 +246,8 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 					flags: MessageFlags.EPHEMERAL
 				});
 			}
-
-			ratelimit.consume();
+		} else {
+			UserRateLimit?.consume();
 		}
 	}
 

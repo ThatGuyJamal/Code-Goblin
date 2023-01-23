@@ -10,11 +10,16 @@ import {
 	InteractionTypes
 } from 'oceanic.js';
 import type { CreateImageRequest } from 'openai';
-import { openai } from '../../../api/openai_wrapper.js';
 import { isCanary } from '../../../config/config.js';
 import constants, { Milliseconds } from '../../../utils/constants.js';
 import type Main from '../../main.js';
 import { CreateCommand } from '../../structures/command.js';
+
+enum CollectFor {
+	time = Milliseconds.SECOND * 30
+}
+
+const variationCache = new Set();
 
 export default CreateCommand({
 	trigger: 'imagine',
@@ -27,11 +32,11 @@ export default CreateCommand({
 			opt.setName('prompt').setDescription('The prompt to generate').setRequired(true).setMinMax(1, 1024);
 		}).setDMPermission(false);
 	},
-	// todo - remove this in prod
-	superUserOnly: true,
+	// todo - setup premium system
+	premiumOnly: true,
 	ratelimit: {
-		user: new RateLimitManager(Milliseconds.MINUTE * 1, 2),
-		guild: new RateLimitManager(Milliseconds.HOUR * 100, 1)
+		user: new RateLimitManager(Milliseconds.MINUTE * 10, 2),
+		guild: new RateLimitManager(Milliseconds.HOUR * 1, 10)
 	},
 	register: isCanary ? 'guild' : 'global',
 	run: async ({ instance, interaction }) => {
@@ -39,10 +44,62 @@ export default CreateCommand({
 	}
 });
 
+/**
+ * Creates an image from a prompt
+ * @param instance
+ * @param Prompt
+ * @param interaction
+ * @param Variation
+ * @returns
+ */
 async function CreateImage(instance: Main, Prompt: string, interaction: CommandInteraction | ComponentInteraction, Variation?: string) {
-	await interaction.defer(64);
+	await interaction.defer();
 
 	try {
+		if (variationCache.has(interaction.user.id)) {
+			return await interaction.editOriginal({
+				embeds: [
+					{
+						description: instance.utils.stripIndents(
+							`
+					\`\`\`asciidoc
+					• Error :: You cant create another ${Variation ? 'variation' : 'image'}! Please wait...
+					\`\`\`
+					`
+						),
+						color: constants.numbers.colors.primary,
+						footer: {
+							text: `Requested by ${interaction.user.tag}`
+						},
+						timestamp: new Date().toISOString()
+					}
+				],
+				flags: 64,
+				allowedMentions: {
+					repliedUser: true
+				}
+			});
+		}
+
+		await interaction.editOriginal({
+			embeds: [
+				{
+					description: instance.utils.stripIndents(
+						`
+					\`\`\`asciidoc
+					• Info :: Generating ${Variation ? 'variation' : 'image'}...
+					\`\`\`
+					`
+					),
+					color: constants.numbers.colors.primary,
+					footer: {
+						text: `Requested by ${interaction.user.tag}`
+					},
+					timestamp: new Date().toISOString()
+				}
+			]
+		});
+
 		const imageOptions: CreateImageRequest = {
 			prompt: Prompt,
 			n: 1,
@@ -52,8 +109,11 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 		};
 
 		const image = Variation
-			? await openai.GenerateVariation({ image: (await openai.GetBufferFromURL(Variation)) as any, ...(imageOptions as any) })
-			: await openai.GenerateImage({ ...imageOptions });
+			? await instance.collections.openai.image.GenerateVariation({
+					image: await instance.collections.openai.image.GetBufferFromURL(Variation),
+					...(imageOptions as any)
+			  })
+			: await instance.collections.openai.image.GenerateImage({ ...imageOptions });
 
 		const imageURL = image ? image[0].Response.url : null;
 
@@ -64,7 +124,7 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 						description: instance.utils.stripIndents(
 							`
 						\`\`\`asciidoc
-						• Error :: Failed to generate image!
+						• Error :: Failed to generate ${Variation ? 'variation' : 'image'}!
 						\`\`\`
 						`
 						),
@@ -74,9 +134,32 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 						},
 						timestamp: new Date().toISOString()
 					}
-				]
+				],
+				allowedMentions: {
+					repliedUser: true
+				},
+				flags: 64
 			});
 		}
+
+		await interaction.editOriginal({
+			embeds: [
+				{
+					description: instance.utils.stripIndents(
+						`
+					\`\`\`asciidoc
+					• Info :: Generated ${Variation ? 'variation' : 'image'}!
+					\`\`\`
+					`
+					),
+					color: constants.numbers.colors.primary,
+					footer: {
+						text: `Requested by ${interaction.user.tag}`
+					},
+					timestamp: new Date().toISOString()
+				}
+			]
+		});
 
 		const message = await interaction.editOriginal({
 			embeds: [
@@ -86,7 +169,7 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 					image: {
 						url: imageURL
 					},
-					color: 16106102
+					color: constants.numbers.colors.primary
 				}
 			],
 			components: [
@@ -107,18 +190,38 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 						}
 					]
 				}
-			]
+			],
+			allowedMentions: {
+				repliedUser: true
+			}
 		});
 
 		const collector = new InteractionCollector(instance.DiscordClient, {
 			message: message,
 			interactionType: InteractionTypes.MESSAGE_COMPONENT,
 			componentType: ComponentTypes.BUTTON,
-			idle: 30000
+			idle: CollectFor.time,
+			filter: (i) => i.user.id === interaction.user.id
 		});
-		collector.on('collect', (i) => CreateImage(instance, Prompt, i, imageURL));
-		collector.on('end', (i) => {
-			interaction.editOriginal({
+
+		collector.on('collect', async (i) => {
+			await CreateImage(
+				instance,
+				'/imagine prompt: A desert Sea of skulls and sand. The sky is black and no sighs of life. The clouds have a dark and ominousness feel. No hope left.',
+				i,
+				imageURL
+			).then(() => {
+				// Adding user to variation cache to prevent spamming
+				// todo - fix bug where users can spam the button and create multiple variations even if they are in the cache
+				variationCache.add(interaction.user.id);
+				instance.logger.info('Variation cache added user: ' + interaction.user.id);
+			});
+		});
+
+		collector.on('end', async (i) => {
+			variationCache.delete(interaction.user.id);
+			instance.logger.info('Variation cache removed user: ' + interaction.user.id);
+			await interaction.editOriginal({
 				components: [
 					{
 						type: ComponentTypes.ACTION_ROW,
@@ -134,25 +237,60 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 				]
 			});
 		});
-	} catch (error) {
-		return await interaction.createFollowup({
-			embeds: [
-				{
-					description: instance.utils.stripIndents(
-						`
+	} catch (error: any) {
+		if (error.response) {
+			instance.logger.error(error.response.status);
+			instance.logger.error(error.response.data);
+			await interaction.createFollowup({
+				embeds: [
+					{
+						description: instance.utils.stripIndents(
+							`
+						**Notice**
 						\`\`\`asciidoc
-						• Error :: Error while generating image!
+						• Error :: Error while generating ${Variation ? 'variation' : 'image'}!
+						\`\`\`
+						**${error.response.status}**
+						\`\`\`
+						${error.response.data}
 						\`\`\`
 						`
-					),
-					color: constants.numbers.colors.primary,
-					footer: {
-						text: `Requested by ${interaction.user.tag}`
-					},
-					timestamp: new Date().toISOString()
-				}
-			],
-			flags: 64
-		});
+						),
+						color: constants.numbers.colors.primary,
+						footer: {
+							text: `Requested by ${interaction.user.tag}`
+						},
+						timestamp: new Date().toISOString()
+					}
+				],
+				flags: 64
+			});
+		} else {
+			instance.logger.error(error.message);
+			await interaction.createFollowup({
+				embeds: [
+					{
+						description: instance.utils.stripIndents(
+							`
+						**Notice**
+						\`\`\`asciidoc
+						• Error :: Error while generating ${Variation ? 'variation' : 'image'}!
+						\`\`\`
+						**Error**
+						\`\`\`
+						${error.message}
+						\`\`\`
+						`
+						),
+						color: constants.numbers.colors.primary,
+						footer: {
+							text: `Requested by ${interaction.user.tag}`
+						},
+						timestamp: new Date().toISOString()
+					}
+				],
+				flags: 64
+			});
+		}
 	}
 }
