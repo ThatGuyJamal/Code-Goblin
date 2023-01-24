@@ -5,24 +5,13 @@ plugins {
 group 'org.github.codegoblin'
 version '1.0-SNAPSHOT'
 
-def jdaVersion = '5.0.0-beta.2'
-
 repositories {
     mavenCentral()
-    maven {
-        url "https://m2.dv8tion.net/releases"
-    }
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    implementation("net.dv8tion:JDA:$jdaVersion")
+    implementation('org.javacord:javacord:3.7.0')
     implementation("com.sparkjava:spark-core:2.9.4")
+    runtimeOnly 'org.apache.logging.log4j:log4j-core:2.17.1'
+    implementation 'io.github.cdimascio:dotenv-java:2.3.2'
 }
-
-test {
-    useJUnitPlatform()
-}
-
-compileJava.options.encoding = 'UTF-8'

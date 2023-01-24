@@ -1,7 +1,5 @@
 package org.github.thatguyjamal;
 
-import org.github.thatguyjamal.discord.Discord;
-
 public class Main {
     public static void main(String[] args) {
         // Create a new instance of the Rest class
@@ -11,10 +9,11 @@ public class Main {
         Discord discord = new Discord();
 
         // Run the init() method in the Rest class
-        rest.init();
+        rest.init(3030);
+        discord.CreateLogMessage("Code Goblin Rest API is online and running!");
 
         // Run the init() method in the Discord class
-        // discord.init();
-        System.out.println("Bot is disabled until API is ready");
+         discord.init();
+         discord.CreateLogMessage("Code Goblin Discord API is online and running!");
     }
 }

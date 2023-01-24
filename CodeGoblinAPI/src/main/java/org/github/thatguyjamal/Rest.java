@@ -2,9 +2,11 @@ package org.github.thatguyjamal;
 
 import static spark.Spark.*;
 public class Rest {
-    public void init() {
-       //  port(5678); <- Uncomment this if you want spark to listen to port 5678 instead of the default 4567
+    public void init(int _port) {
+        port(_port);
         hello();
+
+        System.out.println("http://localhost:" + _port + "/hello/API");
     }
     private static void hello() {
         // matches "GET /hello/foo" and "GET /hello/bar"
@@ -18,7 +20,6 @@ public class Rest {
             return "Hello " + request.params(":name");
         });
         System.out.println("Running Rest API");
-        System.out.println("http://localhost:4567/hello");
     }
 
 
