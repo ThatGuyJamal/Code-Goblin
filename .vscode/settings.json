@@ -8,6 +8,7 @@
         "openai",
         "pino",
         "ratelimit",
-        "ratelimits"
+        "ratelimits",
+        "thatguyjamal"
     ]
 }

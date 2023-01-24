@@ -30,6 +30,10 @@ These commands are only available to premium users. The main reason is because t
 -   [x] `imagine <prompt>` Generate an image from a prompt.
 -   [ ] `code <language> <code>` Generate code completions from text.
 
+## `API` 
+
+Code Goblins API is currently in development. If you would like to contribute to the project, please contact me on Discord. For now you can find the code [here](./CodeGoblinAPI/src/main/java/org/github/thatguyjamal/).
+
 ## `Contributing`
 
 `Code Goblin` is an open source bot dedicated to helping programmers make learning easier within discord. We are always looking for support in the form of code contributions, bug reports, and feature requests. If you would like to contribute to the project, please clone the repository and submit a pull request.
