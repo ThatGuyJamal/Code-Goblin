@@ -8,8 +8,6 @@ import java.util.Objects;
 import static spark.Spark.*;
 
 public class Rest {
-
-
     /**
      * Runs the Rest API
      * @param _port The port to run the API on
