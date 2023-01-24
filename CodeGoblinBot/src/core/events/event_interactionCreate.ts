@@ -151,15 +151,15 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		});
 	}
 
-	if (command.requiredBotPermissions && interaction.channel?.type !== ChannelTypes.DM) {
-		if (!interaction.appPermissions?.has(...command.requiredBotPermissions)) {
+	if (command.requiredBotPermissions) {
+		if (!interaction.appPermissions?.has(...command.requiredBotPermissions) && interaction.channel?.type !== ChannelTypes.DM) {
 			return await interaction.createMessage({
 				embeds: [
 					{
 						description: Main.utils.stripIndents(
 							`
 						\`\`\`asciidoc
-						• Error :: Missing Permissions: ${command.requiredBotPermissions}
+						• Error :: I'm Missing Permissions: ${command.requiredBotPermissions}
 						\`\`\`
 						`
 						),
@@ -171,14 +171,14 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 	}
 
 	if (command.requiredUserPermissions && !isOwner) {
-		if (!interaction.member?.permissions.has(...command.requiredUserPermissions)) {
+		if (!interaction.member?.permissions.has(...command.requiredUserPermissions) && interaction.channel?.type !== ChannelTypes.DM) {
 			return await interaction.createMessage({
 				embeds: [
 					{
 						description: Main.utils.stripIndents(
 							`
 						\`\`\`asciidoc
-						• Error :: Missing Permissions: ${command.requiredUserPermissions}
+						• Error :: Your Missing Permissions: ${command.requiredUserPermissions}
 						\`\`\`
 						`
 						),
