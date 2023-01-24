@@ -1,4 +1,4 @@
-import { AnyInteractionGateway, CommandInteraction, InteractionTypes, MessageFlags } from 'oceanic.js';
+import { AnyInteractionGateway, ChannelTypes, CommandInteraction, InteractionTypes, MessageFlags } from 'oceanic.js';
 import config from '../../config/config.js';
 import { GlobalStatsModel } from '../../database/index.js';
 import { logger, constants } from '../../utils/index.js';
@@ -57,9 +57,27 @@ export default async function (interaction: AnyInteractionGateway) {
 async function processCommandInteraction(interaction: CommandInteraction): Promise<void> {
 	const command = Main.collections.commands.commandStoreMap.get(interaction.data.name);
 
+	if(!command) {
+		return await interaction.createMessage({
+			embeds: [
+				{
+					description: Main.utils.stripIndents(
+						`
+						\`\`\`asciidoc
+						• Error :: This command does not exist.
+						\`\`\`
+						`
+					),
+					color: constants.numbers.colors.primary
+				}
+			],
+			flags: MessageFlags.EPHEMERAL
+		});
+	}
+
 	const isOwner = Main.utils.isOwner(interaction.user.id);
 
-	if (command?.disabled && !isOwner) {
+	if (command.disabled && !isOwner) {
 		return await interaction.createMessage({
 			embeds: [
 				{
@@ -77,7 +95,7 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		});
 	}
 
-	if (command?.superUserOnly && !isOwner) {
+	if (command.superUserOnly && !isOwner) {
 		return await interaction.createMessage({
 			embeds: [
 				{
@@ -95,7 +113,7 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		});
 	}
 
-	if (command?.premiumOnly && !Main.collections.controllers.premiumUsers.isPremiumUser(interaction.user.id) && !isOwner) {
+	if (command.premiumOnly && !Main.collections.controllers.premiumUsers.isPremiumUser(interaction.user.id) && !isOwner) {
 		return await interaction.createMessage({
 			embeds: [
 				{
@@ -115,7 +133,7 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		});
 	}
 
-	if (command?.helperUserOnly && !isOwner) {
+	if (command.helperUserOnly && !isOwner) {
 		return await interaction.createMessage({
 			embeds: [
 				{
@@ -133,7 +151,7 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		});
 	}
 
-	if (command?.requiredBotPermissions) {
+	if (command.requiredBotPermissions && interaction.channel?.type !== ChannelTypes.DM) {
 		if (!interaction.appPermissions?.has(...command.requiredBotPermissions)) {
 			return await interaction.createMessage({
 				embeds: [
@@ -152,7 +170,7 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		}
 	}
 
-	if (command?.requiredUserPermissions && !isOwner) {
+	if (command.requiredUserPermissions && !isOwner) {
 		if (!interaction.member?.permissions.has(...command.requiredUserPermissions)) {
 			return await interaction.createMessage({
 				embeds: [
@@ -172,7 +190,7 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		}
 	}
 
-	if (command?.ratelimit && !isOwner) {
+	if (command.ratelimit && !isOwner) {
 		let globalManager = command.ratelimit.global;
 		let guildManager = command.ratelimit.guild;
 		let userManager = command.ratelimit.user;
