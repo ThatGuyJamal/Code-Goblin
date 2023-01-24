@@ -4,6 +4,7 @@
         "guildcreate",
         "guildleave",
         "logform",
+        "maxsize",
         "oceanicjs",
         "openai",
         "pino",
