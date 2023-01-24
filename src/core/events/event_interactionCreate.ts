@@ -102,12 +102,10 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 					description: Main.utils.stripIndents(
 						`
 						\`\`\`asciidoc
-						• Error :: This command is only available to premium users. 
+						• Error :: This command is only available to premium users.
 						\`\`\`
-
-						\`\`\`
-						You can get premium by contacting the developers in the support server.
-						\`\`\`
+						
+						You can get premium by contacting the developers in the ${Main.utils.hyperlink('Support Server Link', config.DevelopmentServerInviteUrl)}.
 						`
 					),
 					color: constants.numbers.colors.primary
