@@ -5,7 +5,6 @@ import config from '../../config/config.js';
 import { isCanary } from '../../config/config.js';
 import { CreateCommand } from '../structures/command.js';
 import { constants } from '../../utils/index.js';
-import { GlobalStatsModel } from '../../database/index.js';
 import { RateLimitManager } from '@sapphire/ratelimits';
 import { Milliseconds } from '../../utils/constants.js';
 
@@ -48,12 +47,11 @@ export default CreateCommand({
 		user: new RateLimitManager(Milliseconds.SECOND * 10, 1)
 	},
 	run: async ({ instance, interaction }) => {
-		const global = await GlobalStatsModel.findOne({ find_id: 'global' })
+		const global = await instance.database.schemas.statistics.GetGlobalStats();
 
 		let dbStatus = instance.database.network_status();
 
 		const { guilds, users } = instance.DiscordClient;
-
 
 		await interaction.createMessage({
 			embeds: [

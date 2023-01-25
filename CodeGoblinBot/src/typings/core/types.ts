@@ -11,7 +11,6 @@ export interface MainCollections {
 	commands: MainCollectionCommands;
 	/** A Collection of keys used throughout the bot */
 	keys: MainCollectionKeys;
-
 	openai: {
 		image: OpenAPIImageWrapper;
 	};

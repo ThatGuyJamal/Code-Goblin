@@ -1,6 +1,5 @@
 import { ButtonStyles, ComponentTypes, Message } from 'oceanic.js';
 import config from '../../config/config.js';
-import { GlobalStatsModel } from '../../database/index.js';
 import type { LegacyCommand } from '../../typings/core/types.js';
 import { constants, logger } from '../../utils/index.js';
 import { Main } from '../index.js';
@@ -100,18 +99,12 @@ export default async function (message: Message) {
 			logger.debug(`[${new Date().toISOString()}][command/${command.trigger}]: ${message.author.tag} (${message.author.id})`);
 		}
 
+		await processLegacyCommand(message, command);
+
 		if (!config.IsInDevelopmentMode) {
-			await GlobalStatsModel.findOneAndUpdate(
-				{ find_id: 'global' },
-				{ $inc: { commands_executed: 1 } },
-				{
-					upsert: true,
-					new: true
-				}
-			);
+			await Main.database.schemas.statistics.UpdateCommandsExecuted()
 		}
 
-		await processLegacyCommand(message, command);
 	} catch (error) {
 		logger.error(error);
 		await message.channel
@@ -132,14 +125,7 @@ export default async function (message: Message) {
 			.catch(() => {});
 
 		if (!config.IsInDevelopmentMode) {
-			await GlobalStatsModel.findOneAndUpdate(
-				{ find_id: 'global' },
-				{ $inc: { commands_failed: 1 } },
-				{
-					new: true,
-					upsert: true
-				}
-			);
+			await Main.database.schemas.statistics.UpdateCommandsFailed();
 		}
 	}
 }

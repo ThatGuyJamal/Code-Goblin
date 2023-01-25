@@ -3,7 +3,7 @@ import { Configuration } from 'openai';
 import { OpenAPIImageWrapper } from './structures/openai.js';
 
 import config from '../config/config.js';
-import { Database } from '../database/index.js';
+import { MongodbDatabase } from '../database/index.js';
 import type { MainCollections } from '../typings/core/types.js';
 import { logger as ILogger, Utils } from '../utils/index.js';
 import { DiscordClient as IDiscordClient } from './structures/client.js';
@@ -23,12 +23,12 @@ export default class Main {
 	/** A class for bot common api utilities */
 	public utils: Utils;
 	/** Database Schemas, cache, etc */
-	public database: Database;
+	public database: MongodbDatabase;
 	public logger;
 
 	public constructor() {
 		this.utils = new Utils(this);
-		this.database = new Database(this);
+		this.database = new MongodbDatabase(this);
 		this.DiscordClient = new IDiscordClient(this);
 		this.collections = {
 			commands: {

@@ -23,6 +23,10 @@ class Statistics {
 	@prop({ type: Number })
 	commands_failed?: number;
 
+	public static async GetGlobalStats(this: ReturnModelType<typeof Statistics>): Promise<Statistics | null> {
+		return await this.findOne({ find_id: 'global'})
+	}
+
 	public static async UpdateGuildsJoined(this: ReturnModelType<typeof Statistics>) {
 		await this.updateOne(
 			{ find_id: 'global' },

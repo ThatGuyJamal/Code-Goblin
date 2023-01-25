@@ -7,5 +7,5 @@ export default async function GuildCreateEvent(guild: Guild) {
 		`Left a guild: ${guild.name} (${guild.id}) with ${guild.memberCount} members. Now in ${Main.DiscordClient.guilds.size} guilds.`
 	);
 
-	await Main.database.schemas.statistics.UpdateGuildsLeft()
+	await Main.database.schemas.statistics.UpdateGuildsLeft();
 }

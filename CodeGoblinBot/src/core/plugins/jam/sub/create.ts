@@ -101,7 +101,7 @@ ${instance.utils.codeBlock(
 			flags: MessageFlags.EPHEMERAL
 		});
 	} catch (err) {
-		err
+		err;
 		await interaction.createFollowup({
 			content: `Error creating the Code Jam Event in the server!\n\`\`\`${err}\`\`\``,
 			flags: MessageFlags.EPHEMERAL

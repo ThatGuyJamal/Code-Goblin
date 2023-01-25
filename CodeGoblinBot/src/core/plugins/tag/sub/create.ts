@@ -72,15 +72,13 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		});
 	}
 
-	await instance.database.schemas.tag.CreateTag(
-		{
-			guild_id: interaction.guild!.id,
-			name: c_name,
-			content: c_content,
-			created_by_name: interaction.user.username,
-			created_by_id: interaction.user.id,
-		}
-	);
+	await instance.database.schemas.tag.CreateTag({
+		guild_id: interaction.guild!.id,
+		name: c_name,
+		content: c_content,
+		created_by_name: interaction.user.username,
+		created_by_id: interaction.user.id
+	});
 
 	return await interaction.createFollowup({
 		embeds: [

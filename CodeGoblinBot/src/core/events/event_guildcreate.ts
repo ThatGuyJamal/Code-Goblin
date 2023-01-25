@@ -7,5 +7,5 @@ export default async function GuildCreateEvent(guild: Guild) {
 		`Joined a new guild: ${guild.name} (${guild.id}) with ${guild.memberCount} members. Now in ${Main.DiscordClient.guilds.size} guilds.`
 	);
 
-	await Main.database.schemas.statistics.UpdateGuildsJoined()
+	await Main.database.schemas.statistics.UpdateGuildsJoined();
 }

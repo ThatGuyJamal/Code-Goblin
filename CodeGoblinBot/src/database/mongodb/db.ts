@@ -9,7 +9,7 @@ import { GlobalStatsModel } from './models/statistics.js';
 import { TagModel } from './models/tag.js';
 import { WelcomeModel } from './models/welcome.js';
 
-export class Database {
+export class MongodbDatabase {
 	instance: typeof Main;
 
 	/** Access core methods for the database */
