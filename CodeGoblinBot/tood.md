@@ -12,3 +12,5 @@
 - Improve the ai image command. We need to send the new image to discord and use its cdn. This will save the url then send it back to users in the embed. This is because the image api used by open ai deletes the image after 1 hour where as discord's cdn will keep it forever.
 
 - create a function that checks daily if a premium users activation has expired and if it has then it will remove the premium account from the user.
+
+- remove caching in favor of db calls
