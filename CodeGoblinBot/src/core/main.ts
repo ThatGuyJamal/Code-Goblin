@@ -4,14 +4,9 @@ import { OpenAPIImageWrapper } from './structures/openai.js';
 
 import config from '../config/config.js';
 import { Database } from '../database/index.js';
-import { GoodbyeCommandController } from '../database/mongodb/controllers/goodbye.js';
-import { CodeJamCommandController } from '../database/mongodb/controllers/jam.js';
-import { TagCommandController } from '../database/mongodb/controllers/tag.js';
-import { WelcomeCommandController } from '../database/mongodb/controllers/welcome.js';
 import type { MainCollections } from '../typings/core/types.js';
 import { logger as ILogger, Utils } from '../utils/index.js';
 import { DiscordClient as IDiscordClient } from './structures/client.js';
-import { PremiumUserCommandController } from '../database/mongodb/controllers/premium.js';
 
 /**
  * The main instance of the application. This is the entry point for the bot.
@@ -41,13 +36,6 @@ export default class Main {
 				commandStoreArrayJsonGuild: [],
 				commandStoreArrayJsonGlobal: [],
 				legacyCommandStoreMap: new Collection()
-			},
-			controllers: {
-				tags: new TagCommandController(this),
-				welcome: new WelcomeCommandController(this),
-				goodbye: new GoodbyeCommandController(this),
-				jam: new CodeJamCommandController(this),
-				premiumUsers: new PremiumUserCommandController(this)
 			},
 			keys: {
 				super_users: new Set(config.SuperUsers),

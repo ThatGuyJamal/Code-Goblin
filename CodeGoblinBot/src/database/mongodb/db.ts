@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 import config from '../../config/config.js';
 import type { Main } from '../../core/index.js';
-import type { DatabaseSchemas, NetworkStatusReturnTypes } from '../../typings/database/types.js';
+import type { NetworkStatusReturnTypes } from '../../typings/database/types.js';
 import { GoodbyeModel } from './models/goodbye.js';
 import { CodeJamModel } from './models/jam.js';
 import { PremiumUserModel } from './models/premium.js';
+import { GlobalStatsModel } from './models/statistics.js';
 import { TagModel } from './models/tag.js';
 import { WelcomeModel } from './models/welcome.js';
 
@@ -12,16 +13,19 @@ export class Database {
 	instance: typeof Main;
 
 	/** Access core methods for the database */
-	public schemas: DatabaseSchemas;
+	public schemas;
 
 	public constructor(m: typeof Main) {
 		this.instance = m;
 		this.schemas = {
-			welcome: WelcomeModel,
-			goodbye: GoodbyeModel,
+			automation: {
+				goodbye: GoodbyeModel,
+				welcome: WelcomeModel
+			},
 			tag: TagModel,
 			jam: CodeJamModel,
-			premiumUser: PremiumUserModel
+			premiumUser: PremiumUserModel,
+			statistics: GlobalStatsModel
 		};
 	}
 

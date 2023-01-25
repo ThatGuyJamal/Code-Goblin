@@ -3,10 +3,7 @@ import constants from '../../../utils/constants.js';
 import { getWelcomeResults } from '../../events/event_welcome.js';
 import { getGoodbyeResults } from '../../events/event_goodbye.js';
 import config from '../../../config/config.js';
-import { PremiumUserLevels, PremiumUserSchema } from '../../../typings/database/types.js';
-import { DurationFormatter } from '@sapphire/duration';
-
-const formatter = new DurationFormatter();
+import { PremiumUserLevels } from '../../../typings/database/types.js';
 
 export default CreateLegacyCommand({
 	trigger: 'dev',
@@ -198,7 +195,7 @@ export default CreateLegacyCommand({
 								});
 							}
 
-							let isPremium = await instance.collections.controllers.premiumUsers.isPremiumUser(args[2]);
+							let isPremium = await instance.database.schemas.premiumUser.CheckIfPremiumUser(args[2]);
 
 							if (isPremium) {
 								return await message.channel?.createMessage({
@@ -236,42 +233,34 @@ export default CreateLegacyCommand({
 								});
 							}
 
-							let Data: PremiumUserSchema;
-
 							if (args[3].toLowerCase() === 'lifetime' || args[3].toLowerCase() === 'l') {
-								await instance.collections.controllers.premiumUsers
-									.CreatePremiumUser({
-										user_id: args[2],
-										activated: true,
-										activated_at: Date.now(),
-										expires_at: null,
-										level: PremiumUserLevels.LIFE_TIME
-									})
-									.then((data) => (Data = data));
+								await instance.database.schemas.premiumUser.CreatePremiumUser({
+									user_id: args[2],
+									activated: true,
+									activated_at: Date.now(),
+									expires_at: null,
+									level: PremiumUserLevels.LIFE_TIME
+								});
 							}
 
 							if (args[3].toLowerCase() === 'yearly' || args[3].toLowerCase() === 'y') {
-								await instance.collections.controllers.premiumUsers
-									.CreatePremiumUser({
-										user_id: args[2],
-										activated: true,
-										activated_at: Date.now(),
-										expires_at: null,
-										level: PremiumUserLevels.YEARLY
-									})
-									.then((data) => (Data = data));
+								await instance.database.schemas.premiumUser.CreatePremiumUser({
+									user_id: args[2],
+									activated: true,
+									activated_at: Date.now(),
+									expires_at: null,
+									level: PremiumUserLevels.YEARLY
+								});
 							}
 
 							if (args[3].toLowerCase() === 'monthly' || args[3].toLowerCase() === 'm') {
-								await instance.collections.controllers.premiumUsers
-									.CreatePremiumUser({
-										user_id: args[2],
-										activated: true,
-										activated_at: Date.now(),
-										expires_at: null,
-										level: PremiumUserLevels.MONTHLY
-									})
-									.then((data) => (Data = data));
+								await instance.database.schemas.premiumUser.CreatePremiumUser({
+									user_id: args[2],
+									activated: true,
+									activated_at: Date.now(),
+									expires_at: null,
+									level: PremiumUserLevels.MONTHLY
+								});
 							}
 
 							await message.channel?.createMessage({
@@ -288,15 +277,15 @@ export default CreateLegacyCommand({
 							});
 
 							await instance.utils.sendToLogChannel(
-								"premium",
+								'premium',
 								utils.stripIndents(`
 							Premium user added.
 
-							• User ID      = ${instance.utils.userMention(Data!.user_id)} (ID:${Data!.user_id})
-							• Level        = ${Data!.level}
-							• Activated    = ${Data!.activated ? 'Yes' : 'No'}
-							• Activated At = ${formatter.format(Data!.activated_at! - Date.now())}
-							• Expires At   = ${Data!.expires_at ?? 'Never'}
+							• User ID      = ${instance.utils.userMention(args[2])} (ID:${args[2]})
+							• Level        = \`${args[3]}\`
+							• Activated    = \`Yes\`
+							• Activated At = \`${Date.now()}\`
+							• Expires At   = \`n/a\`
 							`),
 								true,
 								'Premium'
@@ -355,7 +344,7 @@ export default CreateLegacyCommand({
 								});
 							}
 
-							let isPremium = await instance.collections.controllers.premiumUsers.isPremiumUser(args[2]);
+							let isPremium = await instance.database.schemas.premiumUser.CheckIfPremiumUser(args[2]);
 
 							if (!isPremium) {
 								return await message.channel?.createMessage({
@@ -374,7 +363,7 @@ export default CreateLegacyCommand({
 								});
 							}
 
-							const result = await instance.collections.controllers.premiumUsers.DeletePremiumUser(args[2]);
+							const result = await instance.database.schemas.premiumUser.DeletePremiumUser(args[2]);
 
 							if (!result) {
 								return await message.channel?.createMessage({
@@ -436,9 +425,9 @@ export default CreateLegacyCommand({
 						break;
 					case 'list':
 						try {
-							const premiumUsers = await instance.collections.controllers.premiumUsers.getAllPremiumUsers();
+							const premiumUsers = await instance.database.schemas.premiumUser.GetPremiumUsers();
 
-							if (!premiumUsers) {
+							if (premiumUsers.length === 0) {
 								return await message.channel?.createMessage({
 									embeds: [
 										{
@@ -456,7 +445,7 @@ export default CreateLegacyCommand({
 							}
 
 							const users = premiumUsers
-								.map((user: PremiumUserSchema) => {
+								.map((user: any) => {
 									return `> ${instance.utils.userMention(user.user_id)} (ID:${user.user_id})`;
 								})
 								.join('\n');

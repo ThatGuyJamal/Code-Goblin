@@ -24,7 +24,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		});
 	}
 
-	await instance.collections.controllers.tags.ClearTags(interaction.guild!.id);
+	await instance.database.schemas.tag.DeleteTags(interaction.guild!.id);
 
 	return await interaction.createFollowup({
 		embeds: [

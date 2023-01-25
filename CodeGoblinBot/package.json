@@ -21,6 +21,7 @@
     "@sapphire/duration": "^1.0.0",
     "@sapphire/fetch": "^2.4.1",
     "@sapphire/ratelimits": "^2.4.5",
+    "@typegoose/typegoose": "^10.0.0",
     "common-tags": "^1.8.2",
     "logform": "^2.4.2",
     "mongoose": "^6.8.1",

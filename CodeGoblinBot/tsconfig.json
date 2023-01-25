@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"outDir": "./dist",
 		"rootDirs": ["./src"],
+		"experimentalDecorators": true,
 	},
 	"include": ["src", "lib"],
 	"exclude": ["node_modules", "build"]

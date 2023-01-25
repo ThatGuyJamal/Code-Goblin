@@ -5,7 +5,7 @@ import type Main from '../../../main.js';
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
 	await interaction.defer(64);
 
-	const data = await instance.collections.controllers.welcome.GetWelcome(interaction.guild!.id);
+	const data = await instance.database.schemas.automation.welcome.GetWelcome(interaction.guild!.id);
 
 	const { utils } = instance;
 

@@ -5,7 +5,7 @@ import type Main from '../../../main.js';
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
 	await interaction.defer(64);
 
-	const jam = await instance.collections.controllers.jam.getCodeJam(interaction.guild!.id);
+	const jam = await instance.database.schemas.jam.GetJam(interaction.guild!.id);
 
 	if (jam?.event_participants_ids?.includes(interaction.member!.id)) {
 		return await interaction.createFollowup({
@@ -68,7 +68,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 
 	await interaction.member?.addRole(role.id, `Joined Code Jam`).catch(() => {});
 
-	await instance.collections.controllers.jam.addJamParticipant(interaction.guild!.id, interaction.member!.id);
+	await instance.database.schemas.jam.AddJamParticipant(interaction.guild!.id, interaction.member!.id);
 
 	return await interaction.createFollowup({
 		embeds: [

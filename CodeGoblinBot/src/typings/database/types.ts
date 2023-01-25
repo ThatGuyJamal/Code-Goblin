@@ -1,46 +1,9 @@
-import type { ConnectionStates, Model } from 'mongoose';
+import type { ConnectionStates } from 'mongoose';
 
 export interface NetworkStatusReturnTypes {
 	connected: boolean;
 	status: ConnectionStates;
 }
-
-/** The global statistics types */
-export interface GlobalStatistics {
-	/** The id to find on the query */
-	find_id: string;
-	guilds_joined: number;
-	guilds_left: number;
-	commands_executed: number;
-	commands_failed: number;
-}
-
-/** The database schemas */
-export interface DatabaseSchemas {
-	goodbye: Model<GoodbyeSchema, {}, {}, {}, any>;
-	welcome: Model<WelcomeSchema, {}, {}, {}, any>;
-	tag: Model<TagSchema, {}, {}, {}, any>;
-	jam: Model<CodeJamSchema, {}, {}, {}, any>;
-	premiumUser: Model<PremiumUserSchema, {}, {}, {}, any>;
-}
-
-export interface WelcomeSchema {
-	guild_id: string;
-	channel_id: string;
-	content_type: ContentType;
-	content: string;
-	enabled: boolean;
-}
-
-export interface GoodbyeSchema {
-	guild_id: string;
-	channel_id: string;
-	content_type: ContentType;
-	content: string;
-	enabled: boolean;
-}
-
-export type ContentType = 'text' | 'embed';
 
 export enum TagLimits {
 	MAX_CREATED_TAGS = 10
@@ -93,7 +56,7 @@ export interface PremiumUserSchema {
 	activated: boolean;
 	activated_at: number | null;
 	/** Some users can have life time access */
-	expires_at: Date | null;
+	expires_at: Number | null;
 	level: PremiumUserLevels | null;
 }
 

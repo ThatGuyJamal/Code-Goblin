@@ -5,7 +5,7 @@ import type Main from '../../../main.js';
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
 	await interaction.defer(64);
 
-	const jam = await instance.collections.controllers.jam.getCodeJam(interaction.guild!.id);
+	const jam = await instance.database.schemas.jam.GetJam(interaction.guild!.id);
 
 	if (!jam) {
 		return await interaction.createFollowup({
@@ -46,7 +46,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		});
 	}
 
-	await instance.collections.controllers.jam.deleteCodeJam(interaction.guild!.id);
+	await instance.database.schemas.jam.DeleteJam(interaction.guild!.id);
 
 	return await interaction.createFollowup({
 		embeds: [

@@ -28,7 +28,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	const content = interaction.data.options.getString('content', true);
 
 	// Check if the tag exists
-	const tagExists = instance.collections.controllers.tags.GetTag(interaction.guild!.id, name);
+	const tagExists = instance.database.schemas.tag.GetTag(interaction.guild!.id, name);
 
 	if (!tagExists) {
 		return await interaction.createFollowup({
@@ -49,7 +49,11 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		});
 	}
 
-	const tag = await instance.collections.controllers.tags.UpdateTag(interaction.guild!.id, name, content);
+	await instance.database.schemas.tag.UpdateTag({
+		guild_id: interaction.guild!.id,
+		name: name,
+		content: content
+	});
 
 	return await interaction.createFollowup({
 		embeds: [
@@ -57,7 +61,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 				description: instance.utils.stripIndents(
 					`
 \`\`\`asciidoc
-• Success :: Tag ${tag.name} has been updated!
+• Success :: Tag ${name} has been updated!
 \`\`\`
 `
 				),

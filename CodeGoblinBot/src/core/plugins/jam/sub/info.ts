@@ -6,7 +6,7 @@ import type Main from '../../../main.js';
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
 	await interaction.defer();
 
-	const jam = await instance.collections.controllers.jam.getCodeJam(interaction.guild!.id);
+	const jam = await instance.database.schemas.jam.GetJam(interaction.guild!.id);
 
 	if (!jam) {
 		return await interaction.createFollowup({
@@ -28,7 +28,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 
 	const embed = new EmbedBuilder();
 
-	const managers = await instance.collections.controllers.jam.getJamManagers(interaction.guild!.id);
+	const managers = await instance.database.schemas.jam.GetJamManagers(interaction.guild!.id);
 
 	if (managers && managers.length > 0) {
 		// Only give the first 5 managers
@@ -40,7 +40,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		embed.addField('Managers', `${managersString}`);
 	}
 
-	const participants = await instance.collections.controllers.jam.getJamParticipants(interaction.guild!.id);
+	const participants = await instance.database.schemas.jam.GetJamParticipants(interaction.guild!.id);
 
 	if (participants && participants.length > 0) {
 		// Only give the first 15 participants and number them 1 - 15
@@ -66,9 +66,8 @@ Configured Code Jam:
 \`\`\`asciidoc
 • Name               :: ${jam.name}
 • Description        :: ${jam.description}
-• Created At         :: ${jam.created_at.toDateString()} 
 \`\`\`
-> Created By         :: ${instance.utils.userMention(jam.created_by_id)}
+> Created By         :: ${instance.utils.userMention(jam.created_by_id!)}
 > Start Time         :: ${jam.event_scheduled_start_time}
 > End Time           :: ${jam.event_scheduled_end_time}
 > Event Role         :: ${instance.utils.roleMention(jam.event_role_id!)}

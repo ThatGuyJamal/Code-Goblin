@@ -26,7 +26,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 
 	const name = interaction.data.options.getString('name', true);
 
-	let result = await instance.collections.controllers.tags.DeleteTag(interaction.guild!.id, name);
+	let result = await instance.database.schemas.tag.DeleteTag(interaction.guild!.id, name);
 
 	if (!result) {
 		return await interaction.createFollowup({

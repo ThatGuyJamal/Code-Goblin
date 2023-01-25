@@ -5,7 +5,7 @@ import type Main from '../../../main.js';
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
 	await interaction.defer(64);
 
-	let result = await instance.collections.controllers.goodbye.DeleteGoodbye(interaction.guild!.id);
+	let result = await instance.database.schemas.automation.goodbye.DeleteGoodbye(interaction.guild!.id);
 
 	if (!result) {
 		return await interaction.createFollowup({

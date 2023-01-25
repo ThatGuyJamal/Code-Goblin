@@ -1,13 +1,77 @@
-// todo
-import { Schema, type Model, model } from 'mongoose';
-import type { GoodbyeSchema } from '../../../typings/database/types.js';
+import { prop, ReturnModelType, ModelOptions, getModelForClass } from '@typegoose/typegoose';
 
-const goodbyeSchema = new Schema<GoodbyeSchema>({
-	guild_id: { type: String, required: true },
-	channel_id: { type: String, required: true },
-	content_type: { type: String, required: false },
-	content: { type: String, required: false },
-	enabled: { type: Boolean, required: true }
-});
+@ModelOptions({
+	schemaOptions: {
+		collection: 'goodbye',
+		timestamps: true,
+		autoIndex: true
+	}
+})
+export class GoodbyeTypegooseSchema {
+	@prop({ type: String, required: true })
+	guild_id?: string;
 
-export const GoodbyeModel: Model<GoodbyeSchema> = model('goodbye', goodbyeSchema);
+	@prop({ type: String, default: null })
+	channel_id?: string;
+
+	@prop({ type: String, default: null })
+	content?: string;
+
+	@prop({ type: Boolean, default: false })
+	enabled?: boolean;
+
+	/**
+	 * Creates a Goodbye document for a guild
+	 * @param this
+	 * @param data
+	 * @returns
+	 */
+	public static async CreateGoodbye(this: ReturnModelType<typeof GoodbyeTypegooseSchema>, data: GoodbyeTypegooseSchema) {
+		await this.create(data);
+	}
+
+	/**
+	 * Updates a Goodbye message for a guild
+	 * @param guildId
+	 * @param channelId
+	 * @param contentType
+	 * @param content
+	 * @param enabled
+	 * @returns
+	 */
+	public static async UpdateGoodbye(this: ReturnModelType<typeof GoodbyeTypegooseSchema>, data: GoodbyeTypegooseSchema): Promise<boolean> {
+		return await this.updateOne(
+			{
+				guild_id: data.guild_id
+			},
+			{
+				data
+			},
+			{
+				new: true,
+				upsert: true
+			}
+		)
+			.then((res) => res.acknowledged)
+			.catch(() => false);
+	}
+
+	/**
+	 * Deletes a Goodbye message for a guild
+	 * @param guildId
+	 */
+	public static async DeleteGoodbye(this: ReturnModelType<typeof GoodbyeTypegooseSchema>, guildId: string): Promise<boolean> {
+		return (await this.deleteOne({ guild_id: guildId })) ? true : false;
+	}
+
+	/**
+	 * Gets the Goodbye message for a guild
+	 * @param guildId
+	 * @returns
+	 */
+	public static async GetGoodbye(this: ReturnModelType<typeof GoodbyeTypegooseSchema>, guildId: string): Promise<GoodbyeTypegooseSchema | null> {
+		return await this.findOne({ guild_id: guildId });
+	}
+}
+
+export const GoodbyeModel = getModelForClass(GoodbyeTypegooseSchema);

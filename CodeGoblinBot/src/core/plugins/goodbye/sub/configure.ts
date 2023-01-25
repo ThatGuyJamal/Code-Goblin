@@ -8,7 +8,12 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	const channel = interaction.data.options.getChannel('channel', true);
 	const context = interaction.data.options.getString('context', true);
 
-	await instance.collections.controllers.goodbye.CreateGoodbye(interaction.guild!.id, channel.id, 'text', context, true);
+	await instance.database.schemas.automation.goodbye.CreateGoodbye({
+		guild_id: interaction.guild!.id,
+		channel_id: channel.id,
+		content: context,
+		enabled: true
+	});
 
 	return await interaction.createFollowup({
 		embeds: [

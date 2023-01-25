@@ -1,6 +1,5 @@
 import { AnyInteractionGateway, ChannelTypes, CommandInteraction, InteractionTypes, MessageFlags } from 'oceanic.js';
 import config from '../../config/config.js';
-import { GlobalStatsModel } from '../../database/index.js';
 import { logger, constants } from '../../utils/index.js';
 import { Main } from '../index.js';
 import { DurationFormatter } from '@sapphire/duration';
@@ -13,33 +12,16 @@ export default async function (interaction: AnyInteractionGateway) {
 			if (config.IsInDevelopmentMode) {
 				logger.debug(`[${new Date().toISOString()}][command/${interaction.data.name}]: ${interaction.user.tag} (${interaction.user.id})`);
 			}
-			await GlobalStatsModel.findOneAndUpdate(
-				{ find_id: 'global' },
-				{ $inc: { commands_executed: 1 } },
-				{
-					upsert: true,
-					new: true
-				}
-			);
 			await processCommandInteraction(interaction);
+			await Main.database.schemas.statistics.UpdateCommandsExecuted();
 		} catch (error) {
+			await Main.database.schemas.statistics.UpdateCommandsFailed();
 			logger.error(error);
 			await interaction
 				.createMessage({
 					content: `An error occurred while running \`/${interaction.data.name}\` command.`
 				})
 				.catch(() => {});
-
-			if (!config.IsInDevelopmentMode) {
-				await GlobalStatsModel.findOneAndUpdate(
-					{ find_id: 'global' },
-					{ $inc: { commands_failed: 1 } },
-					{
-						new: true,
-						upsert: true
-					}
-				);
-			}
 		}
 	}
 
@@ -57,7 +39,7 @@ export default async function (interaction: AnyInteractionGateway) {
 async function processCommandInteraction(interaction: CommandInteraction): Promise<void> {
 	const command = Main.collections.commands.commandStoreMap.get(interaction.data.name);
 
-	if(!command) {
+	if (!command) {
 		return await interaction.createMessage({
 			embeds: [
 				{
@@ -113,7 +95,7 @@ async function processCommandInteraction(interaction: CommandInteraction): Promi
 		});
 	}
 
-	if (command.premiumOnly && !Main.collections.controllers.premiumUsers.isPremiumUser(interaction.user.id) && !isOwner) {
+	if (command.premiumOnly && !Main.database.schemas.premiumUser.CheckIfPremiumUser(interaction.user.id) && !isOwner) {
 		return await interaction.createMessage({
 			embeds: [
 				{
