@@ -5,7 +5,7 @@ import type Main from '../../../main.js';
 
 export default async function (instance: Main, interaction: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>) {
 	await interaction.defer();
-	const tags = await instance.collections.controllers.tags.GetTags(interaction.guild!.id);
+	const tags = await instance.database.schemas.tag.GetTags(interaction.guild!.id);
 
 	const noTags: boolean = tags.length === 0;
 

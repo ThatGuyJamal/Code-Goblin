@@ -25,13 +25,13 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		});
 	}
 
-	const name = interaction.data.options.getString('name', true);
-	const content = interaction.data.options.getString('content', true);
+	const c_name = interaction.data.options.getString('name', true);
+	const c_content = interaction.data.options.getString('content', true);
 
 	// Check if the tax limit has been reached
-	const tagLimits = await instance.collections.controllers.tags.GetTagLimits(interaction.guild!.id);
+	const tagLimits = await instance.database.schemas.tag.CheckIfLimited(interaction.guild!.id);
 
-	if (tagLimits.limited) {
+	if (tagLimits) {
 		return await interaction.createFollowup({
 			embeds: [
 				{
@@ -51,7 +51,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	}
 
 	// Check if the tag already exists
-	const tagExists = await instance.collections.controllers.tags.GetTag(interaction.guild!.id, name);
+	const tagExists = await instance.database.schemas.tag.CheckIfTagExists(interaction.guild!.id, c_name);
 
 	if (tagExists) {
 		return await interaction.createFollowup({
@@ -60,7 +60,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 					description: instance.utils.stripIndents(
 						`
 \`\`\`asciidoc
-• Error :: Tag \`${name}\` already exists!
+• Error :: Tag \`${c_name}\` already exists!
 \`\`\`
 `
 					),
@@ -72,13 +72,13 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		});
 	}
 
-	const tag = await instance.collections.controllers.tags.CreateTag(
-		interaction.guild!.id,
-		name,
-		content,
-		interaction.user.id,
-		interaction.user.tag
-	);
+	await instance.database.schemas.tag.CreateTag({
+		guild_id: interaction.guild!.id,
+		name: c_name,
+		content: c_content,
+		created_by_name: interaction.user.username,
+		created_by_id: interaction.user.id
+	});
 
 	return await interaction.createFollowup({
 		embeds: [
@@ -86,7 +86,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 				description: instance.utils.stripIndents(
 					`
 \`\`\`asciidoc
-• Success :: Tag \`${tag.name}\` has been created!
+• Success :: Tag \`${c_name}\` has been created!
 \`\`\`
 `
 				),

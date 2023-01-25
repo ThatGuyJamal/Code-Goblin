@@ -25,9 +25,9 @@ export async function getWelcomeResults(member: Member) {
 
 	if (!guild) return;
 
-	const data = await Main.collections.controllers.welcome.GetWelcome(guild.id);
+	const data = await Main.database.schemas.automation.welcome.GetWelcome(guild.id);
 
-	if (!data) return;
+	if (!data || !data.enabled || !data.channel_id || !data?.content) return;
 
 	const welcomeChannel = Main.DiscordClient.getChannel(data.channel_id) as TextChannel;
 

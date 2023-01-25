@@ -7,7 +7,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 
 	const { utils } = instance;
 
-	const jam = await instance.collections.controllers.jam.getCodeJam(interaction.guild!.id);
+	const jam = await instance.database.schemas.jam.GetJam(interaction.guild!.id);
 
 	if (!jam) {
 		return await interaction.createFollowup({
@@ -141,7 +141,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 			});
 		}
 
-		await instance.collections.controllers.jam.addJamParticipant(interaction.guild!.id, manageAddParticipant.id);
+		await instance.database.schemas.jam.AddJamParticipant(interaction.guild!.id, manageAddParticipant.id);
 
 		const role = interaction.guild?.roles.get(jam.event_role_id!);
 		const member = interaction.guild?.members.get(manageAddParticipant.id);
@@ -155,13 +155,13 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	}
 
 	if (manageName) {
-		await instance.collections.controllers.jam.updateJamName(interaction.guild!.id, manageName);
+		await instance.database.schemas.jam.UpdateJamName(interaction.guild!.id, manageName);
 
 		changes.push(`Updated the name to \`${manageName}\``);
 	}
 
 	if (manageDescription) {
-		await instance.collections.controllers.jam.updateCodeJamDescription(interaction.guild!.id, manageDescription);
+		await instance.database.schemas.jam.UpdateJamDescription(interaction.guild!.id, manageDescription);
 
 		changes.push(`Updated the description.`);
 	}
@@ -171,20 +171,20 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	}
 
 	if (manageEventChannel) {
-		await instance.collections.controllers.jam.updateCodeJamChannel(interaction.guild!.id, manageEventChannel.id);
+		await instance.database.schemas.jam.updateCodeJamChannel(interaction.guild!.id, manageEventChannel.id);
 
 		changes.push(`Updated the event channel to <#${manageEventChannel.id}>`);
 	}
 
 	if (manageEventRole) {
-		await instance.collections.controllers.jam.updateCodeJamRole(interaction.guild!.id, manageEventRole.id);
+		await instance.database.schemas.jam.updateCodeJamRole(interaction.guild!.id, manageEventRole.id);
 
 		changes.push(`Updated the event role to ${utils.roleMention(manageEventRole.id)}`);
 	}
 
 	// TODO - Make it so if this role is updated, it updates the role for all participants
 	if (manageEventManagerRole) {
-		await instance.collections.controllers.jam.updateCodeJamManagerRole(interaction.guild!.id, manageEventManagerRole.id);
+		await instance.database.schemas.jam.updateCodeJamRoleManagers(interaction.guild!.id, manageEventManagerRole.id);
 
 		const role = interaction.guild?.roles.get(jam.event_managers_role_id!);
 
@@ -197,13 +197,13 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	}
 
 	if (manageEventImage) {
-		await instance.collections.controllers.jam.updateCodeJamImage(interaction.guild!.id, manageEventImage);
+		await instance.database.schemas.jam.updateCodeJamImage(interaction.guild!.id, manageEventImage);
 
 		changes.push(`Updated the event image to \`${manageEventImage}\``);
 	}
 
 	if (manageRemoveParticipant) {
-		await instance.collections.controllers.jam.removeJamParticipant(interaction.guild!.id, manageRemoveParticipant.id);
+		await instance.database.schemas.jam.RemoveJamManager(interaction.guild!.id, manageRemoveParticipant.id);
 
 		const role = interaction.guild?.roles.get(jam.event_role_id!);
 		const member = interaction.guild?.members.get(manageRemoveParticipant.id);
@@ -217,7 +217,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	}
 
 	if (manageAddManager) {
-		await instance.collections.controllers.jam.addJamManager(interaction.guild!.id, manageAddManager.id);
+		await instance.database.schemas.jam.AddJamManager(interaction.guild!.id, manageAddManager.id);
 
 		const role = interaction.guild?.roles.get(jam.event_managers_role_id!);
 		const member = interaction.guild?.members.get(manageAddManager.id);
@@ -231,7 +231,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	}
 
 	if (manageRemoveManager) {
-		await instance.collections.controllers.jam.removeJamManager(interaction.guild!.id, manageRemoveManager.id);
+		await instance.database.schemas.jam.RemoveJamManager(interaction.guild!.id, manageRemoveManager.id);
 
 		const role = interaction.guild?.roles.get(jam.event_managers_role_id!);
 		const member = interaction.guild?.members.get(manageRemoveManager.id);
@@ -247,7 +247,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	if (manageEventStart) {
 		let format = utils.convertDateStringToDiscordTimeStamp(manageEventStart, 'd');
 
-		await instance.collections.controllers.jam.updateCodeJamStartDate(interaction.guild!.id, format);
+		await instance.database.schemas.jam.updateCodeJamStartTime(interaction.guild!.id, format);
 
 		changes.push(`Updated the event start date to ${format}`);
 	}
@@ -255,7 +255,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	if (manageEventEnd) {
 		let format = utils.convertDateStringToDiscordTimeStamp(manageEventEnd, 'd');
 
-		await instance.collections.controllers.jam.updateCodeJamEndDate(interaction.guild!.id, format);
+		await instance.database.schemas.jam.updateCodeJamEndTime(interaction.guild!.id, format);
 
 		changes.push(`Updated the event end date to ${format}`);
 	}

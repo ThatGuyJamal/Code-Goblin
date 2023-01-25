@@ -31,7 +31,13 @@ export default class Utils {
 	 * @param options
 	 * @returns
 	 */
-	public async sendToLogChannel(type: 'error' | 'api' | "premium", message: string, custom?: boolean, name?: string, options?: CreateMessageOptions) {
+	public async sendToLogChannel(
+		type: 'error' | 'api' | 'premium',
+		message: string,
+		custom?: boolean,
+		name?: string,
+		options?: CreateMessageOptions
+	) {
 		const log = this.instance.DiscordClient.getChannel(
 			type === 'error' ? config.BotErrorLogChannelId : type === 'api' ? config.BotApiLogChannelId : config.BotPremiumLogChannelId
 		) as TextChannel;
@@ -387,8 +393,8 @@ export default class Utils {
 	 *
 	 * @param channelId - The channel ID to format
 	 */
-	public channelMention(channelId: string): string {
-		return `<#${channelId}>`;
+	public channelMention(channelId: string | null | undefined): string {
+		return channelId ? `<#${channelId}>` : 'No channel found';
 	}
 
 	/**

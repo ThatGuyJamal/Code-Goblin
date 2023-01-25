@@ -3,22 +3,14 @@ import type { ApplicationCommandTypes, Collection, CommandInteraction, Message, 
 import type { CreateApplicationCommandOptions } from 'oceanic.js';
 import type config from '../../config/config.js';
 import type Main from '../../core/main.js';
-import type { GoodbyeCommandController } from '../../database/mongodb/controllers/goodbye.js';
-import type { CodeJamCommandController } from '../../database/mongodb/controllers/jam.js';
-import type { TagCommandController } from '../../database/mongodb/controllers/tag.js';
-import type { WelcomeCommandController } from '../../database/mongodb/controllers/welcome.js';
 import type { RateLimitManager } from '@sapphire/ratelimits';
 import type { OpenAPIImageWrapper } from '../../core/structures/openai.js';
-import type { PremiumUserCommandController } from '../../database/mongodb/controllers/premium.js';
 
 export interface MainCollections {
 	/** A Collection of all command information and data */
 	commands: MainCollectionCommands;
-	/** A Collection of all plugin information and data */
-	controllers: MainCollectionControllers;
 	/** A Collection of keys used throughout the bot */
 	keys: MainCollectionKeys;
-
 	openai: {
 		image: OpenAPIImageWrapper;
 	};
@@ -39,14 +31,6 @@ interface MainCollectionCommands {
 	commandStoreArrayJsonGlobal: CreateApplicationCommandOptions[];
 
 	legacyCommandStoreMap: Collection<string, LegacyCommand>;
-}
-
-interface MainCollectionControllers {
-	tags: TagCommandController;
-	welcome: WelcomeCommandController;
-	goodbye: GoodbyeCommandController;
-	jam: CodeJamCommandController;
-	premiumUsers: PremiumUserCommandController;
 }
 
 export interface CommandDataProp {

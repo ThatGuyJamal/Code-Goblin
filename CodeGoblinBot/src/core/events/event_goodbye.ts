@@ -23,9 +23,9 @@ export async function getGoodbyeResults(member: Member) {
 
 	if (!guild) return;
 
-	const data = await Main.collections.controllers.goodbye.GetGoodbye(guild.id);
+	const data = await Main.database.schemas.automation.goodbye.GetGoodbye(guild.id);
 
-	if (!data) return;
+	if (!data || !data.enabled || !data.channel_id || !data?.content) return;
 
 	const GoodbyeChannel = Main.DiscordClient.getChannel(data.channel_id) as TextChannel;
 

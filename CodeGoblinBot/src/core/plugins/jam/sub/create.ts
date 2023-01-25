@@ -37,7 +37,7 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 	const createEventImage = interaction.data.options.getString('create-event-image');
 
 	// Check if the Code Jam already exists
-	if (await instance.collections.controllers.jam.getCodeJam(interaction.guild!.id)) {
+	if (await instance.database.schemas.jam.GetJam(interaction.guild!.id)) {
 		return await interaction.createFollowup({
 			embeds: [
 				{
@@ -61,18 +61,20 @@ export default async function (instance: Main, interaction: CommandInteraction<A
 		createEventEnd = instance.utils.convertDateStringToDiscordTimeStamp(createEventEnd, 'd');
 
 		// Create the Code Jam
-		await instance.collections.controllers.jam.createCodeJam({
-			guildId: interaction.guild!.id,
-			jam_name: createName,
-			jam_description: createDescription,
-			roleId: createEventRole?.id,
-			roleIdManagers: createEventManagerRole?.id,
-			image: createEventImage,
-			start: createEventStart,
-			end: createEventEnd,
-			channel: createEventChannel?.id,
-			createdBy: interaction.member.username,
-			createdById: interaction.member.user.id
+		await instance.database.schemas.jam.CreateJam({
+			guild_id: interaction.guild!.id,
+			name: createName,
+			description: createDescription,
+			event_role_id: createEventRole?.id,
+			event_participants_ids: [],
+			event_managers_ids: [],
+			event_managers_role_id: createEventManagerRole?.id,
+			event_image_url: createEventImage,
+			event_scheduled_start_time: createEventStart,
+			event_scheduled_end_time: createEventEnd,
+			event_channel: createEventChannel?.id,
+			created_by_name: interaction.member.username,
+			created_by_id: interaction.member.user.id
 		});
 
 		return await interaction.createFollowup({
@@ -99,8 +101,9 @@ ${instance.utils.codeBlock(
 			flags: MessageFlags.EPHEMERAL
 		});
 	} catch (err) {
+		err;
 		await interaction.createFollowup({
-			content: `Error creating the Code Jam Event in the server!`,
+			content: `Error creating the Code Jam Event in the server!\n\`\`\`${err}\`\`\``,
 			flags: MessageFlags.EPHEMERAL
 		});
 		logger.error(err);

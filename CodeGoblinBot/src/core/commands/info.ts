@@ -5,8 +5,6 @@ import config from '../../config/config.js';
 import { isCanary } from '../../config/config.js';
 import { CreateCommand } from '../structures/command.js';
 import { constants } from '../../utils/index.js';
-import { GlobalStatsModel } from '../../database/index.js';
-import type { GlobalStatistics } from '../../typings/database/types.js';
 import { RateLimitManager } from '@sapphire/ratelimits';
 import { Milliseconds } from '../../utils/constants.js';
 
@@ -49,19 +47,11 @@ export default CreateCommand({
 		user: new RateLimitManager(Milliseconds.SECOND * 10, 1)
 	},
 	run: async ({ instance, interaction }) => {
-		const global = (await GlobalStatsModel.findOne({ find_id: 'global' })) as GlobalStatistics;
-		
+		const global = await instance.database.schemas.statistics.GetGlobalStats();
+
 		let dbStatus = instance.database.network_status();
 
 		const { guilds, users } = instance.DiscordClient;
-
-		let pluginSize: number =
-			instance.collections.controllers.goodbye.cache.size +
-			instance.collections.controllers.welcome.cache.size +
-			instance.collections.controllers.tags.cache.size +
-			instance.collections.controllers.jam.cache.size +
-			instance.collections.controllers.premiumUsers.cache.size;
-
 
 		await interaction.createMessage({
 			embeds: [
@@ -79,11 +69,10 @@ export default CreateCommand({
 \`\`\`
 **Global Information**
 \`\`\`asciidoc
-• Guilds Joined     :: ${global.guilds_joined}
-• Guilds Left       :: ${global.guilds_left}
-• Commands Executed :: ${global.commands_executed}
-• Commands Failed   :: ${global.commands_failed}
-• Plugins Loaded    :: ${pluginSize}
+• Guilds Joined     :: ${global!.guilds_joined ?? 0}
+• Guilds Left       :: ${global!.guilds_left ?? 0}
+• Commands Executed :: ${global!.commands_executed ?? 0}
+• Commands Failed   :: ${global!.commands_failed ?? 0}
 • Database Status   :: ${dbStatus.connected ? 'Connected' : 'Disconnected'}
 \`\`\`
 `),

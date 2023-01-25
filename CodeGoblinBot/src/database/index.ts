@@ -1,4 +1,3 @@
-import { Database } from './mongodb/db.js';
-import { GlobalStatsModel } from './mongodb/models/statistics.js';
+import { MongodbDatabase } from './mongodb/db.js';
 
-export { Database, GlobalStatsModel };
+export { MongodbDatabase };

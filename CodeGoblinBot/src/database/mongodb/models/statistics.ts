@@ -1,14 +1,75 @@
-import { Schema, Model, model } from 'mongoose';
-import type { GlobalStatistics } from '../../../typings/database/types.js';
+import { getModelForClass, ModelOptions, prop, ReturnModelType } from '@typegoose/typegoose';
 
-const GlobalStatsSchema = new Schema<GlobalStatistics>({
-	find_id: { type: String, required: true, default: 'global' },
+@ModelOptions({
+	schemaOptions: {
+		collection: 'global-statistics',
+		timestamps: true,
+		autoIndex: true
+	}
+})
+class Statistics {
+	@prop({ type: String })
+	find_id?: string;
 
-	guilds_joined: { type: Number, required: true, default: 0 },
-	guilds_left: { type: Number, required: true, default: 0 },
+	@prop({ type: Number })
+	guilds_joined?: number;
 
-	commands_executed: { type: Number, required: true, default: 0 },
-	commands_failed: { type: Number, required: true, default: 0 }
-});
+	@prop({ type: Number })
+	guilds_left?: number;
 
-export const GlobalStatsModel: Model<GlobalStatistics> = model('global-statistics', GlobalStatsSchema);
+	@prop({ type: Number })
+	commands_executed?: number;
+
+	@prop({ type: Number })
+	commands_failed?: number;
+
+	public static async GetGlobalStats(this: ReturnModelType<typeof Statistics>): Promise<Statistics | null> {
+		return await this.findOne({ find_id: 'global'})
+	}
+
+	public static async UpdateGuildsJoined(this: ReturnModelType<typeof Statistics>) {
+		await this.updateOne(
+			{ find_id: 'global' },
+			{ $inc: { guilds_joined: 1 } },
+			{
+				upsert: true,
+				new: true
+			}
+		);
+	}
+
+	public static async UpdateGuildsLeft(this: ReturnModelType<typeof Statistics>) {
+		await this.updateOne(
+			{ find_id: 'global' },
+			{ $inc: { guilds_left: 1 } },
+			{
+				upsert: true,
+				new: true
+			}
+		);
+	}
+
+	public static async UpdateCommandsExecuted(this: ReturnModelType<typeof Statistics>) {
+		await this.updateOne(
+			{ find_id: 'global' },
+			{ $inc: { commands_executed: 1 } },
+			{
+				upsert: true,
+				new: true
+			}
+		);
+	}
+
+	public static async UpdateCommandsFailed(this: ReturnModelType<typeof Statistics>) {
+		await this.updateOne(
+			{ find_id: 'global' },
+			{ $inc: { commands_failed: 1 } },
+			{
+				upsert: true,
+				new: true
+			}
+		);
+	}
+}
+
+export const GlobalStatsModel = getModelForClass(Statistics);

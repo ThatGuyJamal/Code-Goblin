@@ -5,7 +5,77 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c52ab96-bc2a-4e99-81c2-9a67d669b46f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/github/thatguyjamal/Rest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/github/thatguyjamal/Rest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/config/example.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/config/example.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/automate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/automate.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/commands.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/commands.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/embed.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/embed.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/info.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/info.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/legacy/commands.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/legacy/commands.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/legacy/developer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/legacy/developer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/openai/imagine.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/openai/imagine.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/ping.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/commands/ping.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_debug.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_debug.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_goodbye.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_goodbye.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_guildcreate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_guildcreate.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_guildleave.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_guildleave.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_interactionCreate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_interactionCreate.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_messageCreate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_messageCreate.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_ready.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_ready.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_welcome.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/events/event_welcome.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/goodbye/sub/configure.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/goodbye/sub/configure.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/goodbye/sub/delete.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/goodbye/sub/delete.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/goodbye/sub/view.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/goodbye/sub/view.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/cmd.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/cmd.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/create.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/create.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/delete.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/delete.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/end.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/end.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/info.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/info.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/join.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/join.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/leave.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/leave.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/manage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/jam/sub/manage.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/cmd.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/cmd.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/clear.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/clear.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/create.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/create.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/delete.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/delete.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/edit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/edit.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/list.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/list.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/view.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/tag/sub/view.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/welcome/sub/configure.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/welcome/sub/configure.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/welcome/sub/delete.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/welcome/sub/delete.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/welcome/sub/view.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/plugins/welcome/sub/view.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/structures/client.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/structures/client.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/structures/command.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/structures/command.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/core/structures/openai.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/core/structures/openai.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/database/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/controllers/goodbye.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/controllers/jam.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/controllers/premium.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/controllers/tag.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/controllers/welcome.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/db.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/db.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/goodbye.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/goodbye.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/jam.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/jam.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/premium.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/premium.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/statistics.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/statistics.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/tag.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/tag.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/welcome.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/database/mongodb/models/welcome.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/typings/api/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/typings/api/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/typings/core/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/typings/core/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/typings/database/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/typings/database/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/typings/utils/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/typings/utils/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/cdn.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/cdn.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/constants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/logger.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/logger.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/queue.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/queue.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/src/utils/utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CodeGoblinBot/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../CodeGoblinBot/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,25 +110,25 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/heroh/code/projects/code-goblin/bot/CodeGoblinAPI",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/heroh/code/projects/code-goblin/bot/CodeGoblinAPI&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\heroh\code\projects\code-goblin\bot\CodeGoblinAPI" />
@@ -80,6 +150,7 @@
       <workItem from="1674576554902" duration="4834000" />
       <workItem from="1674588991255" duration="2917000" />
       <workItem from="1674591922363" duration="5503000" />
+      <workItem from="1674677861098" duration="1470000" />
     </task>
     <servers />
   </component>
