@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1c52ab96-bc2a-4e99-81c2-9a67d669b46f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/codegoblin/api/API.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/codegoblin/api/API.java" afterDir="false" />
-    </list>
+    <list default="true" id="1c52ab96-bc2a-4e99-81c2-9a67d669b46f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -88,7 +84,7 @@
       <workItem from="1674677861098" duration="1470000" />
       <workItem from="1674690823411" duration="2390000" />
       <workItem from="1674693228469" duration="16230000" />
-      <workItem from="1674713170944" duration="5094000" />
+      <workItem from="1674713170944" duration="5396000" />
     </task>
     <servers />
   </component>

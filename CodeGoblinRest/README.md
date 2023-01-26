@@ -1,0 +1,54 @@
+# `Code Goblin Rest`
+
+The Code Goblin API is a Restful API that provides access to the Code Goblins core discord bot information. It is written in [Typescript](https://www.typescriptlang.org/) and uses the [AdonisJs](https://adonisjs.com/) framework. 
+
+The API main goal is to take load off of the bot and provide a more stable way to access information from the discord API. This will also help us with sharding in the future. Instead of having to make a request to each shard, the shards will just make a request to the API.
+
+## Endpoints
+
+### GET `/`
+
+Returns a array of all the endpoints.
+
+```json
+[
+    "/api/v1/guilds",
+    "/api/v1/guilds/:id"
+]
+```
+
+### GET `/api/v1/guilds`
+
+Returns a JSON array of guilds that the bot is in.
+
+*Example return data*
+```json
+[
+    {
+        "memberCount": 3,
+        "name": "Pingu",
+        "id": "943700714469855332"
+    },
+    {
+        "memberCount": 5,
+        "name": "Typescript's server",
+        "id": "954186846504648706"
+    },
+    {
+        "memberCount": 103,
+        "name": "Code Goblin  (Support Server)",
+        "id": "991449362246934648"
+    }
+]
+```
+
+### GET `/api/v1/guilds/:id`
+
+Returns a JSON object with information about the guild with the given ID.
+
+```json
+{
+  
+}
+```
+
