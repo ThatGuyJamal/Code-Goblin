@@ -104,19 +104,28 @@ public class API {
                             return null;
                         }
 
-                        String description = guild.getDescription().toString();
-
-                        // If the guild has no description, set it to an empty string.
-                        if (description != null) {
-                            attributes.put("description", description);
-                        } else {
-                            attributes.put("description", null);
-                        }
-
                         // Add the data to the attributes map.
                         attributes.put("id", guild.getIdAsString());
                         attributes.put("name", guild.getName());
                         attributes.put("memberCount", guild.getMemberCount());
+                        attributes.put("description", guild.getDescription().isPresent() ? guild.getDescription().get() : null);
+                        attributes.put("icon", guild.getIcon().isPresent() ? guild.getIcon().get().getUrl().toString() : null);
+                        attributes.put("splash", guild.getSplash().isPresent() ? guild.getSplash().get().getUrl().toString() : null);
+                        attributes.put("vanityUrl", guild.getVanityUrlCode().isPresent() ? guild.getVanityUrlCode().get() : null);
+                        attributes.put("verificationLevel", guild.getVerificationLevel().toString());
+                        attributes.put("region", guild.getRegion().toString());
+                        attributes.put("afkChannel", guild.getAfkChannel().isPresent() ? guild.getAfkChannel().get().getName() : null);
+                        attributes.put("systemChannel", guild.getSystemChannel().isPresent() ? guild.getSystemChannel().get().getName() : null);
+                        attributes.put("systemChannelFlags", guild.getSystemChannelFlags());
+                        attributes.put("widgetChannel", guild.getWidgetChannel().isPresent() ? guild.getWidgetChannel().get().getName() : null);
+                        attributes.put("widgetEnabled", guild.isWidgetEnabled());
+                        attributes.put("createdAt", guild.getCreationTimestamp().toString());
+                        attributes.put("rulesChannelId", guild.getRulesChannel().isPresent() ? guild.getRulesChannel().get().getId() : null);
+                        attributes.put("features", guild.getFeatures().toString());
+                        attributes.put("roles", guild.getRoles().toString());
+                        attributes.put("channels", guild.getChannels().toString());
+                        attributes.put("boostersCount", guild.getBoostCount());
+                        attributes.put("boostersTier", guild.getBoostLevel().toString());
 
                         return attributes;
                     } catch (Exception e) {

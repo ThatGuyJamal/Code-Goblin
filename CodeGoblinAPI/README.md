@@ -48,9 +48,19 @@ Returns a JSON object with information about the guild with the given ID.
 
 ```json
 {
-        "memberCount": 3,
-        "name": "Pingu",
-        "id": "943700714469855332"
+  "boostersTier": "NONE",
+  "memberCount": 6,
+  "roles": ["..."],
+  "verificationLevel": "NONE",
+  "widgetEnabled": false,
+  "createdAt": "2022-03-18T01:17:52.141Z",
+  "features": "[]",
+  "systemChannelFlags": [],
+  "channels": ["..."],
+  "name": "Example Response",
+  "id": "1234456754",
+  "boostersCount": 1,
+  "region": "UNKNOWN"
 }
 ```
 
