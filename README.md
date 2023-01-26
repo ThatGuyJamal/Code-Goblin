@@ -32,7 +32,7 @@ These commands are only available to premium users. The main reason is because t
 
 ## `API` 
 
-Code Goblins API is currently in development. If you would like to contribute to the project, please contact me on Discord. For now you can find the code [here](./CodeGoblinAPI/src/main/java/org/github/thatguyjamal/).
+Code Goblins API is currently in development. If you would like to contribute to the project, please contact me on Discord. For now you can find the code [here](./CodeGoblinAPI/README.md)
 
 ## `Contributing`
 
