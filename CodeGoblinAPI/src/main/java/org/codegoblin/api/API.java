@@ -33,6 +33,10 @@ public class API {
         // Add the username and password to the map.
         usernamePasswords.put(_username, _password);
 
+        path("/ws", () -> {
+            webSocket("/echo", WebSocket.class);
+        });
+
         // Creates simple authentication for the API.
         // Example: http://localhost:3030/api/v1/guilds?user=someguy&password=someguyspassword
         before((request, response) -> {
@@ -45,18 +49,19 @@ public class API {
             }
         });
 
-        get("/",  (request, response) -> {
-            response.type("application/json");
-            ArrayList<Object> attributes = new ArrayList<>();
-
-            // Add a list of endpoints to the attributes list.
-            attributes.add("/api/v1/guilds");
-            attributes.add("/api/v1/guilds/:id");
-
-            return attributes;
-        }, new JsonTransformer());
-
         path("/api", () -> {
+
+            get("/",  (request, response) -> {
+                response.type("application/json");
+                ArrayList<Object> attributes = new ArrayList<>();
+
+                // Add a list of endpoints to the attributes list.
+                attributes.add("/api/v1/guilds");
+                attributes.add("/api/v1/guilds/:id");
+
+                return attributes;
+            }, new JsonTransformer());
+
             path("/v1", () -> {
                 // Gets the discord guild data for all cached servers.
                 get("/guilds", (request, response) -> {
@@ -85,7 +90,7 @@ public class API {
                     } catch (Exception e) {
                         e.printStackTrace();
                         halt(500, "Internal server error!");
-                        return null;
+                        return "Internal server error!";
                     }
                 }, new JsonTransformer());
 
@@ -100,11 +105,11 @@ public class API {
 
                         // if no guild is found, return a 404.
                         if (guild == null) {
-                            halt(404, "Invalid ID provided!");
-                            return null;
+                            halt(404, "Guild not found!");
+                            return "Guild not found!";
                         }
 
-                        // Add the data to the attributes map.
+                        // Data
                         attributes.put("id", guild.getIdAsString());
                         attributes.put("name", guild.getName());
                         attributes.put("memberCount", guild.getMemberCount());
@@ -135,7 +140,7 @@ public class API {
                     } catch (Exception e) {
                         e.printStackTrace();
                         halt(500, "Internal server error!");
-                        return null;
+                        return "Internal server error!";
                     }
                 }, new JsonTransformer());
             });

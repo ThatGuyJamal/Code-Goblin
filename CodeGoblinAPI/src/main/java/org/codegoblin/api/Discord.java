@@ -19,18 +19,6 @@ public class Discord {
             .login().join();
 
     public static void main(String[] args) {
-        System.out.println("Running Discord API");
-
-        client.addServerBecomesAvailableListener(event -> {
-            System.out.println("Server available: " + event.getServer().getName());
-            System.out.println(event.getServer());
-        });
-
-        client.addServerBecomesUnavailableListener(event -> {
-            System.out.println("Server unavailable: " + event.getServer().getName());
-            System.out.println(event.getServer());
-        });
-
         client.addServerJoinListener(event -> {
             System.out.println("Joined server: " + event.getServer().getName());
         });
