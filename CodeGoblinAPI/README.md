@@ -52,12 +52,7 @@ Returns a JSON object with information about the guild with the given ID.
   "boostersTier": "NONE",
   "memberCount": 5,
   "roles": [
-    "954186846504648706",
-    "1014926353151295571",
-    "1014639441186390079",
-    "1008201654560116768",
-    "972026154762518551",
-    "971829156813881408"
+    "954186846504648706"
   ],
   "verificationLevel": "NONE",
   "widgetEnabled": false,
@@ -70,8 +65,8 @@ Returns a JSON object with information about the guild with the given ID.
   "members": [
     "1004561646347374742"
   ],
-  "name": "Typescript's server",
-  "id": "954186846504648706",
+  "name": "server",
+  "id": "2309482348249",
   "boostersCount": 0,
   "region": "UNKNOWN"
 }
