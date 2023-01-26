@@ -1,6 +1,7 @@
 package org.codegoblin.api;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import org.javacord.api.entity.DiscordEntity;
 import org.javacord.api.entity.server.Server;
 
 import static spark.Spark.*;
@@ -94,7 +95,6 @@ public class API {
                         response.type("application/json");
                         Map<String, Object> attributes = new HashMap<>();
 
-
                         // Get the guild id from the request params.
                         Server guild = discord.GetGuild(request.params(":id"));
 
@@ -121,11 +121,15 @@ public class API {
                         attributes.put("widgetEnabled", guild.isWidgetEnabled());
                         attributes.put("createdAt", guild.getCreationTimestamp().toString());
                         attributes.put("rulesChannelId", guild.getRulesChannel().isPresent() ? guild.getRulesChannel().get().getId() : null);
-                        attributes.put("features", guild.getFeatures().toString());
-                        attributes.put("roles", guild.getRoles().toString());
-                        attributes.put("channels", guild.getChannels().toString());
                         attributes.put("boostersCount", guild.getBoostCount());
                         attributes.put("boostersTier", guild.getBoostLevel().toString());
+
+                        // Mapped Data
+                        attributes.put("roles", guild.getRoles().stream().map(DiscordEntity::getIdAsString).toArray());
+                        attributes.put("channels", guild.getChannels().stream().map(DiscordEntity::getIdAsString).toArray());
+                        attributes.put("emojis", guild.getCustomEmojis().stream().map(DiscordEntity::getIdAsString).toArray());
+                        attributes.put("members", guild.getMembers().stream().map(DiscordEntity::getIdAsString).toArray());
+                        attributes.put("features", guild.getFeatures().stream().map(Enum::toString).toArray());
 
                         return attributes;
                     } catch (Exception e) {
@@ -136,5 +140,7 @@ public class API {
                 }, new JsonTransformer());
             });
         });
+
+        System.out.println("API is running on port 3030.");
     }
 }
