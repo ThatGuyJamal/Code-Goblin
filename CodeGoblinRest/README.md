@@ -68,6 +68,8 @@ _Example return data:_
 
 Returns a JSON object with information about the guild with the given ID.
 
+_Example return data:_
+
 ```json
 {
   "success": true,
@@ -86,6 +88,8 @@ Returns a JSON object with information about the guild with the given ID.
 ### GET `/api/v1/guilds/:id/channels`
 
 Returns a JSON array of channels in the guild with the given ID.
+
+_Example return data:_
 
 ```json
 {
