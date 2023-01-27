@@ -3,6 +3,7 @@ import config from '../config.json'
 
 class DiscordClient extends Client {
   private _allowedToConnect: boolean
+  public alive: boolean
   public constructor() {
     super({
       auth: `Bot ${process.env.BOT_TOKEN}`,
@@ -13,6 +14,7 @@ class DiscordClient extends Client {
 
     this.on('ready', () => {
       console.log('Discord client ready')
+      this.alive = true
     })
 
     this._allowedToConnect = config.discordConnectionAllowed

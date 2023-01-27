@@ -31,6 +31,9 @@ Route.group(() => {
     }
   })
 
+  // Handles requests for the health route
+  Route.get('/health', 'HealthController.index')
+
   // Handles requests for guilds
   Route.get('/guilds/:id?', 'GuildsController.index')
 
