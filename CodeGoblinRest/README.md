@@ -6,7 +6,7 @@ The API main goal is to take load off of the bot and provide a more stable way t
 
 ## Endpoints
 
-### GET `/`
+### GET `/api/v1/`
 
 Returns a array of all the endpoints.
 
