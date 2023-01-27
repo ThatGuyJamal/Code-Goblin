@@ -120,3 +120,20 @@ _Example return data:_
   ]
 }
 ```
+
+### GET `/api/v1/health`
+
+Returns a JSON object with information about the API.
+
+*Return Json example:*
+
+```json
+{
+  "success": true,
+  "data": {
+    "restHealth": "OK",
+    "databaseHealth": "OK",
+    "discordHealth": "OK"
+  }
+}
+```
