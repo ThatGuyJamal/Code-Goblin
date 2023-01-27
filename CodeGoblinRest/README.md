@@ -1,6 +1,6 @@
 # `Code Goblin Rest`
 
-The Code Goblin API is a Restful API that provides access to the Code Goblins core discord bot information. It is written in [Typescript](https://www.typescriptlang.org/) and uses the [AdonisJs](https://adonisjs.com/) framework. 
+The Code Goblin API is a Restful API that provides access to the Code Goblins core discord bot information. It is written in [Typescript](https://www.typescriptlang.org/) and uses the [AdonisJs](https://adonisjs.com/) framework.
 
 The API main goal is to take load off of the bot and provide a more stable way to access information from the discord API. This will also help us with sharding in the future. Instead of having to make a request to each shard, the shards will just make a request to the API.
 
@@ -10,12 +10,13 @@ The API main goal is to take load off of the bot and provide a more stable way t
 
 Returns a array of all the endpoints.
 
-*Example return data:*
+_Example return data:_
+
 ```json
 {
-  message: "Welcome to CodeGoblin's REST API!",
-  github: "https://github.com/ThatGuyJamal/Code-Goblin",
-  routes: ["/api/v1/guilds", "/api/v1/guilds/:id", "/api/v1/guilds/:id/channels"],
+  "message": "Welcome to CodeGoblin's REST API!",
+  "github": "https://github.com/ThatGuyJamal/Code-Goblin",
+  "routes": ["/api/v1/guilds", "/api/v1/guilds/:id", "/api/v1/guilds/:id/channels"]
 }
 ```
 
@@ -23,7 +24,8 @@ Returns a array of all the endpoints.
 
 Returns a JSON array of guilds that the bot is in.
 
-*Example return data:*
+_Example return data:_
+
 ```json
 {
   "success": true,
@@ -34,16 +36,8 @@ Returns a JSON array of guilds that the bot is in.
       "icon": null,
       "ownerId": "954147463600701510",
       "memberCount": 5,
-      "channels": [
-        "954186847347687435",
-        "954186847347687436",
-        "1037173913609830400"
-      ],
-      "roles": [
-        "954186846504648706",
-        "1014639441186390079",
-        "1014926353151295571"
-      ]
+      "channels": ["954186847347687435", "954186847347687436", "1037173913609830400"],
+      "roles": ["954186846504648706", "1014639441186390079", "1014926353151295571"]
     },
     {
       "id": "991449362246934648",
@@ -83,15 +77,8 @@ Returns a JSON object with information about the guild with the given ID.
     "icon": null,
     "ownerId": "954147463430702210",
     "memberCount": 5,
-    "channels": [
-      "954186847347687435",
-      "954186847347687436",
-      "1037173913609830400"
-    ],
-    "roles": [
-      "954186846504648706",
-      "1014926353151295571"
-    ]
+    "channels": ["954186847347687435", "954186847347687436", "1037173913609830400"],
+    "roles": ["954186846504648706", "1014926353151295571"]
   }
 }
 ```

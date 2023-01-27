@@ -1,5 +1,5 @@
 import { Client } from 'oceanic.js'
-import config from "../config.json" 
+import config from '../config.json'
 
 class DiscordClient extends Client {
   private _allowedToConnect: boolean

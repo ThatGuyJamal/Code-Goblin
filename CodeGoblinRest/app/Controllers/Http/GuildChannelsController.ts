@@ -14,36 +14,36 @@ type Channels = {
 }
 
 export default class GuildChannelsController {
-public async index(ctx: HttpContextContract) {
-     const guild = discord.guilds.get(ctx.params.id)
+  public async index(ctx: HttpContextContract) {
+    const guild = discord.guilds.get(ctx.params.id)
 
-     if (!guild) {
-       return ctx.response.status(404).send({
-         success: false,
-         data: null,
-       })
-     }
+    if (!guild) {
+      return ctx.response.status(404).send({
+        success: false,
+        data: null,
+      })
+    }
 
-     const channels: Channels[] = guild.channels.map((channel) => {
-       return {
-         id: channel.id,
-         name: channel.name,
-         type: channel.type,
-         position: channel.position,
-         parent: channel.parentID ?? null,
-       }
-     })
+    const channels: Channels[] = guild.channels.map((channel) => {
+      return {
+        id: channel.id,
+        name: channel.name,
+        type: channel.type,
+        position: channel.position,
+        parent: channel.parentID ?? null,
+      }
+    })
 
-     if (channels.length === 0) {
-       return ctx.response.status(404).send({
-         success: false,
-         data: null,
-       })
-     }
+    if (channels.length === 0) {
+      return ctx.response.status(404).send({
+        success: false,
+        data: null,
+      })
+    }
 
-     return ctx.response.status(200).send({
-       success: true,
-       data: channels,
-     })
-}
+    return ctx.response.status(200).send({
+      success: true,
+      data: channels,
+    })
+  }
 }

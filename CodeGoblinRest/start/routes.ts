@@ -21,7 +21,6 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
-
   // Handles requests for the root route
   Route.get('/', async () => {
     return {
@@ -36,5 +35,4 @@ Route.group(() => {
 
   // Handles requests for a specific guild's channels
   Route.get('/guilds/:id/channels', 'GuildChannelsController.index')
-
 }).prefix('/api/v1')
