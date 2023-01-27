@@ -10,6 +10,20 @@ The API main goal is to take load off of the bot and provide a more stable way t
 
 Returns a array of all the endpoints.
 
+*Example return data:*
+```json
+{
+  message: "Welcome to CodeGoblin's REST API!",
+  github: "https://github.com/ThatGuyJamal/Code-Goblin",
+  routes: ["/api/v1/guilds", "/api/v1/guilds/:id", "/api/v1/guilds/:id/channels"],
+}
+```
+
+### GET `/api/v1/guilds`
+
+Returns a JSON array of guilds that the bot is in.
+
+*Example return data:*
 ```json
 {
   "success": true,
@@ -54,15 +68,6 @@ Returns a array of all the endpoints.
     }
   ]
 }
-```
-
-### GET `/api/v1/guilds`
-
-Returns a JSON array of guilds that the bot is in.
-
-*Example return data*
-```json
-
 ```
 
 ### GET `/api/v1/guilds/:id`
