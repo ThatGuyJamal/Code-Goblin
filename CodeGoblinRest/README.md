@@ -16,7 +16,8 @@ _Example return data:_
 {
   "message": "Welcome to CodeGoblin's REST API!",
   "github": "https://github.com/ThatGuyJamal/Code-Goblin",
-  "routes": ["/api/v1/guilds", "/api/v1/guilds/:id", "/api/v1/guilds/:id/channels"]
+  "routes": ["/api/v1/guilds", "/api/v1/guilds/:id", "/api/v1/guilds/:id/channels"],
+  "supportServer": "https://discord.gg/invite/MSTrBrNaGn"
 }
 ```
 
