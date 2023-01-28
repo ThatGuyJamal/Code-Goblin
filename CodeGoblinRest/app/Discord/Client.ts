@@ -1,35 +1,53 @@
 import { Client } from 'oceanic.js'
-import config from '../config.json'
+import Logger from '@ioc:Adonis/Core/Logger'
 
 class DiscordClient extends Client {
-  private _allowedToConnect: boolean
   public alive: boolean
   public constructor() {
     super({
       auth: `Bot ${process.env.BOT_TOKEN}`,
+      collectionLimits: {
+        members: Infinity,
+        messages: 100,
+        users: Infinity,
+      },
       gateway: {
+        autoReconnect: true,
+        getAllUsers: false,
+        guildCreateTimeout: 5000,
+        connectionProperties: {
+          browser: 'Code Goblin Rest',
+          device: 'Code Goblin Rest',
+          os: 'Linux',
+        },
         intents: ['ALL'],
       },
     })
 
+    this.on('error', (error) => {
+      if (typeof error === 'string') {
+        Logger.error(error)
+      }
+      this.alive = false
+    })
+
+    this.on('disconnect', () => {
+      Logger.info('Discord client disconnected')
+      this.alive = false
+    })
+
     this.on('ready', () => {
-      console.log('Discord client ready')
+      Logger.info('Discord client ready!')
       this.alive = true
     })
 
-    this._allowedToConnect = config.discordConnectionAllowed
     this._init()
   }
 
   private _init(): void {
-    const allowedToConnect = this._allowedToConnect
+    const allowedToConnect = 'allowed'
 
-    if (!allowedToConnect) {
-      console.warn('Discord Client Not Allowed To Connect')
-      return
-    }
-
-    this.connect()
+    if (allowedToConnect === 'allowed' && !this.alive) this.connect()
   }
 }
 

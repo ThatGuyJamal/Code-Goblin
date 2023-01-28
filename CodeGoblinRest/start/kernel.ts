@@ -20,7 +20,12 @@ import Server from '@ioc:Adonis/Core/Server'
 | are defined for every HTTP requests.
 |
 */
-Server.middleware.register([() => import('@ioc:Adonis/Core/BodyParser')])
+Server.middleware.register([
+  () => import('@ioc:Adonis/Core/BodyParser'),
+  // Handles the authentication of the request.
+  // This is applied to all routes in the application.
+  () => import('App/Middleware/Auth'),
+])
 
 /*
 |--------------------------------------------------------------------------

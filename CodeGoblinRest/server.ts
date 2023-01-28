@@ -17,3 +17,14 @@ import { Ignitor } from '@adonisjs/core/build/standalone'
 sourceMapSupport.install({ handleUncaughtExceptions: false })
 
 new Ignitor(__dirname).httpServer().start()
+
+process
+  .on('unhandledRejection', (err, promise) => {
+    console.error('Unhandled Rejection:', err, promise)
+  })
+  .on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err)
+  })
+  .on('uncaughtExceptionMonitor', (err, origin) => {
+    console.error('Uncaught Exception Monitor:', err, origin)
+  })

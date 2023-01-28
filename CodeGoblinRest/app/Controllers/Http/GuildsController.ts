@@ -15,6 +15,15 @@ type Guilds = {
 }
 
 export default class GuildsController {
+  /**
+   * Handles the /guilds route
+   *
+   * /guilds/:id - Returns a single guild
+   * /guilds - Returns all guilds
+   *
+   * @param ctx
+   * @returns
+   */
   public async index(ctx: HttpContextContract) {
     // If the request has an ID parameter, return the guild with that ID
     // Otherwise, return all guilds
@@ -22,7 +31,7 @@ export default class GuildsController {
       const guild = discord.guilds.get(ctx.params.id)
 
       if (!guild) {
-        return ctx.response.status(404).send({
+        return ctx.response.status(200).send({
           success: false,
           data: null,
         })
@@ -63,7 +72,7 @@ export default class GuildsController {
     }
 
     if (result.length === 0) {
-      return ctx.response.status(404).send({
+      return ctx.response.status(200).send({
         success: false,
         data: null,
       })

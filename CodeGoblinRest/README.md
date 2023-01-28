@@ -4,9 +4,9 @@ The Code Goblin API is a Restful API that provides access to the Code Goblins co
 
 The API main goal is to take load off of the bot and provide a more stable way to access information from the discord API. This will also help us with sharding in the future. Instead of having to make a request to each shard, the shards will just make a request to the API.
 
-## Endpoints
+# Endpoints
 
-### GET `/api/v1/`
+### GET `/api/v1/credits`
 
 Returns a array of all the endpoints.
 
@@ -20,6 +20,25 @@ _Example return data:_
   "supportServer": "https://discord.gg/invite/MSTrBrNaGn"
 }
 ```
+
+### GET `/api/v1/health`
+
+Returns a JSON object with information about the API.
+
+_Return Json example:_
+
+```json
+{
+  "success": true,
+  "data": {
+    "restHealth": "OK",
+    "databaseHealth": "OK",
+    "discordHealth": "OK"
+  }
+}
+```
+
+## Guilds Endpoints
 
 ### GET `/api/v1/guilds`
 
@@ -86,6 +105,44 @@ _Example return data:_
 }
 ```
 
+### GET `/api/v1/guilds/:id/roles`
+
+Returns a JSON array of roles in the guild with the given ID.
+
+_Example return data:_
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "991449362246934648",
+      "name": "@everyone",
+      "color": 0,
+      "position": 0,
+      "hoist": false,
+      "mentionable": false,
+      "permissions": {
+        "allow": "277025458177",
+        "deny": "0"
+      }
+    },
+    {
+      "id": "992576058014576660",
+      "name": "Booster",
+      "color": 16271828,
+      "position": 5,
+      "hoist": true,
+      "mentionable": false,
+      "permissions": {
+        "allow": "687265333825",
+        "deny": "0"
+      }
+    }
+  ]
+}
+```
+
 ### GET `/api/v1/guilds/:id/channels`
 
 Returns a JSON array of channels in the guild with the given ID.
@@ -121,19 +178,108 @@ _Example return data:_
 }
 ```
 
-### GET `/api/v1/health`
+## Members Endpoints
 
-Returns a JSON object with information about the API.
+### GET `/api/v1/guilds/:id/members`
 
-*Return Json example:*
+Returns a JSON array of members in the guild with the given ID.
+
+_Example return data:_
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "961161221430734908",
+      "username": "user1",
+      "discriminator": "5846",
+      "avatar": "https://cdn.discordapp.com/avatars/961161221430734908/7d974cf32b2b9fb991eda169650a13f7.png?size=4096",
+      "bot": false,
+      "system": false,
+      "flags": 0,
+      "premiumSince": null,
+      "publicFlags": 0
+    },
+    {
+      "id": "558350798392786994",
+      "username": "user2",
+      "discriminator": "8559",
+      "avatar": "https://cdn.discordapp.com/avatars/558350798392786994/05a7a2879c23f5d9a212f98ec7cdba8d.png?size=4096",
+      "bot": false,
+      "system": false,
+      "flags": 0,
+      "premiumSince": null,
+      "publicFlags": 4194368
+    }
+  ]
+}
+```
+
+### GET `/api/v1/guilds/:id/members/:memberId`
+
+Returns a JSON object with information about the member with the given ID in the guild with the given ID.
+
+_Example return data:_
+
+```json
+{
+  "id": "370637638820036608",
+  "username": "ThatGuyJamal",
+  "discriminator": "2695",
+  "avatar": "https://cdn.discordapp.com/embed/avatars/0.png?size=4096",
+  "bot": false,
+  "system": false,
+  "flags": 0,
+  "premiumSince": null,
+  "publicFlags": 4194432,
+   "roles": [
+    "1006242953255206952",
+    "1055659568417484851"
+  ]
+        },
+```
+
+### GET `/api/v1/guilds/:id/members/:memberId/roles`
+
+Returns a JSON array of roles the member with the given ID has in the guild with the given ID.
+
+_Example return data:_
+
+```json
+{
+  "success": true,
+  "data": ["1006242953255206952", "1055659568417484851"]
+}
+```
+
+## Channels Endpoints
+
+### GET `/api/v1/guilds/:id/channels/:channelId`
+
+Returns a JSON object with information about the channel with the given ID in the guild with the given ID.
+
+_Example return data:_
 
 ```json
 {
   "success": true,
   "data": {
-    "restHealth": "OK",
-    "databaseHealth": "OK",
-    "discordHealth": "OK"
+    "id": "954186847347687435",
+    "name": "News",
+    "type": 4,
+    "position": 0,
+    "parent": null
   }
 }
+```
+
+### GET `/api/v1/guilds/:id/channels/:channelId/messages`
+
+Returns a JSON array of messages in the channel with the given ID in the guild with the given ID.
+
+_Example return data:_
+
+```json
+{}
 ```
