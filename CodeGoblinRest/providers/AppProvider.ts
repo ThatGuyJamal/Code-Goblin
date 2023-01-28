@@ -1,5 +1,6 @@
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application'
 import { discord } from 'App/Discord/Client'
+import Logger from '@ioc:Adonis/Core/Logger'
 import mongoose from 'mongoose'
 
 export default class AppProvider {
@@ -10,10 +11,10 @@ export default class AppProvider {
     mongoose
       .connect(process.env.MONGODB_URL ?? 'mongodb://localhost:27017/db')
       .then(() => {
-        console.info('Connected to Mongodb!')
+        Logger.info('Connected to Mongodb!')
       })
       .catch((err) => {
-        console.error(`Error connecting to the database: ${err}`)
+        Logger.error(`Error connecting to the database: ${err}`)
       })
   }
 
@@ -28,6 +29,8 @@ export default class AppProvider {
   public async shutdown() {
     // Cleanup, since app is going down
     discord.disconnect()
+    Logger.info('Disconnected from Discord!')
     await mongoose.connection.close()
+    Logger.info('Disconnected from Mongodb!')
   }
 }
