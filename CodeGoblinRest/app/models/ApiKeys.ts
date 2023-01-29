@@ -1,7 +1,7 @@
 import { getModelForClass, ModelOptions, prop, ReturnModelType } from '@typegoose/typegoose'
 import crypto from 'node:crypto'
 
-@ModelOptions({ schemaOptions: { collection: 'api-keys' } })
+@ModelOptions({ schemaOptions: { collection: 'rest-api-keys' } })
 export class ApiKeys {
   @prop({ type: String, required: true })
   public key!: string
