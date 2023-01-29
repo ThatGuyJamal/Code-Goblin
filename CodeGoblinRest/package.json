@@ -2,6 +2,7 @@
   "name": "@thatguyjamal/code-goblin-rest",
   "version": "1.0.0",
   "private": true,
+  "main": "server.js",
   "scripts": {
     "dev": "node ace serve --watch",
     "build": "node ace build --production",

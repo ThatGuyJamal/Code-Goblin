@@ -16,10 +16,12 @@
         "minio",
         "oceanicjs",
         "openai",
+        "Parens",
         "Pingu",
         "pino",
         "ratelimit",
         "ratelimits",
-        "thatguyjamal"
+        "thatguyjamal",
+        "youch"
     ]
 }
