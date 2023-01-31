@@ -1,0 +1,34 @@
+{
+  "name": "@thatguyjamal/code-goblin-rest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./build/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rimraf build/ && tsc -p tsconfig.json",
+    "watch": "tsc -w",
+    "start": "node ./build/index.js",
+    "dev": "run-s build start",
+    "watch:start": "tsc-watch --onSuccess \"node ./build/index.js\"",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@uwu-codes/tsconfig": "^1.0.5",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.3",
+    "rimraf": "^4.1.2",
+    "tsc-watch": "^6.0.0",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@typegoose/typegoose": "^10.1.0",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.12.0",
+    "mongoose": "^6.9.0",
+    "oceanic.js": "^1.4.1"
+  }
+}

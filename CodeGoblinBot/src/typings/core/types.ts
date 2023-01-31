@@ -113,11 +113,11 @@ export interface CommandRateLimit {
 /** Values for the client */
 export enum ClientLimits {
 	/** Max Users to cache */
-	MAX_USERS_TO_CACHE = 100000,
+	MAX_USERS_TO_CACHE = 50_000,
 	/** Max messages to cache */
 	MAX_MESSAGES_TO_CACHE = 0,
 	/** Max members to cache */
-	MAX_MEMBERS_TO_CACHE = 1_000,
+	MAX_MEMBERS_TO_CACHE = 5_000,
 	/** The largeThreshold for the cache */
 	LARGE_THRESHOLD = 250
 }

@@ -1,0 +1,11 @@
+{
+	"extends": "@uwu-codes/tsconfig/esm",
+	"compilerOptions": {
+		"outDir": "./build",
+		"rootDirs": ["./src"],
+		"experimentalDecorators": true,
+		"declaration": true,
+	},
+	"include": ["lib"],
+	"exclude": ["node_modules", "build"]
+}

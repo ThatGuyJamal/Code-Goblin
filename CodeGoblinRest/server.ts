@@ -13,18 +13,19 @@
 import 'reflect-metadata'
 import sourceMapSupport from 'source-map-support'
 import { Ignitor } from '@adonisjs/core/build/standalone'
+import Logger from '@ioc:Adonis/Core/Logger'
 
-sourceMapSupport.install({ handleUncaughtExceptions: false })
+sourceMapSupport.install({ handleUncaughtExceptions: true })
 
 new Ignitor(__dirname).httpServer().start()
 
 process
   .on('unhandledRejection', (err, promise) => {
-    console.error('Unhandled Rejection:', err, promise)
+    Logger.error('Unhandled Rejection:', err, promise)
   })
   .on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err)
+    Logger.error('Uncaught Exception:', err)
   })
   .on('uncaughtExceptionMonitor', (err, origin) => {
-    console.error('Uncaught Exception Monitor:', err, origin)
+    Logger.error('Uncaught Exception Monitor:', err, origin)
   })
