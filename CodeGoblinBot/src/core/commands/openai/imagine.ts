@@ -29,7 +29,7 @@ export default CreateCommand({
 			opt.setName('prompt').setDescription('The prompt to generate').setRequired(true).setMinMax(1, 1024);
 		}).setDMPermission(false);
 	},
-	premiumOnly: true,
+	premiumOnly: false,
 	ratelimit: {
 		user: new RateLimitManager(Milliseconds.MINUTE * 5, 2),
 		guild: new RateLimitManager(Milliseconds.HOUR * 1, 20)
