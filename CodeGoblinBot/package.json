@@ -2,7 +2,7 @@
   "name": "code-goblin",
   "version": "1.0.0",
   "description": "A bot that helps programmers make learning easier within discord.",
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "type": "module",
   "scripts": {
     "build": "rimraf dist/ && tsc -p tsconfig.json",
@@ -37,6 +37,7 @@
     "@types/ms": "^0.7.31",
     "@types/node": "^18.11.17",
     "@uwu-codes/tsconfig": "^1.0.2",
+    "keep-a-changelog": "^2.2.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.1",
     "rimraf": "^4.1.1",

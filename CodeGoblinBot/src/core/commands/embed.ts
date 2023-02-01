@@ -61,6 +61,9 @@ export default CreateCommand({
 			.addOption('channel', ApplicationCommandOptionTypes.CHANNEL, (option) => {
 				option.setName('channel').setDescription('The channel to send the embed to').setChannelTypes([ChannelTypes.GUILD_TEXT]);
 			})
+			.addOption('embed-content', ApplicationCommandOptionTypes.STRING, (option) => {
+				option.setName('content').setDescription('The content before a message embed');
+			})
 			.setDMPermission(false);
 	},
 	register: isCanary ? 'guild' : 'global',
@@ -79,6 +82,7 @@ export default CreateCommand({
 			const field1value = interaction.data.options.getString('value-1');
 			const field2name = interaction.data.options.getString('name-2');
 			const field2value = interaction.data.options.getString('value-2');
+			const embedContent = interaction.data.options.getString('content');
 
 			const channel = interaction.data.options.getChannel('channel');
 
@@ -100,7 +104,8 @@ export default CreateCommand({
 				!field1value &&
 				!field2name &&
 				!field2value &&
-				!channel
+				!channel &&
+				!embedContent
 			)
 				return await interaction.createFollowup({ content: `No option given to create an embed.` });
 
@@ -132,8 +137,42 @@ export default CreateCommand({
 					});
 				}
 
+				if (
+					embedContent &&
+					!title &&
+					!description &&
+					!color &&
+					!footer &&
+					!thumbnail &&
+					!image &&
+					!author &&
+					!url &&
+					!timestamp &&
+					!field1name &&
+					!field1value &&
+					!field2name &&
+					!field2value
+				) {
+					let send = await ch.createMessage({
+						content: embedContent ? embedContent : undefined
+					});
+
+					// Send a followup message
+					return await interaction.createFollowup({
+						content: `Content sent to ${channel.mention} successfully!`,
+						embeds: [
+							{
+								description: `[View Message](${instance.utils.messageLink(ch.id, send.id, interaction.guild!.id)}).`
+							}
+						]
+					});
+				}
+
 				// Send the embed
-				let send = await ch.createMessage({ embeds: [embed.toJSON()] });
+				let send = await ch.createMessage({
+					content: embedContent ? embedContent : undefined,
+					embeds: [embed.toJSON()]
+				});
 
 				// Send a followup message
 				return await interaction.createFollowup({
@@ -144,10 +183,30 @@ export default CreateCommand({
 						}
 					]
 				});
-			} else {
-				const send = await interaction.channel?.createMessage({ embeds: [embed.toJSON()] }).catch(() => null);
+			}
 
-				if (!send) return await interaction.createFollowup({ content: `I could not send the embed to the channel.` });
+			if (!channel) {
+				if (
+					embedContent &&
+					!title &&
+					!description &&
+					!color &&
+					!footer &&
+					!thumbnail &&
+					!image &&
+					!author &&
+					!url &&
+					!timestamp &&
+					!field1name &&
+					!field1value &&
+					!field2name &&
+					!field2value &&
+					!channel
+				) {
+					await interaction.channel?.createMessage({ content: embedContent }).catch(() => null);
+				}
+
+				await interaction.channel?.createMessage({ content: embedContent ? embedContent : undefined, embeds: [embed.toJSON()] }).catch(() => null);
 
 				await interaction.createFollowup({
 					content: `Embed created successfully!`

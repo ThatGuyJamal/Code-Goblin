@@ -4,10 +4,11 @@ import { randomUUID } from 'node:crypto';
 import type { ImageBuffer, ImageResult, ImageVariationOptions } from '../../typings/api/types.js';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
 import { logger } from '../../utils/index.js';
-import { Collection } from 'oceanic.js';
+import { Collection, TextChannel } from 'oceanic.js';
 import { Queue } from '../../utils/queue.js';
 import { CDN } from '../../utils/cdn.js';
 import { Milliseconds } from '../../utils/constants.js';
+import { Main } from '../index.js';
 
 /**
  * The OpenAI Wrapper class
@@ -163,8 +164,29 @@ export class OpenAPIImageWrapper {
 	}
 
 	// todo - implement this
-	public GetDiscordCDNAttachment(file: string) {
+	public async GetDiscordCDNAttachment(messageId:string, channelId: string, amount: number) {
 		// const cnd_url = "https://cdn.discordapp.com/attachments/";
+ 
+		const channel = Main.DiscordClient.getChannel<TextChannel>(channelId);
+
+		if (!channel) return null;
+
+		return await channel.getMessage(messageId) ?? null;
+	}
+
+	public async sendImageToChannel(channelId: string, fileUrl: string) {
+		const channel = Main.DiscordClient.getChannel<TextChannel>(channelId);
+
+		if (!channel) return null;
+
+		await channel.createMessage({
+			files: [
+				{
+					name: 'image.png',
+					contents: await this.GetBufferFromURL(fileUrl)
+				}
+			]
+		});
 	}
 
 	private clearImagesCache() {

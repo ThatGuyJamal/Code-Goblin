@@ -762,6 +762,19 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
+"@deno/shim-deno-test@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@deno/shim-deno-test/-/shim-deno-test-0.4.0.tgz#2ff56821854c51323c0cd08a4a56d668f84367ba"
+  integrity sha512-oYWcD7CpERZy/TXMTM9Tgh1HD/POHlbY9WpzmAk+5H8DohcxG415Qws8yLGlim3EaKBT2v3lJv01x4G0BosnaQ==
+
+"@deno/shim-deno@~0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@deno/shim-deno/-/shim-deno-0.12.0.tgz#c5786cd535e7b3903e4d4e72b52b998d41e166e6"
+  integrity sha512-nD/Izdp4RfU35rip2Jx4lP1WOWY8qAvGLpB3wvjlwgut237/RS4PwhLdmYnxDBXdsjjWMx8sDxmdHWs35GF3yA==
+  dependencies:
+    "@deno/shim-deno-test" "^0.4.0"
+    which "^2.0.2"
+
 "@discordjs/voice@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@discordjs/voice/-/voice-0.13.0.tgz#dd7eb490246ce00ccdad486859b9ccc4ef275ac9"
@@ -1453,6 +1466,13 @@ kareem@2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.5.1.tgz#7b8203e11819a8e77a34b3517d3ead206764d15d"
   integrity sha512-7jFxRVm+jD+rkq3kY0iZDJfsO2/t4BBPeEb2qKn2lR/9KhuksYk5hxzfRYWMPV8P/x2d0kHD306YyWLzjjH+uA==
+
+keep-a-changelog@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/keep-a-changelog/-/keep-a-changelog-2.2.1.tgz#cdd74ab5ce9bae17cb39ca5cb05429f8959b56ff"
+  integrity sha512-SAqFQASEJFGJYk6SZ9RbyhZSRrpQyYB8+5r/PzEqIjVfSYczd/CapExulCoGEJEoLWY6FyH/Z72rKWyuKjg7UA==
+  dependencies:
+    "@deno/shim-deno" "~0.12.0"
 
 kuler@^2.0.0:
   version "2.0.0"
@@ -2164,7 +2184,7 @@ which@^1.2.9:
   dependencies:
     isexe "^2.0.0"
 
-which@^2.0.1:
+which@^2.0.1, which@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/which/-/which-2.0.2.tgz#7c6a8dd0a636a0327e10b59c9286eee93f3f51b1"
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==

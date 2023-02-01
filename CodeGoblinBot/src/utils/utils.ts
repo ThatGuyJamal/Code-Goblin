@@ -115,7 +115,7 @@ export default class Utils {
 	 */
 	public FormatPluginStringData(member: Member, str: string): string {
 		return str
-			.replaceAll(/{user}/g, member.mention)
+			.replaceAll(/{user}/g, this.userMention(member.id))
 			.replaceAll(/{user_id}/g, member.id)
 			.replaceAll(/{user_tag}/g, member.tag)
 			.replaceAll(/{user_username}/g, member.username)

@@ -53,22 +53,16 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 
 	try {
 		await interaction.editOriginal({
-			embeds: [
-				{
-					description: instance.utils.stripIndents(
-						`
+			content: instance.utils.stripIndents(
+				`
 					\`\`\`asciidoc
 					• Info :: Generating ${Variation ? 'variation' : 'image'}...
 					\`\`\`
 					`
-					),
-					color: constants.numbers.colors.primary,
-					footer: {
-						text: `Requested by ${interaction.user.tag}`
-					},
-					timestamp: new Date().toISOString()
-				}
-			]
+			),
+			allowedMentions: {
+				repliedUser: true
+			}
 		});
 
 		const imageOptions: CreateImageRequest = {
@@ -90,22 +84,13 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 
 		if (!image || !imageURL) {
 			return interaction.editOriginal({
-				embeds: [
-					{
-						description: instance.utils.stripIndents(
-							`
+				content: instance.utils.stripIndents(
+					`
 						\`\`\`asciidoc
 						• Error :: Failed to generate ${Variation ? 'variation' : 'image'}!
 						\`\`\`
 						`
-						),
-						color: constants.numbers.colors.primary,
-						footer: {
-							text: `Requested by ${interaction.user.tag}`
-						},
-						timestamp: new Date().toISOString()
-					}
-				],
+				),
 				allowedMentions: {
 					repliedUser: true
 				},
@@ -114,33 +99,25 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 		}
 
 		await interaction.editOriginal({
-			embeds: [
-				{
-					description: instance.utils.stripIndents(
-						`
+			content: instance.utils.stripIndents(
+				`
 					\`\`\`asciidoc
-					• Info :: Generated ${Variation ? 'variation' : 'image'}!
+					• Info :: Generated ${Variation ? 'variation' : 'image'} Successful! Loading image into discord...
 					\`\`\`
 					`
-					),
-					color: constants.numbers.colors.primary,
-					footer: {
-						text: `Requested by ${interaction.user.tag}`
-					},
-					timestamp: new Date().toISOString()
-				}
-			]
+			),
 		});
 
 		const message = await interaction.editOriginal({
-			embeds: [
+			content: instance.utils.stripIndents(`
+				${Variation ? 'Variated' : 'Imagined'} the unimagined! ✨
+
+				Given prompt: \`${Prompt}\`
+			`),
+			files: [
 				{
-					title: `${Variation ? 'Variated' : 'Imagined'} the unimagined! ✨`,
-					description: `Given prompt: ${Prompt}`,
-					image: {
-						url: imageURL
-					},
-					color: constants.numbers.colors.primary
+					name: 'image.png',
+					contents: await instance.collections.openai.image.GetBufferFromURL(imageURL)
 				}
 			],
 			components: [
