@@ -49,12 +49,16 @@ export default CreateCommand({
  * @returns
  */
 async function CreateImage(instance: Main, Prompt: string, interaction: CommandInteraction | ComponentInteraction, Variation?: string) {
+
+	const { utils } = instance;
+
 	await interaction.defer();
 
 	try {
 		await interaction.editOriginal({
 			content: instance.utils.stripIndents(
 				`
+					${utils.userMention(interaction.user.id)} requested a ${Variation ? 'variation' : 'image'}!
 					\`\`\`asciidoc
 					• Info :: Generating ${Variation ? 'variation' : 'image'}...
 					\`\`\`
@@ -86,8 +90,9 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 			return interaction.editOriginal({
 				content: instance.utils.stripIndents(
 					`
+						${utils.userMention(interaction.user.id)} your requested ${Variation ? 'variation' : 'image'} failed!
 						\`\`\`asciidoc
-						• Error :: Failed to generate ${Variation ? 'variation' : 'image'}!
+						• Error :: Failed to generate ${Variation ? 'variation' : 'image'} due to a server error!
 						\`\`\`
 						`
 				),
@@ -105,11 +110,12 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 					• Info :: Generated ${Variation ? 'variation' : 'image'} Successful! Loading image into discord...
 					\`\`\`
 					`
-			),
+			)
 		});
 
 		const message = await interaction.editOriginal({
 			content: instance.utils.stripIndents(`
+				${utils.userMention(interaction.user.id)}
 				${Variation ? 'Variated' : 'Imagined'} the unimagined! ✨
 
 				Given prompt: \`${Prompt}\`
@@ -195,6 +201,7 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 					{
 						description: instance.utils.stripIndents(
 							`
+						${utils.userMention(interaction.user.id)}
 						**Notice**
 						\`\`\`asciidoc
 						• Error :: Error while generating ${Variation ? 'variation' : 'image'}!
@@ -221,6 +228,7 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 					{
 						description: instance.utils.stripIndents(
 							`
+						${utils.userMention(interaction.user.id)}
 						**Notice**
 						\`\`\`asciidoc
 						• Error :: Error while generating ${Variation ? 'variation' : 'image'}!
