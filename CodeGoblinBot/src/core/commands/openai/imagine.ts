@@ -49,7 +49,6 @@ export default CreateCommand({
  * @returns
  */
 async function CreateImage(instance: Main, Prompt: string, interaction: CommandInteraction | ComponentInteraction, Variation?: string) {
-
 	const { utils } = instance;
 
 	await interaction.defer();
@@ -65,7 +64,8 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 					`
 			),
 			allowedMentions: {
-				repliedUser: true
+				repliedUser: true,
+				users: [interaction.user.id]
 			}
 		});
 
@@ -97,7 +97,8 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 						`
 				),
 				allowedMentions: {
-					repliedUser: true
+					repliedUser: true,
+					users: [interaction.user.id]
 				},
 				flags: 64
 			});
@@ -146,7 +147,8 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 				}
 			],
 			allowedMentions: {
-				repliedUser: true
+				repliedUser: true,
+				users: [interaction.user.id]
 			}
 		});
 
@@ -219,7 +221,11 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 						timestamp: new Date().toISOString()
 					}
 				],
-				flags: 64
+				flags: 64,
+				allowedMentions: {
+					repliedUser: true,
+					users: [interaction.user.id]
+				}
 			});
 		} else {
 			instance.logger.error(error.message);
@@ -246,7 +252,11 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 						timestamp: new Date().toISOString()
 					}
 				],
-				flags: 64
+				flags: 64,
+				allowedMentions: {
+					repliedUser: true,
+					users: [interaction.user.id]
+				}
 			});
 		}
 	}
