@@ -84,7 +84,7 @@ export default CreateCommand({
 			const field2value = interaction.data.options.getString('value-2');
 			const embedContent = interaction.data.options.getString('content');
 
-			const channel = interaction.data.options.getChannel('channel');
+			const channel = interaction.data.options.getChannel('channel') as unknown as TextChannel;
 
 			const embed = new EmbedBuilder();
 			await interaction.defer(64);
@@ -106,8 +106,9 @@ export default CreateCommand({
 				!field2value &&
 				!channel &&
 				!embedContent
-			)
+			) {
 				return await interaction.createFollowup({ content: `No option given to create an embed.` });
+			}
 
 			if (title) embed.setTitle(title);
 			if (description) embed.setDescription(description);
@@ -153,16 +154,16 @@ export default CreateCommand({
 					!field2name &&
 					!field2value
 				) {
-					let send = await ch.createMessage({
+					// Send the embed
+					let send2 = await ch.createMessage({
 						content: embedContent ? embedContent : undefined
 					});
 
-					// Send a followup message
 					return await interaction.createFollowup({
-						content: `Content sent to ${channel.mention} successfully!`,
+						content: `Message sent to ${channel.mention} successfully!`,
 						embeds: [
 							{
-								description: `[View Message](${instance.utils.messageLink(ch.id, send.id, interaction.guild!.id)}).`
+								description: `[View Message](${instance.utils.messageLink(ch.id, send2.id, interaction.guild!.id)}).`
 							}
 						]
 					});
@@ -200,20 +201,32 @@ export default CreateCommand({
 					!field1name &&
 					!field1value &&
 					!field2name &&
-					!field2value &&
-					!channel
+					!field2value
 				) {
 					await interaction.channel?.createMessage({ content: embedContent }).catch(() => null);
+
+					return await interaction.createFollowup({
+						content: `Message created successfully!`
+					});
 				}
 
-				await interaction.channel?.createMessage({ content: embedContent ? embedContent : undefined, embeds: [embed.toJSON()] }).catch(() => null);
+				await interaction.channel
+					?.createMessage({ content: embedContent ? embedContent : undefined, embeds: [embed.toJSON()] })
+					.catch(() => null);
 
-				await interaction.createFollowup({
+				return await interaction.createFollowup({
 					content: `Embed created successfully!`
 				});
 			}
+
+			return await interaction.createFollowup({
+				content: `Somethings not right...`
+			});
 		} catch (error) {
 			logger.error(error);
+			return await interaction.createFollowup({
+				content: `Something went wrong! Please try again...`
+			});
 		}
 	}
 });
