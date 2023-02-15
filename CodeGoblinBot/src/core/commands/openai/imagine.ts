@@ -111,7 +111,11 @@ async function CreateImage(instance: Main, Prompt: string, interaction: CommandI
 					• Info :: Generated ${Variation ? 'variation' : 'image'} Successful! Loading image into discord...
 					\`\`\`
 					`
-			)
+			),
+			allowedMentions: {
+				repliedUser: true,
+				users: [interaction.user.id]
+			}
 		});
 
 		const message = await interaction.editOriginal({
