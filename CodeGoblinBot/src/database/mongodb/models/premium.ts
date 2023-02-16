@@ -1,5 +1,19 @@
 import { getModelForClass, ModelOptions, prop, ReturnModelType } from '@typegoose/typegoose';
-import type { PremiumUserLevels } from '../../../typings/database/types';
+
+export interface PremiumUserSchema {
+	user_id: string;
+	activated: boolean;
+	activated_at: number | null;
+	/** Some users can have lifetime access */
+	expires_at: Number | null;
+	level: PremiumUserLevels | null;
+}
+
+export enum PremiumUserLevels {
+	LIFE_TIME = 'lifetime',
+	MONTHLY = 'monthly',
+	YEARLY = 'yearly'
+}
 
 @ModelOptions({
 	schemaOptions: {

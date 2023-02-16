@@ -1,29 +1,23 @@
 import mongoose from 'mongoose';
-import config from '../../config/config.js';
-import type { Main } from '../../core/index.js';
-import type { NetworkStatusReturnTypes } from '../../typings/database/types.js';
-import { GoodbyeModel } from './models/goodbye.js';
-import { CodeJamModel } from './models/jam.js';
-import { PremiumUserModel } from './models/premium.js';
-import { GlobalStatsModel } from './models/statistics.js';
-import { TagModel } from './models/tag.js';
-import { WelcomeModel } from './models/welcome.js';
+import { GoodbyeModel } from './models/goodbye';
+import { PremiumUserModel } from './models/premium';
+import { GlobalStatsModel } from './models/statistics';
+import { TagModel } from './models/tag';
+import { WelcomeModel } from './models/welcome';
+import {config} from "../../config";
+import { container } from '@sapphire/framework';
 
 export class MongodbDatabase {
-	instance: typeof Main;
-
 	/** Access core methods for the database */
 	public schemas;
 
-	public constructor(m: typeof Main) {
-		this.instance = m;
+	public constructor() {
 		this.schemas = {
 			automation: {
 				goodbye: GoodbyeModel,
 				welcome: WelcomeModel
 			},
 			tag: TagModel,
-			jam: CodeJamModel,
 			premiumUser: PremiumUserModel,
 			statistics: GlobalStatsModel
 		};
@@ -32,12 +26,12 @@ export class MongodbDatabase {
 	/** Connects to the mongodb host */
 	public async init(): Promise<void> {
 		await mongoose
-			.connect(config.MongoDbUri)
+			.connect(config.MONGODB_URI)
 			.then(() => {
-				this.instance.logger.info('Connected to Mongodb!');
+				container.logger.info('Connected to Mongodb!');
 			})
 			.catch((err) => {
-				this.instance.logger.error(`Error connecting to the database: ${err}`);
+				container.logger.error(`Error connecting to the database: ${err}`);
 			});
 	}
 
@@ -51,4 +45,9 @@ export class MongodbDatabase {
 			status: mongoose.connection.readyState
 		};
 	}
+}
+
+type NetworkStatusReturnTypes = {
+	connected: boolean;
+	status: number;
 }

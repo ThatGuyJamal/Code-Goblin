@@ -24,7 +24,7 @@ class Statistics {
 	commands_failed?: number;
 
 	public static async GetGlobalStats(this: ReturnModelType<typeof Statistics>): Promise<Statistics | null> {
-		return await this.findOne({ find_id: 'global'})
+		return await this.findOne({ find_id: 'global' });
 	}
 
 	public static async UpdateGuildsJoined(this: ReturnModelType<typeof Statistics>) {

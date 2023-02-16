@@ -1,5 +1,8 @@
 import { getModelForClass, ModelOptions, prop, type ReturnModelType } from '@typegoose/typegoose';
-import { TagLimits } from '../../../typings/database/types.js';
+
+export enum TagLimits {
+	MAX_CREATED_TAGS = 10
+}
 
 @ModelOptions({
 	schemaOptions: {

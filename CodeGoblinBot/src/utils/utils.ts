@@ -1,27 +1,15 @@
-import {
-	AnyTextChannelWithoutGroup,
-	CommandInteraction,
-	CreateMessageOptions,
-	PermissionName,
-	Member,
-	MessageFlags,
-	TextChannel,
-	Uncached
-} from 'oceanic.js';
-import { constants, logger } from './index.js';
+import {config} from "../config.js";
 import { stripIndents } from 'common-tags';
-import config from '../config/config.js';
-import type Main from '../core/main.js';
-import type { Command, CommandDataProp, LegacyCommand } from '../typings/core/types.js';
-import type { TimestampStylesString } from '../typings/utils/types.js';
+import constants from "./constants.js";
+import type { Client, TextChannel, TimestampStylesString, GuildMember } from "discord.js";
+
+/** Returns the guild ids to register commands in. */
+export function getGuildIds(): string[] {
+    return config.IsInDevelopmentMode ? [config.DevelopmentGuildId] : [];
+}
+
 
 export default class Utils {
-	private instance: Main;
-
-	constructor(instance: Main) {
-		this.instance = instance;
-	}
-
 	/**
 	 * Sends a message to the log channels
 	 * @param type of log channel
@@ -32,13 +20,13 @@ export default class Utils {
 	 * @returns
 	 */
 	public async sendToLogChannel(
+		client: Client,
 		type: 'error' | 'api' | 'premium',
 		message: string,
 		custom?: boolean,
 		name?: string,
-		options?: CreateMessageOptions
 	) {
-		const log = this.instance.DiscordClient.getChannel(
+		const log = client.channels.cache.get(
 			type === 'error' ? config.BotErrorLogChannelId : type === 'api' ? config.BotApiLogChannelId : config.BotPremiumLogChannelId
 		) as TextChannel;
 
@@ -46,7 +34,7 @@ export default class Utils {
 
 		if (type === 'error') {
 			if (custom) {
-				await log.createMessage({
+				await log.send({
 					embeds: [
 						{
 							description: message,
@@ -54,13 +42,12 @@ export default class Utils {
 							timestamp: new Date().toISOString()
 						}
 					],
-					flags: MessageFlags.EPHEMERAL
 				});
 			} else {
-				await log.createMessage({
+				await log.send({
 					embeds: [
 						{
-							description: this.instance.utils.stripIndents(
+							description: this.stripIndents(
 								`
 \`\`\`asciidoc
 • ${name ?? 'Error'} Log :: ${message}
@@ -71,12 +58,11 @@ export default class Utils {
 							timestamp: new Date().toISOString()
 						}
 					],
-					flags: MessageFlags.EPHEMERAL
 				});
 			}
 		} else {
 			if (custom) {
-				await log.createMessage({
+				await log.send({
 					embeds: [
 						{
 							description: message,
@@ -84,13 +70,12 @@ export default class Utils {
 							timestamp: new Date().toISOString()
 						}
 					],
-					flags: MessageFlags.EPHEMERAL
 				});
 			} else {
-				await log.createMessage({
+				await log.send({
 					embeds: [
 						{
-							description: this.instance.utils.stripIndents(
+							description: this.stripIndents(
 								`
 \`\`\`asciidoc
 • ${name ?? 'Info'} Log :: ${message}
@@ -101,7 +86,6 @@ export default class Utils {
 							timestamp: new Date().toISOString()
 						}
 					],
-					flags: MessageFlags.EPHEMERAL
 				});
 			}
 		}
@@ -113,100 +97,17 @@ export default class Utils {
 	 * @param str the string to format
 	 * @returns
 	 */
-	public FormatPluginStringData(member: Member, str: string): string {
+	public FormatPluginStringData(member: GuildMember, str: string): string {
 		return str
 			.replaceAll(/{user}/g, this.userMention(member.id))
 			.replaceAll(/{user_id}/g, member.id)
-			.replaceAll(/{user_tag}/g, member.tag)
-			.replaceAll(/{user_username}/g, member.username)
-			.replaceAll(/{user_discriminator}/g, member.discriminator)
-			.replaceAll(/{user_createdAt}/g, member.createdAt.toString())
+			.replaceAll(/{user_tag}/g, member.user.tag)
+			.replaceAll(/{user_username}/g, member.user.username)
+			.replaceAll(/{user_discriminator}/g, member.user.discriminator)
+			.replaceAll(/{user_createdAt}/g, member.user.createdAt.toString())
 			.replaceAll(/{server}/g, member.guild.name)
 			.replaceAll(/{server_id}/g, member.guild.id)
 			.replaceAll(/{memberCount}/g, member.guild.memberCount.toString());
-	}
-
-	/**
-	 * Gets the command list from the command store
-	 */
-	public get CommandList(): IterableIterator<Command> {
-		return this.instance.collections.commands.commandStoreMap.values();
-	}
-
-	/**
-	 * Adds a command to the command store
-	 * @param cmd
-	 */
-	public addCommand(cmd: CommandDataProp) {
-		try {
-			// if the command is disabled, don't add it to the command store
-			if (!cmd.props.disabled) {
-				if (!cmd.props.requiredBotPermissions) cmd.props.requiredBotPermissions = ['SEND_MESSAGES', 'EMBED_LINKS'];
-				if (!cmd.props.requiredUserPermissions) cmd.props.requiredUserPermissions = ['SEND_MESSAGES'];
-				if (!cmd.props.disabled) cmd.props.disabled = false;
-
-				this.instance.collections.commands.commandStoreMap.set(cmd.props.trigger, cmd.props);
-
-				if (cmd.props.register === 'global') {
-					this.instance.collections.commands.commandStoreArrayJsonGlobal.push(cmd.toJson());
-				} else if (cmd.props.register === 'guild') {
-					this.instance.collections.commands.commandStoreArrayJsonGuild.push(cmd.toJson());
-				} else if (cmd.props.register === 'both') {
-					this.instance.collections.commands.commandStoreArrayJsonGlobal.push(cmd.toJson());
-					this.instance.collections.commands.commandStoreArrayJsonGuild.push(cmd.toJson());
-				}
-				logger.info(`Loaded ${cmd.props.trigger} command into memory.`);
-			} else {
-				logger.info(`${cmd.props.trigger} was not loaded into memory because it is disabled.`);
-			}
-		} catch (err) {
-			logger.error(`[ERROR] Failed to load command ${cmd.props.trigger} into memory.`, err);
-			logger.error(err);
-		}
-	}
-
-	/**
-	 * Adds a legacy command to the command store
-	 * @param cmd
-	 */
-	public async addLegacyCommand(cmd: LegacyCommand) {
-		try {
-			// if the command is disabled, don't add it to the command store
-			if (!cmd.disabled) {
-				if (!cmd.requiredBotPermissions) cmd.requiredBotPermissions = ['SEND_MESSAGES', 'EMBED_LINKS'];
-				if (!cmd.requiredUserPermissions) cmd.requiredUserPermissions = ['SEND_MESSAGES'];
-				if (!cmd.disabled) cmd.disabled = false;
-
-				this.instance.collections.commands.legacyCommandStoreMap.set(cmd.trigger, cmd);
-				logger.info(`Loaded ${cmd.trigger} legacy command into memory.`);
-			} else {
-				logger.info(`${cmd.trigger} was not loaded into memory because it is disabled.`);
-			}
-		} catch (err) {
-			logger.error(`[ERROR] Failed to load legacy command ${cmd.trigger} into memory.`, err);
-			logger.error(err);
-		}
-	}
-
-	/**
-	 * Checks if a user has the required permissions
-	 * @param i The interaction
-	 * @param permissions The permissions to check for
-	 * @returns
-	 */
-	public hasPermissions(i: CommandInteraction<AnyTextChannelWithoutGroup | Uncached>, permissions: PermissionName): boolean {
-		if (this.instance.collections.keys.super_users.has(i.user.id)) return true;
-		if (i.member?.permissions.has(permissions)) return true;
-		return false;
-	}
-
-	/**
-	 * Checks if the user is a bot owner
-	 * @param id The user id
-	 * @returns
-	 */
-	public isOwner(id: string): boolean {
-		return this.instance.collections.keys.super_users.has(id);
 	}
 
 	/**
@@ -472,3 +373,5 @@ export default class Utils {
 		return typeof style === 'string' ? `<t:${timeOrSeconds}:${style}>` : `<t:${timeOrSeconds}>`;
 	}
 }
+
+export const GlobalUtils = new Utils();

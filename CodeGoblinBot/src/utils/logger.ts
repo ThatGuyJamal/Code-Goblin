@@ -1,10 +1,10 @@
-import config from '../config/config.js';
+import { config } from '../config';
 import winston from 'winston';
 import { format } from 'logform';
 
 export class ILogger {
 	private instance;
-	private IsInDevelopmentMode: boolean;
+	private readonly IsInDevelopmentMode: boolean;
 	public constructor() {
 		this.IsInDevelopmentMode = config.IsInDevelopmentMode;
 
