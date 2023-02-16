@@ -1,13 +1,54 @@
-import {config} from "../config.js";
+/**
+ *  Code Goblin - A discord bot for programmers.
+    
+    Copyright (C) 2022, ThatGuyJamal and contributors
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+ */
+
 import { stripIndents } from 'common-tags';
-import constants from "./constants.js";
-import type { Client, TextChannel, TimestampStylesString, GuildMember } from "discord.js";
+import { BrandingColors } from './constants.js';
+import {
+	Client,
+	TextChannel,
+	TimestampStylesString,
+	GuildMember,
+	APIMessage,
+	Message,
+	DMChannel,
+	Guild,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	codeBlock,
+	CommandInteraction
+} from 'discord.js';
+import { Main } from '../index.js';
 
 /** Returns the guild ids to register commands in. */
 export function getGuildIds(): string[] {
-    return config.IsInDevelopmentMode ? [config.DevelopmentGuildId] : [];
+	return Main.config.IsInDevelopmentMode ? [Main.config.DevelopmentGuildId] : [];
 }
 
+export interface GuildMessage extends Message {
+	channel: TextChannel;
+	readonly guild: Guild;
+	readonly member: GuildMember;
+}
+
+export interface DMMessage extends Message {
+	channel: DMChannel;
+	readonly guild: null;
+	readonly member: null;
+}
+
+export type MessageAcknowledgeable = TextChannel | GuildMessage;
 
 export default class Utils {
 	/**
@@ -19,15 +60,9 @@ export default class Utils {
 	 * @param options
 	 * @returns
 	 */
-	public async sendToLogChannel(
-		client: Client,
-		type: 'error' | 'api' | 'premium',
-		message: string,
-		custom?: boolean,
-		name?: string,
-	) {
+	public async sendToLogChannel(client: Client, type: 'error' | 'api' | 'premium', message: string, custom?: boolean, name?: string) {
 		const log = client.channels.cache.get(
-			type === 'error' ? config.BotErrorLogChannelId : type === 'api' ? config.BotApiLogChannelId : config.BotPremiumLogChannelId
+			type === 'error' ? Main.config.BotErrorLogChannelId : type === 'api' ? Main.config.BotApiLogChannelId : Main.config.BotPremiumLogChannelId
 		) as TextChannel;
 
 		if (!log) return;
@@ -38,10 +73,10 @@ export default class Utils {
 					embeds: [
 						{
 							description: message,
-							color: constants.numbers.colors.tertiary,
+							color: BrandingColors.Error,
 							timestamp: new Date().toISOString()
 						}
-					],
+					]
 				});
 			} else {
 				await log.send({
@@ -54,10 +89,10 @@ export default class Utils {
 \`\`\`
 `
 							),
-							color: constants.numbers.colors.tertiary,
+							color: BrandingColors.Error,
 							timestamp: new Date().toISOString()
 						}
-					],
+					]
 				});
 			}
 		} else {
@@ -66,10 +101,10 @@ export default class Utils {
 					embeds: [
 						{
 							description: message,
-							color: constants.numbers.colors.secondary,
+							color: BrandingColors.Primary,
 							timestamp: new Date().toISOString()
 						}
-					],
+					]
 				});
 			} else {
 				await log.send({
@@ -82,10 +117,10 @@ export default class Utils {
 \`\`\`
 `
 							),
-							color: constants.numbers.colors.secondary,
+							color: BrandingColors.Primary,
 							timestamp: new Date().toISOString()
 						}
-					],
+					]
 				});
 			}
 		}
@@ -315,7 +350,7 @@ export default class Utils {
 	 * @param subcommandName - The subcommand name to format
 	 * @param commandId - The application command ID to format
 	 */
-	chatInputApplicationCommandMention(commandName: string, subcommandGroupName: string, subcommandName?: string, commandId?: string): string {
+	public chatInputApplicationCommandMention(commandName: string, subcommandGroupName: string, subcommandName?: string, commandId?: string): string {
 		if (typeof commandId !== 'undefined') {
 			return `</${commandName} ${subcommandGroupName} ${subcommandName!}:${commandId}>`;
 		}
@@ -333,7 +368,7 @@ export default class Utils {
 	 * @param emojiId - The emoji ID to format
 	 * @param animated - Whether the emoji is animated or not. Defaults to `false`
 	 */
-	formatEmoji(emojiId: string, animated = false): string {
+	public formatEmoji(emojiId: string, animated = false): string {
 		return `<${animated ? 'a' : ''}:_:${emojiId}>`;
 	}
 
@@ -343,7 +378,7 @@ export default class Utils {
 	 * @param channelId - The channel's id
 	 * @param guildId - The guild's id
 	 */
-	channelLink(channelId: string, guildId?: string): string {
+	public channelLink(channelId: string, guildId?: string): string {
 		return `https://discord.com/channels/${guildId ?? '@me'}/${channelId}`;
 	}
 
@@ -354,7 +389,7 @@ export default class Utils {
 	 * @param messageId - The message's id
 	 * @param guildId - The guild's id
 	 */
-	messageLink(channelId: string, messageId: string, guildId?: string) {
+	public messageLink(channelId: string, messageId: string, guildId?: string) {
 		return `${typeof guildId === 'undefined' ? this.channelLink(channelId) : this.channelLink(channelId, guildId)}/${messageId}`;
 	}
 
@@ -364,13 +399,74 @@ export default class Utils {
 	 * @param seconds - The time to format, represents an UNIX timestamp in seconds
 	 * @param style - The style to use
 	 */
-	time(timeOrSeconds?: Date | number, style?: TimestampStylesString): string {
+	public time(timeOrSeconds?: Date | number, style?: TimestampStylesString): string {
 		if (typeof timeOrSeconds !== 'number') {
 			// eslint-disable-next-line no-param-reassign
 			timeOrSeconds = Math.floor((timeOrSeconds?.getTime() ?? Date.now()) / 1_000);
 		}
 
 		return typeof style === 'string' ? `<t:${timeOrSeconds}:${style}>` : `<t:${timeOrSeconds}>`;
+	}
+
+	/**
+	 * Checks whether a message was sent in a guild.
+	 * @param message The message to check.
+	 * @returns Whether the message was sent in a guild.
+	 */
+	public isGuildMessage(message: Message): message is GuildMessage {
+		return message.guild !== null;
+	}
+
+	/**
+	 * Checks whether a message was sent in a DM channel.
+	 * @param message The message to check.
+	 * @returns Whether the message was sent in a DM channel.
+	 */
+	public isPrivateMessage(message: Message): message is DMMessage {
+		return message.guild === null;
+	}
+
+	/**
+	 * Checks whether a given message is an instance of {@link Message}, and not {@link APIMessage}
+	 * @param message The message to check
+	 * @returns `true` if the message is an instance of `Message`, false otherwise.
+	 */
+	public isMessageInstance(message: APIMessage | Message): message is Message {
+		return message instanceof Message;
+	}
+
+	public sendError(interaction: CommandInteraction, description: string, ephemeral = true) {
+		// Core sapphire errors end in ".", so that needs to be accounted for.
+		const parsedDescription = `❌ ${description.endsWith('.') ? description.slice(0, -1) : description}!`;
+
+		const payload = {
+			content: codeBlock(
+				'css',
+				`
+     [Notice] - ${parsedDescription}
+    `
+			),
+			// embeds: [createEmbed(parsedDescription, BrandingColors.Error)],
+			components: [
+				new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setLabel('Need help')
+						.setEmoji('❓')
+						.setStyle(ButtonStyle.Link)
+						.setURL(`${Main.config.BotSupportServerInvite}`)
+				)
+			],
+			allowedMentions: { users: [interaction.user.id], roles: [] },
+			ephemeral
+		};
+
+		// eslint-disable-next-line @typescript-eslint/unbound-method
+		const replyFn = interaction.replied ? interaction.followUp : interaction.deferred ? interaction.editReply : (interaction.reply as any);
+		return replyFn.call(interaction, payload);
+	}
+
+	public setToArray(set: Set<any>): any[] {
+		return Array.from(set);
 	}
 }
 

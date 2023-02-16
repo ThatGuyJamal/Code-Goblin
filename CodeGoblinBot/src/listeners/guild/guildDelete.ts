@@ -11,19 +11,22 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU Affero General Public License for more details.
  */
+import { ApplyOptions } from '@sapphire/decorators';
+import { ListenerOptions, Events, Listener } from '@sapphire/framework';
+import type { Guild } from 'discord.js';
 
-import { container } from '@sapphire/framework';
-import { OpenAIApi, Configuration } from 'openai';
+@ApplyOptions<ListenerOptions>({
+	event: Events.GuildDelete
+})
+export class UserEvent extends Listener {
+	public async run(guild: Guild) {
+		const { client } = this.container;
 
-/**
- * The OpenAI Wrapper class
- * @class
- * @see https://beta.openai.com/docs/api-reference/images
- */
-export class OpenAIWrapper {
-	public api: OpenAIApi;
-	public constructor(configuration: Configuration) {
-		this.api = new OpenAIApi(configuration);
-		container.logger.debug('OpenAI API Wrapper initialized');
+		try {
+			let msg = `❌ ${client.user?.username} has been removed from \`${guild.name} | id:(${guild.id})\` **Now in** \`${client.guilds.cache.size} servers.\``;
+			console.log(msg);
+		} catch (error) {
+			this.container.client.logger.error(error);
+		}
 	}
 }

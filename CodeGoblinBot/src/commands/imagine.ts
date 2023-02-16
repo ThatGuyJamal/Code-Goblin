@@ -1,34 +1,43 @@
+/**
+ *  Code Goblin - A discord bot for programmers.
+    
+    Copyright (C) 2022, ThatGuyJamal and contributors
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+ */
+
 import { ChatInputCommand, Command, RegisterBehavior } from '@sapphire/framework';
 import { getGuildIds, GlobalUtils } from '../utils/utils';
 import { Time } from '@sapphire/duration';
 import type { CreateImageRequest } from 'openai';
-
 import { OpenAIImageWrapper } from '../openai/image';
-import { config } from '../config';
 import { Configuration } from 'openai';
-import { AttachmentBuilder } from 'discord.js';
+import { AttachmentBuilder, TextChannel } from 'discord.js';
+import { Main } from '..';
+import { ExtendedCommand, ExtendedCommandOptions } from '../command';
+import { ApplyOptions } from '@sapphire/decorators';
 
 const ImagineAPI = new OpenAIImageWrapper(
 	new Configuration({
-        apiKey: config.OpenAPIkey
-    })
+		apiKey: Main.config.OpenAPIkey
+	})
 );
 
-export class ICommand extends Command {
-	public constructor(context: Command.Context, options: Command.Options) {
-		super(context, {
-			...options,
-			name: 'imagine',
-			description: 'imagine the impossible',
-			requiredClientPermissions: ['SendMessages', 'EmbedLinks'],
-			preconditions: ['GuildOnly'],
-			cooldownLimit: 5,
-			cooldownDelay: Time.Minute * 1
-		});
-	}
-
+@ApplyOptions<ExtendedCommandOptions>({
+	name: 'imagine',
+	description: 'imagine the impossible',
+	cooldownLimit: 5,
+	cooldownDelay: Time.Minute * 1,
+	enabled: true
+})
+export class ImagineCommand extends ExtendedCommand {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-
 		await interaction.deferReply();
 
 		const Prompt = interaction.options.getString('prompt', true);
@@ -36,15 +45,13 @@ export class ICommand extends Command {
 		await interaction.editReply({
 			content: GlobalUtils.stripIndents(
 				`
-					${GlobalUtils.userMention(interaction.user.id)} requested a image!
 					\`\`\`asciidoc
-					• Info :: Generating imagine...
+					• Info :: ${await this.t(interaction.channel as TextChannel, 'commands/openai:imagine_command.loading')}
 					\`\`\`
 					`
 			),
 			allowedMentions: {
 				repliedUser: true,
-				users: [interaction.user.id]
 			}
 		});
 
@@ -64,15 +71,14 @@ export class ICommand extends Command {
 			return interaction.editReply({
 				content: GlobalUtils.stripIndents(
 					`
-						${GlobalUtils.userMention(interaction.user.id)} your requested imagine failed!
 						\`\`\`asciidoc
-						• Error :: Failed to generate imagine due to a server error!
+						• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/openai:imagine_command.failed')}
 						\`\`\`
 						`
 				),
 				allowedMentions: {
-					users: [interaction.user.id]
-				},
+					repliedUser: true
+				}
 			});
 		}
 
@@ -86,13 +92,12 @@ export class ICommand extends Command {
 			content: GlobalUtils.stripIndents(
 				`
 					\`\`\`asciidoc
-					• Info :: Generated image Successful! Loading image into discord...
+					• Info :: ${await this.t(interaction.channel as TextChannel, 'commands/openai:imagine_command.success')}
 					\`\`\`
 					`
 			),
 			allowedMentions: {
-				repliedUser: true,
-				users: [interaction.user.id]
+				repliedUser: true
 			},
 			files: [att]
 		});

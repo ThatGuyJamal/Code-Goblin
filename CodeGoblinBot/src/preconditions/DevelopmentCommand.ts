@@ -12,18 +12,16 @@
     GNU Affero General Public License for more details.
  */
 
-import { container } from '@sapphire/framework';
-import { OpenAIApi, Configuration } from 'openai';
+import { Precondition } from '@sapphire/framework';
+import type { CommandInteraction, CacheType } from 'discord.js';
+import { Main } from '..';
 
-/**
- * The OpenAI Wrapper class
- * @class
- * @see https://beta.openai.com/docs/api-reference/images
- */
-export class OpenAIWrapper {
-	public api: OpenAIApi;
-	public constructor(configuration: Configuration) {
-		this.api = new OpenAIApi(configuration);
-		container.logger.debug('OpenAI API Wrapper initialized');
+export class UserPrecondition extends Precondition {
+	public override async chatInputRun(interaction: CommandInteraction<CacheType>) {
+		return Main.config.SuperUsers.has(interaction.user.id)
+			? this.ok()
+			: this.error({
+					message: 'This command is currently in active development. Please try again later or join our support server for questions.'
+			  });
 	}
 }

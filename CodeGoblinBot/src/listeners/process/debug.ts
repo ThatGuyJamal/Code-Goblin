@@ -12,18 +12,14 @@
     GNU Affero General Public License for more details.
  */
 
-import { container } from '@sapphire/framework';
-import { OpenAIApi, Configuration } from 'openai';
+import { ApplyOptions } from '@sapphire/decorators';
+import { Events, Listener, ListenerOptions } from '@sapphire/framework';
 
-/**
- * The OpenAI Wrapper class
- * @class
- * @see https://beta.openai.com/docs/api-reference/images
- */
-export class OpenAIWrapper {
-	public api: OpenAIApi;
-	public constructor(configuration: Configuration) {
-		this.api = new OpenAIApi(configuration);
-		container.logger.debug('OpenAI API Wrapper initialized');
+@ApplyOptions<ListenerOptions>({
+	event: Events.Debug
+})
+export class UserEvent extends Listener {
+	public run(debug: string) {
+		this.container.logger.debug(debug);
 	}
 }

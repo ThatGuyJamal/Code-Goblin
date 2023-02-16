@@ -12,18 +12,22 @@
     GNU Affero General Public License for more details.
  */
 
-import { container } from '@sapphire/framework';
-import { OpenAIApi, Configuration } from 'openai';
+import { ApplyOptions } from '@sapphire/decorators';
+import { ListenerOptions, Events, Listener } from '@sapphire/framework';
+import type { Guild } from 'discord.js';
 
-/**
- * The OpenAI Wrapper class
- * @class
- * @see https://beta.openai.com/docs/api-reference/images
- */
-export class OpenAIWrapper {
-	public api: OpenAIApi;
-	public constructor(configuration: Configuration) {
-		this.api = new OpenAIApi(configuration);
-		container.logger.debug('OpenAI API Wrapper initialized');
+@ApplyOptions<ListenerOptions>({
+	event: Events.GuildCreate
+})
+export class UserEvent extends Listener {
+	public async run(guild: Guild) {
+		const { client } = this.container;
+
+		try {
+			let msg = `✅ ${client.user?.username} has been added to \`${guild.name} | id:(${guild.id})\` **Now in** \`${client.guilds.cache.size} servers.\``;
+			console.log(msg);
+		} catch (error) {
+			this.container.client.logger.error(error);
+		}
 	}
 }

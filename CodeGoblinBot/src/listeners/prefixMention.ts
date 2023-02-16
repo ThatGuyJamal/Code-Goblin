@@ -12,18 +12,26 @@
     GNU Affero General Public License for more details.
  */
 
-import { container } from '@sapphire/framework';
-import { OpenAIApi, Configuration } from 'openai';
+import { ApplyOptions } from '@sapphire/decorators';
+import { ListenerOptions, Events, Listener } from '@sapphire/framework';
+import type { Message } from 'discord.js';
+import { Main } from '..';
 
-/**
- * The OpenAI Wrapper class
- * @class
- * @see https://beta.openai.com/docs/api-reference/images
- */
-export class OpenAIWrapper {
-	public api: OpenAIApi;
-	public constructor(configuration: Configuration) {
-		this.api = new OpenAIApi(configuration);
-		container.logger.debug('OpenAI API Wrapper initialized');
+@ApplyOptions<ListenerOptions>({
+	event: Events.MentionPrefixOnly
+})
+export class UserEvent extends Listener {
+	public async run(ctx: Message) {
+		let _prefix = this.container.client.fetchPrefix(ctx);
+
+		if (!Main.utils.isPrivateMessage(ctx)) {
+			await ctx.reply({
+				content: `My prefix in this server is \`${_prefix}\``
+			});
+		} else {
+			await ctx.reply({
+				content: "I don't have a prefix in the dms!"
+			});
+		}
 	}
 }

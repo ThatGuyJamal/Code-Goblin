@@ -1,6 +1,8 @@
 {
     "cSpell.words": [
         "adonisjs",
+        "autorestart",
+        "colorette",
         "Cooldown",
         "fastify",
         "filebuffer",
@@ -11,6 +13,7 @@
         "Ignitor",
         "japa",
         "joho",
+        "Lngs",
         "logform",
         "maxsize",
         "mikefmeyer",

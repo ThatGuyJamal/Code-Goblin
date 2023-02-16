@@ -1,0 +1,6 @@
+{
+    "ping_command": {
+        "loading": "Fetching current latency...",
+        "success": "Pong! 🏓\nBot Latency: `{{rest}}`\nDiscord API Latency: `{{ws}}`\nUptime: `{{health}}`"
+    }
+}

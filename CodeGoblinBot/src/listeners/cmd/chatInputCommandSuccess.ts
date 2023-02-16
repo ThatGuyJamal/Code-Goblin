@@ -12,18 +12,18 @@
     GNU Affero General Public License for more details.
  */
 
-import { container } from '@sapphire/framework';
-import { OpenAIApi, Configuration } from 'openai';
+import { ApplyOptions } from '@sapphire/decorators';
+import { Listener, container, LogLevel, Events, ChatInputCommandSuccessPayload } from '@sapphire/framework';
+import { bold, cyan } from 'colorette';
 
-/**
- * The OpenAI Wrapper class
- * @class
- * @see https://beta.openai.com/docs/api-reference/images
- */
-export class OpenAIWrapper {
-	public api: OpenAIApi;
-	public constructor(configuration: Configuration) {
-		this.api = new OpenAIApi(configuration);
-		container.logger.debug('OpenAI API Wrapper initialized');
+@ApplyOptions<Listener.Options>({
+	enabled: container.logger.has(LogLevel.Debug)
+})
+export class UserListener extends Listener<typeof Events.ChatInputCommandSuccess> {
+	public override async run(payload: ChatInputCommandSuccessPayload) {
+		const author = payload.interaction.user;
+		const message = `${cyan(bold(`[/${payload.command.name}]`))} - Command executed by ${author.tag} (${author.id})`;
+
+		this.container.logger.debug(message);
 	}
 }

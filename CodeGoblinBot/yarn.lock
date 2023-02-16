@@ -823,6 +823,13 @@
   resolved "https://registry.yarnpkg.com/@sapphire/async-queue/-/async-queue-1.5.0.tgz#2f255a3f186635c4fb5a2381e375d3dfbc5312d8"
   integrity sha512-JkLdIsP8fPAdh9ZZjrbHWR/+mZj0wvKS5ICibcLrRI1j84UmLMshx5n9QmL8b95d4onJ2xxiyugTgSAX7AalmA==
 
+"@sapphire/decorators@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@sapphire/decorators/-/decorators-6.0.0.tgz#214df9cc0dac5e76e64a0ae0b924f16085f2762e"
+  integrity sha512-su+5K/ZT8PTxPLal9ZEq2Ik1J4ucEnY1ccBY1USW3NRj8iLFaEhPeUKpikRey3Wox2mpKeoxzZphrIWO5E8fng==
+  dependencies:
+    tslib "^2.4.1"
+
 "@sapphire/discord-utilities@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@sapphire/discord-utilities/-/discord-utilities-3.0.0.tgz#3e578942950ea512dd79a23af5dd5df3c24c480e"
@@ -910,6 +917,14 @@
     "@sapphire/timestamp" "^1.0.0"
     colorette "^2.0.19"
     tslib "^2.4.0"
+
+"@sapphire/plugin-subcommands@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@sapphire/plugin-subcommands/-/plugin-subcommands-4.0.0.tgz#f091925cbbcb8776595fac7f662a19bd2b0092e1"
+  integrity sha512-jugJskJuFN8Cq7NeQ2XnaJkQuyPOj9JfZDSAVVSdiddKAGcXVMhGaB0YoDJ29MvFqSSNj3zPXAl4esvzIt/FiA==
+  dependencies:
+    "@sapphire/utilities" "^3.11.0"
+    tslib "^2.4.1"
 
 "@sapphire/prettier-config@^1.4.4":
   version "1.4.5"
@@ -1254,7 +1269,7 @@ discord-api-types@^0.37.20, discord-api-types@^0.37.23, discord-api-types@^0.37.
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.33.tgz#35985992a45dc983f59927cf2ec55b9fc36213bf"
   integrity sha512-ZMH5RU3q1pvYS+2wGUJ5Zvy8jMGTQ4wCpbDlIQDkbIL/k6kJwBPsXnCg81g2GywlOuf0f8ezakxVSe+sZuY6ig==
 
-discord.js@14.x:
+discord.js@^14.7.1:
   version "14.7.1"
   resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.7.1.tgz#26079d0ff4d27daf02480a403c456121f0682bd9"
   integrity sha512-1FECvqJJjjeYcjSm0IGMnPxLqja/pmG1B0W2l3lUY2Gi4KXiyTeQmU1IxWcbXHn2k+ytP587mMWqva2IA87EbA==

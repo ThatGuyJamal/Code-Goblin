@@ -1,5 +1,19 @@
-import type { Configuration, CreateImageRequest, ImagesResponseDataInner } from "openai";
-import { OpenAIWrapper } from "./base";
+/**
+ *  Code Goblin - A discord bot for programmers.
+    
+    Copyright (C) 2022, ThatGuyJamal and contributors
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+ */
+
+import type { Configuration, CreateImageRequest, ImagesResponseDataInner } from 'openai';
+import { OpenAIWrapper } from './base';
 import type { AxiosRequestConfig } from 'axios';
 import { randomUUID } from 'node:crypto';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
@@ -42,14 +56,13 @@ export enum CollectorValues {
 	variationExpiresAfter = Time.Minute * 1
 }
 
-
 export class OpenAIImageWrapper extends OpenAIWrapper {
 	private Images = new Collection<string, string>();
 
 	public constructor(configuration: Configuration) {
 		super(configuration);
 
-        this.clearImagesCache();
+		this.clearImagesCache();
 	}
 
 	/**

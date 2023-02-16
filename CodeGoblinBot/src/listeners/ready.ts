@@ -1,26 +1,101 @@
-import { Listener } from '@sapphire/framework';
-import { ActivityType, Client } from 'discord.js';
+/**
+ *  Code Goblin - A discord bot for programmers.
+    
+    Copyright (C) 2022, ThatGuyJamal and contributors
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+ */
 
-export class ReadyListener extends Listener {
-    public constructor(context: Listener.Context, options: Listener.Options) {
-        super(context, {
-            ...options,
-            once: true,
-            event: 'ready'
-        });
-    }
-    public run(client: Client) {
+import { ApplyOptions } from '@sapphire/decorators';
+import { ListenerOptions, Events, Listener, Store } from '@sapphire/framework';
+import { ActivityType, Message } from 'discord.js';
+import { blue, gray, green, magenta, magentaBright, white, yellow } from 'colorette';
+import { Main } from '..';
 
-        client.user?.setPresence({
-            activities: [
-                {
-                    name: "with Chat-GTP 4",
-                    type: ActivityType.Playing
-                }
-            ]
-        })
+const dev = Main.config.IsInDevelopmentMode;
 
-        const { username, id } = client.user!;
-        this.container.logger.info(`Successfully logged in as ${username} (${id})`);
-    }
+@ApplyOptions<ListenerOptions>({
+	event: Events.ClientReady
+})
+export class UserEvent extends Listener {
+	private readonly style = dev ? yellow : blue;
+
+	public async run(_ctx: Message): Promise<void> {
+		const { client } = this.container;
+
+		client.user?.setPresence({
+			status: 'online',
+			activities: [
+				{
+					name: 'with Chat-GTP',
+					type: ActivityType.Playing
+				}
+			]
+		});
+		this.initializeFunctions().then(() =>
+			this.container.logger.info(`${client.user?.tag} is online and ready to compute ${client.guilds.cache.size} guilds!`)
+		);
+	}
+
+	private async initializeFunctions() {
+		await this.clearApplicationCommands(Main.config.commands.delete);
+		UserEvent.printBanner();
+		this.printStoreDebugInformation();
+	}
+
+	private async clearApplicationCommands(enabled: boolean) {
+		if (!enabled) return;
+		else {
+			const { client } = this.container;
+			// Loop over each test server and clear the application commands
+			for (const id of [Main.config.DevelopmentGuildId]) {
+				await client.application?.commands.set([], id).then((res) => {
+					if (res) this.container.logger.warn(`Cleared application commands in ${id}`);
+					else this.container.logger.warn(`Failed to clear application commands in ${id}`);
+				});
+			}
+			client.logger.fatal('Application commands have been cleared!');
+		}
+	}
+
+	private static printBanner() {
+		const success = green('+');
+
+		const llc = dev ? magentaBright : white;
+		const blc = dev ? magenta : blue;
+
+		const line01 = llc('');
+		const line02 = llc('');
+		const line03 = llc('');
+
+		// Offset Pad
+		const pad = ' '.repeat(7);
+
+		console.log(
+			String.raw`
+${line01} ${pad}${blc('1.0.0')}
+${line02} ${pad}[${success}] Gateway
+${line03}${dev ? ` ${pad}${blc('<')}${llc('/')}${blc('>')} ${llc('DEVELOPMENT MODE')}` : ''}
+		`.trim()
+		);
+	}
+
+	private printStoreDebugInformation() {
+		const { client, logger } = this.container;
+		const stores = [...client.stores.values()];
+		const last = stores.pop()!;
+
+		for (const store of stores) logger.info(this.styleStore(store, false));
+		logger.info(this.styleStore(last, true));
+	}
+
+	private styleStore(store: Store<any>, last: boolean) {
+		return gray(`${last ? '└─' : '├─'} Loaded ${this.style(store.size.toString().padEnd(3, ' '))} ${store.name}.`);
+	}
 }
