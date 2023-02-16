@@ -38,7 +38,7 @@ export class UserEvent extends Listener {
 				}
 			]
 		});
-		this.initializeFunctions().then(() =>
+		await this.initializeFunctions().then(() =>
 			this.container.logger.info(`${client.user?.tag} is online and ready to compute ${client.guilds.cache.size} guilds!`)
 		);
 	}
