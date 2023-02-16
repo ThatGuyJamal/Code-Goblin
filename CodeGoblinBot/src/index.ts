@@ -28,12 +28,12 @@ import { config } from 'dotenv';
 config();
 
 /** Over-writes the default types for the Preconditions */
-declare module "@sapphire/framework" {
-  interface Preconditions {
-    DevelopmentCommand: never;
-    OwnerOnlyCommand: never;
-    CommandCanRun: never;
-  }
+declare module '@sapphire/framework' {
+	interface Preconditions {
+		DevelopmentCommand: never;
+		OwnerOnlyCommand: never;
+		CommandCanRun: never;
+	}
 }
 
 export class MainClass {

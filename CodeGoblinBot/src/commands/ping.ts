@@ -25,7 +25,7 @@ import ms from 'ms';
 	name: 'ping',
 	description: 'Checks the bots latency to the Discord API',
 	cooldownDelay: Time.Second * 10,
-	enabled: true,
+	enabled: true
 })
 export class PingCommand extends ExtendedCommand {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {

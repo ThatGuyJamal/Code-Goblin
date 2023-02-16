@@ -51,7 +51,7 @@ export class ImagineCommand extends ExtendedCommand {
 					`
 			),
 			allowedMentions: {
-				repliedUser: true,
+				repliedUser: true
 			}
 		});
 

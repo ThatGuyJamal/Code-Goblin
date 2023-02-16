@@ -25,7 +25,7 @@ export default {
 				userPermissions: `You do not have the required permissions to run this command.`
 			}
 		}
-	},
+	}
 };
 
 export const API_VERSION = 10;
@@ -80,5 +80,5 @@ export function colorToStyle(color: Colors): string {
 
 export enum BrandingColors {
 	Primary = Colors.LightGreen,
-	Error =Colors.Red,
+	Error = Colors.Red
 }

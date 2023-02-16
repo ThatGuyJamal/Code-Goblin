@@ -41,7 +41,7 @@ export abstract class ExtendedCommand extends SapphireCommand<Args, ExtendedComm
 			preconditions: ['GuildOnly'],
 			nsfw: false,
 			generateDashLessAliases: true,
-			runIn: ['GUILD_TEXT'],
+			runIn: ['GUILD_TEXT']
 		});
 
 		this.extendedDescription = options.extendedDescription;
