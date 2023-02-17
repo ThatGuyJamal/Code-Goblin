@@ -12,10 +12,15 @@
     GNU Affero General Public License for more details.
  */
 
-import { Listener, Events, UserError, ChatInputCommandDeniedPayload } from '@sapphire/framework';
+import { Listener, Events, UserError, ChatInputCommandDeniedPayload, container, LogLevel } from '@sapphire/framework';
 import { Main } from '../..';
+import { ApplyOptions } from '@sapphire/decorators';
 
-export class UserListener extends Listener<typeof Events.ChatInputCommandDenied> {
+@ApplyOptions<Listener.Options>({
+	event: Events.ChatInputCommandDenied,
+	enabled: container.logger.has(LogLevel.Debug)
+})
+export class UserListener extends Listener {
 	public async run(error: UserError, { interaction }: ChatInputCommandDeniedPayload) {
 		try {
 			if (Reflect.get(Object(error.context), 'silent')) return;

@@ -1,4 +1,3 @@
-```ts
 /**
  *  Code Goblin - A discord bot for programmers.
     
@@ -20,15 +19,16 @@ import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
 
 @ApplyOptions<ExtendedCommandOptions>({
-	name: '',
-	description: '',
+	name: 'automate',
+	description: 'Automate actions in your server',
 	cooldownDelay: Time.Second * 5,
-	enabled: true
+	enabled: true,
+	requiredUserPermissions: ['ManageGuild']
 })
-export class NewCommand extends ExtendedCommand {
+export class AutomateCommand extends ExtendedCommand {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-        return await interaction.reply({ content: 'Not implemented!', ephemeral: true });
-    }
+		return await interaction.reply({ content: 'Not implemented!', ephemeral: true });
+	}
 
 	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
 		registry.registerChatInputCommand((builder) => builder.setName(this.name).setDescription(this.description), {
@@ -39,5 +39,3 @@ export class NewCommand extends ExtendedCommand {
 		});
 	}
 }
-
-```

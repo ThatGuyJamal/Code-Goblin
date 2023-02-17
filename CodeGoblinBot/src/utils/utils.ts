@@ -218,14 +218,18 @@ export default class Utils {
 	 *
 	 * @param content - The content to wrap
 	 */
-	public codeBlock<C extends string>(content: C) {
+	public codeBlock(content: string): string {
 		return `\`\`\`\n${content}\n\`\`\``;
 	}
 
+	public miniCodeBlock(content: string): string {
+		return `\`${content}\``;
+	}
+
 	/**
-	 * Wraps the content inside a codeblock with the specified language
+	 * Wraps the content inside a code-block with the specified language
 	 *
-	 * @param language - The language for the codeblock
+	 * @param language - The language for the code-block
 	 * @param content - The content to wrap
 	 */
 	public codeBlockWithLanguage(language: string, content?: string): string {

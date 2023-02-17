@@ -1,4 +1,3 @@
-```ts
 /**
  *  Code Goblin - A discord bot for programmers.
     
@@ -18,17 +17,28 @@ import { getGuildIds } from '../utils/utils';
 import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
+import { EmbedBuilder } from '@discordjs/builders';
+import { BrandingColors } from '../utils/constants';
+import { Main } from '../index';
 
 @ApplyOptions<ExtendedCommandOptions>({
-	name: '',
-	description: '',
+	name: 'commands',
+	description: 'Shows available commands in the bot',
 	cooldownDelay: Time.Second * 5,
 	enabled: true
 })
-export class NewCommand extends ExtendedCommand {
+export class HelpCommand extends ExtendedCommand {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-        return await interaction.reply({ content: 'Not implemented!', ephemeral: true });
-    }
+		const commandsList = this.container.stores
+			.get('commands')
+			.map((command) => command.name)
+			.map((name) => `${Main.utils.miniCodeBlock(`/${name}`)}`)
+			.join(', ');
+
+		const embed = new EmbedBuilder().setTitle('Commands').setDescription(commandsList).setColor(BrandingColors.Primary);
+
+		return await interaction.reply({ embeds: [embed], ephemeral: true });
+	}
 
 	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
 		registry.registerChatInputCommand((builder) => builder.setName(this.name).setDescription(this.description), {
@@ -39,5 +49,3 @@ export class NewCommand extends ExtendedCommand {
 		});
 	}
 }
-
-```

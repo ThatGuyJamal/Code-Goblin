@@ -13,10 +13,11 @@
  */
 
 import { ApplyOptions } from '@sapphire/decorators';
-import { Events, Listener, ListenerOptions } from '@sapphire/framework';
+import { container, Events, Listener, ListenerOptions, LogLevel } from '@sapphire/framework';
 
 @ApplyOptions<ListenerOptions>({
-	event: Events.Debug
+	event: Events.Debug,
+	enabled: container.logger.has(LogLevel.Debug)
 })
 export class UserEvent extends Listener {
 	public run(debug: string) {

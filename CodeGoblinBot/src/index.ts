@@ -22,7 +22,6 @@ import { MongodbDatabase } from './database/mongodb/db.js';
 import { il8n as _il8n } from './utils/il8n.js';
 import { LogLevel, SapphireClient } from '@sapphire/framework';
 import { GatewayIntentBits, Options } from 'discord.js';
-
 import { config } from 'dotenv';
 
 config();
@@ -34,6 +33,10 @@ declare module '@sapphire/framework' {
 		OwnerOnlyCommand: never;
 		CommandCanRun: never;
 	}
+}
+
+declare module '@sapphire/pieces' {
+	interface Container {}
 }
 
 export class MainClass {

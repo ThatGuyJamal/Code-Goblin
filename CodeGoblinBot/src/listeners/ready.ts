@@ -44,6 +44,7 @@ export class UserEvent extends Listener {
 	}
 
 	private async initializeFunctions() {
+		await Main.database.mongodb.init();
 		await this.clearApplicationCommands(Main.config.commands.delete);
 		UserEvent.printBanner();
 		this.printStoreDebugInformation();

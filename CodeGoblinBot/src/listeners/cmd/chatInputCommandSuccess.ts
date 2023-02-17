@@ -17,9 +17,10 @@ import { Listener, container, LogLevel, Events, ChatInputCommandSuccessPayload }
 import { bold, cyan } from 'colorette';
 
 @ApplyOptions<Listener.Options>({
+	event: Events.ChatInputCommandSuccess,
 	enabled: container.logger.has(LogLevel.Debug)
 })
-export class UserListener extends Listener<typeof Events.ChatInputCommandSuccess> {
+export class UserListener extends Listener {
 	public override async run(payload: ChatInputCommandSuccessPayload) {
 		const author = payload.interaction.user;
 		const message = `${cyan(bold(`[/${payload.command.name}]`))} - Command executed by ${author.tag} (${author.id})`;
