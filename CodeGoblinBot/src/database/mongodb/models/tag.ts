@@ -1,15 +1,15 @@
 /**
  *  Code Goblin - A discord bot for programmers.
-    
-    Copyright (C) 2022, ThatGuyJamal and contributors
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Affero General Public License for more details.
+
+ Copyright (C) 2022, ThatGuyJamal and contributors
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
  */
 import { getModelForClass, ModelOptions, prop, type ReturnModelType } from '@typegoose/typegoose';
 
@@ -42,7 +42,6 @@ export class TagTypegooseSchema {
 
 	/**
 	 * Creates a new tag in the database
-	 * @param this
 	 * @param data
 	 */
 	public static async CreateTag(this: ReturnModelType<typeof TagTypegooseSchema>, data: TagTypegooseSchema) {
@@ -51,7 +50,6 @@ export class TagTypegooseSchema {
 
 	/**
 	 * Updates a tag in the database
-	 * @param this
 	 * @param data
 	 * @returns
 	 */
@@ -84,28 +82,25 @@ export class TagTypegooseSchema {
 
 	/**
 	 * Deletes all tags in the database for a guild
-	 * @param this
 	 * @param guildId
 	 * @returns
 	 */
 	public static async DeleteTags(this: ReturnModelType<typeof TagTypegooseSchema>, guildId: string): Promise<boolean> {
-		return (await this.deleteOne({ guild_id: guildId })) ? true : false;
+		return !!(await this.deleteOne({ guild_id: guildId }));
 	}
 
 	/**
 	 * Deletes a tag in the database for a guild
-	 * @param this
 	 * @param guildId
 	 * @param name
 	 * @returns
 	 */
 	public static async DeleteTag(this: ReturnModelType<typeof TagTypegooseSchema>, guildId: string, name: string): Promise<boolean> {
-		return (await this.deleteOne({ guild_id: guildId, name: name })) ? true : false;
+		return !!(await this.deleteOne({ guild_id: guildId, name: name }));
 	}
 
 	/**
 	 * Gets all tags in the database for a guild
-	 * @param this
 	 * @param guildId
 	 * @returns
 	 */
@@ -115,7 +110,6 @@ export class TagTypegooseSchema {
 
 	/**
 	 * Gets a tag in the database for a guild
-	 * @param this
 	 * @param guildId
 	 * @param name
 	 * @returns
@@ -125,17 +119,16 @@ export class TagTypegooseSchema {
 	}
 
 	public static async CheckIfTagExists(this: ReturnModelType<typeof TagTypegooseSchema>, guildId: string, name: string): Promise<boolean> {
-		return (await this.exists({ guild_id: guildId, name: name })) ? true : false;
+		return !!(await this.exists({ guild_id: guildId, name: name }));
 	}
 
 	/**
 	 * Checks if the max amount of tags has been reached for a guild
-	 * @param this
 	 * @param guildId
 	 * @returns
 	 */
 	public static async CheckIfLimited(this: ReturnModelType<typeof TagTypegooseSchema>, guildId: string): Promise<boolean> {
-		return (await this.countDocuments({ guild_id: guildId })) >= TagLimits.MAX_CREATED_TAGS ? true : false;
+		return (await this.countDocuments({ guild_id: guildId })) >= TagLimits.MAX_CREATED_TAGS;
 	}
 }
 

@@ -1,15 +1,15 @@
 /**
  *  Code Goblin - A discord bot for programmers.
-    
-    Copyright (C) 2022, ThatGuyJamal and contributors
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Affero General Public License for more details.
+
+ Copyright (C) 2022, ThatGuyJamal and contributors
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
  */
 
 import '@sapphire/plugin-hmr/register';
@@ -47,6 +47,7 @@ export class MainClass {
 		mongodb: MongodbDatabase;
 	};
 	discord: SapphireClient;
+
 	public constructor() {
 		this.config = new Config(configValues).data;
 		this.utils = new Utils();
@@ -70,7 +71,7 @@ export class MainClass {
 			},
 			defaultCooldown: {
 				// Ignored by Cooldown.
-				filteredUsers: this.utils.setToArray(this.config.SuperUsers)
+				filteredUsers: this.utils.fromSetToArray(this.config.SuperUsers)
 			},
 			i18n: this.il8n.parseInternationalizationOptions,
 			makeCache: Options.cacheWithLimits({

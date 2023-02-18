@@ -10,7 +10,8 @@
     "build": "rimraf tsconfig.tsbuildinfo dist/ && tsc -p tsconfig.json",
     "watch": "tsc -w",
     "watch:start": "tsc-watch --onSuccess \"node ./dist/index.js\"",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "generate-changelog": "node ./scripts/clg.js"
   },
   "prettier": "@sapphire/prettier-config",
   "keywords": [],

@@ -12,8 +12,8 @@
  GNU Affero General Public License for more details.
  */
 
-import { stripIndents } from 'common-tags';
-import { BrandingColors } from './constants.js';
+import {stripIndents} from 'common-tags';
+import {BrandingColors} from './constants.js';
 import {
 	ActionRowBuilder,
 	APIMessage,
@@ -29,7 +29,7 @@ import {
 	TextChannel,
 	TimestampStylesString
 } from 'discord.js';
-import { Main } from '../index.js';
+import {Main} from '../index.js';
 
 /** Returns the guild ids to register commands in. */
 export function getGuildIds(): string[] {
@@ -53,14 +53,20 @@ export type MessageAcknowledgeable = TextChannel | GuildMessage;
 export default class Utils {
 	/**
 	 * Sends a message to the log channels
+	 * @param client
 	 * @param type of log channel
 	 * @param message to send
 	 * @param custom if the message input needs custom formatting
 	 * @param name of the log
-	 * @param options
 	 * @returns
 	 */
-	public async sendToLogChannel(client: Client, type: 'error' | 'api' | 'premium', message: string, custom?: boolean, name?: string) {
+	public async sendToLogChannel(
+		client: Client,
+		type: 'error' | 'api' | 'premium' | 'join-leave',
+		message: string,
+		custom?: boolean,
+		name?: string
+	) {
 		const log = client.channels.cache.get(
 			type === 'error' ? Main.config.BotErrorLogChannelId : type === 'api' ? Main.config.BotApiLogChannelId : Main.config.BotPremiumLogChannelId
 		) as TextChannel;
@@ -95,7 +101,7 @@ export default class Utils {
 					]
 				});
 			}
-		} else {
+		} else if (type === 'api') {
 			if (custom) {
 				await log.send({
 					embeds: [
@@ -114,6 +120,62 @@ export default class Utils {
 								`
 \`\`\`asciidoc
 • ${name ?? 'Info'} Log :: ${message}
+\`\`\`
+`
+							),
+							color: BrandingColors.Primary,
+							timestamp: new Date().toISOString()
+						}
+					]
+				});
+			}
+		} else if (type === 'premium') {
+			if (custom) {
+				await log.send({
+					embeds: [
+						{
+							description: message,
+							color: BrandingColors.Primary,
+							timestamp: new Date().toISOString()
+						}
+					]
+				});
+			} else {
+				await log.send({
+					embeds: [
+						{
+							description: this.stripIndents(
+								`
+\`\`\`asciidoc
+• ${name ?? 'Premium'} Log :: ${message}
+\`\`\`
+`
+							),
+							color: BrandingColors.Primary,
+							timestamp: new Date().toISOString()
+						}
+					]
+				});
+			}
+		} else if (type === 'join-leave') {
+			if (custom) {
+				await log.send({
+					embeds: [
+						{
+							description: message,
+							color: BrandingColors.Primary,
+							timestamp: new Date().toISOString()
+						}
+					]
+				});
+			} else {
+				await log.send({
+					embeds: [
+						{
+							description: this.stripIndents(
+								`
+\`\`\`asciidoc
+• ${name ?? 'Join/Leave'} Log :: ${message}
 \`\`\`
 `
 							),
@@ -161,8 +223,7 @@ export default class Utils {
 	 */
 	public isUserMention(str: string): boolean {
 		// Check if the string is a mention
-		if (!str.startsWith('<@') || !str.endsWith('>')) return false;
-		return true;
+		return !(!str.startsWith('<@') || !str.endsWith('>'));
 	}
 
 	/**
@@ -177,7 +238,6 @@ export default class Utils {
 	/**
 	 * Converts a date string to a discord timestamp
 	 * @example 1d => <t:86400:d>
-	 * @param date
 	 * @see https://discord.com/developers/docs/reference#message-formatting-timestamp-styles
 	 * `t` Short time format, consisting of hours and minutes, e.g. 16:20.
 	 * `T` Long time format, consisting of hours, minutes, and seconds, e.g. 16:20:30.
@@ -187,6 +247,8 @@ export default class Utils {
 	 * `F` Long date-time format, consisting of long date and short time formats, e.g. Tuesday, 20 April 2021 16:20.
 	 * `R` Relative time format, consisting of a relative duration format, e.g. 2 months ago.
 	 * @returns
+	 * @param dateString
+	 * @param style
 	 */
 	public convertDateStringToDiscordTimeStamp(dateString: string, style?: TimestampStylesString): string {
 		// const valid = this.validateDate(dateString);
@@ -194,9 +256,7 @@ export default class Utils {
 		// if (!valid) return 'Invalid Date! Please use the format DD/MM/YYYY or DD-MM-YYYY';
 
 		let time = Math.floor(new Date(dateString).getTime() / 1000);
-		let format = style ? `<t:${time}:${style}>` : `<t:${time}>`;
-
-		return format;
+		return style ? `<t:${time}:${style}>` : `<t:${time}>`;
 	}
 
 	/**
@@ -209,12 +269,12 @@ export default class Utils {
 	}
 
 	validateDate(date: string) {
-		var dateRegex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+		const dateRegex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
 		return dateRegex.test(date);
 	}
 
 	/**
-	 * Wraps the content inside a codeblock with no language
+	 * Wraps the content inside a code-block with no language
 	 *
 	 * @param content - The content to wrap
 	 */
@@ -400,7 +460,7 @@ export default class Utils {
 	/**
 	 * Formats the given timestamp into a short date-time string
 	 *
-	 * @param seconds - The time to format, represents an UNIX timestamp in seconds
+	 * @param timeOrSeconds
 	 * @param style - The style to use
 	 */
 	public time(timeOrSeconds?: Date | number, style?: TimestampStylesString): string {
@@ -464,7 +524,11 @@ export default class Utils {
 		return replyFn.call(interaction, payload);
 	}
 
-	public setToArray(set: Set<any>): any[] {
+	/**
+	 * Converts a set to an array
+	 * @param set
+	 */
+	public fromSetToArray(set: Set<any>): any[] {
 		return Array.from(set);
 	}
 }
