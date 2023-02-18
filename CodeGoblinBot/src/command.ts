@@ -1,23 +1,23 @@
 /**
  *  Statistics Hub OSS - A data analytics discord bot.
-    
-    Copyright (C) 2022, ThatGuyJamal and contributors
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Affero General Public License for more details.
+
+ Copyright (C) 2022, ThatGuyJamal and contributors
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
  */
 
-import { Command as SapphireCommand, type Args, type Piece, UserError } from '@sapphire/framework';
-import { fetchLanguage, resolveKey, TOptions } from '@sapphire/plugin-i18next';
-import type { PermissionResolvable, TextChannel } from 'discord.js';
-import { Main } from '.';
-import type { SubcommandOptions } from '@sapphire/plugin-subcommands';
-import type { GuildMessage } from './utils/utils';
+import {type Args, Command as SapphireCommand, type Piece, UserError} from '@sapphire/framework';
+import {fetchLanguage, resolveKey, TOptions} from '@sapphire/plugin-i18next';
+import type {PermissionResolvable, TextChannel} from 'discord.js';
+import {Main} from '.';
+import type {SubcommandOptions} from '@sapphire/plugin-subcommands';
+import type {GuildMessage} from './utilities/types';
 
 /**
  * The base class for all commands. Extends @SapphireCommand to add more functionally for our bot
@@ -66,6 +66,7 @@ export abstract class ExtendedCommand extends SapphireCommand<Args, ExtendedComm
 			this.enabled = false;
 		}
 	}
+
 	public onLoad() {
 		this.container.logger.debug(`[COMMAND]`, `Loaded ${this.name}.`);
 	}

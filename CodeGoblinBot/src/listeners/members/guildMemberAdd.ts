@@ -16,7 +16,6 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Events, Listener, ListenerOptions } from '@sapphire/framework';
 import type { GuildMember, TextChannel } from 'discord.js';
 import { WelcomeModel } from '../../database/mongodb/models/welcome';
-import { Main } from '../../index';
 
 type WelcomeDataReturnType = {
 	welcomeChannel: TextChannel;
@@ -57,7 +56,7 @@ export class UserEvent extends Listener {
 
 		if (!welcomeChannel) return null;
 
-		const welcomeMessage = Main.utils.FormatPluginStringData(member, data.content);
+		const welcomeMessage = this.container.utilities.format.FormatPluginStringData(member, data.content);
 
 		return { welcomeChannel, welcomeMessage };
 	}

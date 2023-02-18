@@ -15,7 +15,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Events, Listener, ListenerOptions } from '@sapphire/framework';
 import type { GuildMember, TextChannel } from 'discord.js';
-import { Main } from '../../index';
 import { GoodbyeModel } from '../../database/mongodb/models/goodbye';
 
 type GoodbyeDataReturnType = {
@@ -57,7 +56,7 @@ export class UserEvent extends Listener {
 
 		if (!goodbyeChannel) return null;
 
-		const goodbyeMessage = Main.utils.FormatPluginStringData(member, data.content);
+		const goodbyeMessage = this.container.utilities.format.FormatPluginStringData(member, data.content);
 
 		return { goodbyeChannel, goodbyeMessage };
 	}

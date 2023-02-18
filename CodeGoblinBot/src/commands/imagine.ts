@@ -13,7 +13,7 @@
  */
 
 import { ChatInputCommand, Command, RegisterBehavior } from '@sapphire/framework';
-import { getGuildIds, GlobalUtils } from '../utils/utils';
+import { getGuildIds } from '../utilities/utils';
 import { Time } from '@sapphire/duration';
 import type { CreateImageRequest } from 'openai';
 import { Configuration } from 'openai';
@@ -43,7 +43,7 @@ export class ImagineCommand extends ExtendedCommand {
 		const Prompt = interaction.options.getString('prompt', true);
 
 		await interaction.editReply({
-			content: GlobalUtils.stripIndents(
+			content: this.container.utilities.format.stripIndents(
 				`
 					\`\`\`asciidoc
 					• Info :: ${await this.t(interaction.channel as TextChannel, 'commands/openai:imagine_command.loading')}
@@ -69,7 +69,7 @@ export class ImagineCommand extends ExtendedCommand {
 
 		if (!image || !imageURL) {
 			return interaction.editReply({
-				content: GlobalUtils.stripIndents(
+				content: this.container.utilities.format.stripIndents(
 					`
 						\`\`\`asciidoc
 						• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/openai:imagine_command.failed')}
@@ -89,7 +89,7 @@ export class ImagineCommand extends ExtendedCommand {
 		});
 
 		return await interaction.editReply({
-			content: GlobalUtils.stripIndents(
+			content: this.container.utilities.format.stripIndents(
 				`
 					\`\`\`asciidoc
 					• Info :: ${await this.t(interaction.channel as TextChannel, 'commands/openai:imagine_command.success')}

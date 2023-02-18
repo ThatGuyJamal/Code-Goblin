@@ -16,18 +16,18 @@ import { config } from 'dotenv';
 
 config();
 
-const dev = false;
+const dev = true;
 
 export const configValues = {
 	BotToken: dev ? process.env.DISCORD_BOT_TOKEN_DEV! : process.env.DISCORD_BOT_TOKEN!,
 	DevelopmentGuildId: process.env.DISCORD_BOT_DEV_GUILD!,
 	IsInDevelopmentMode: dev,
-	MONGODB_URI: dev ? process.env._DEV! : process.env.MONGODB_URI!,
+	MONGODB_URI: dev ? process.env.MONGODB_URI_DEV! : process.env.MONGODB_URI!,
 	OpenAPIkey: process.env.DISCORD_OPENAI_API_KEY!,
 
 	commands: {
 		delete: false,
-		register: false
+		register: true
 	},
 	BotErrorLogChannelId: '1056339397194297384',
 	BotApiLogChannelId: '1056292297756639342',
@@ -37,7 +37,7 @@ export const configValues = {
 	BotSupportServerInvite: 'https://discord.gg/MSTrBrNaGn',
 	BotOauthInviteLong:
 		'https://discord.com/oauth2/authorize?client_id=1055671501870874634&permissions=148981992464&scope=applications.commands%20bot',
-	BotOauthInviteShort: 'http://bit.ly/3Wvqk5u',
+	BotOauthInviteShort: 'https://bit.ly/3Wvqk5u',
 	SuperUsers: new Set(['370637638820036608'])
 };
 

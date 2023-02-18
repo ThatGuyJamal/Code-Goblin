@@ -13,14 +13,14 @@
  */
 
 import { ChatInputCommand, Command, RegisterBehavior } from '@sapphire/framework';
-import { getGuildIds } from '../utils/utils';
+import { getGuildIds } from '../utilities/utils';
 import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Main } from '../index';
 import { PermissionsBitField } from 'discord.js';
 import { TagLimits, TagModel } from '../database/mongodb/models/tag';
-import { BrandingColors } from '../utils/constants';
+import { BrandingColors } from '../utilities/constants';
 
 @ApplyOptions<ExtendedCommandOptions>({
 	name: 'tag',
@@ -67,7 +67,7 @@ export class NewCommand extends ExtendedCommand {
 			return await interaction.editReply({
 				embeds: [
 					{
-						description: Main.utils.stripIndents(
+						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
 • Error :: You need the following permissions: \`Manage Server\` to execute this command.
@@ -90,7 +90,7 @@ export class NewCommand extends ExtendedCommand {
 			return await interaction.editReply({
 				embeds: [
 					{
-						description: Main.utils.stripIndents(
+						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
 • Error :: You have reached the max tag limit of ${TagLimits.MAX_CREATED_TAGS}! You can delete a tag to create a new one.
@@ -110,7 +110,7 @@ export class NewCommand extends ExtendedCommand {
 			return await interaction.editReply({
 				embeds: [
 					{
-						description: Main.utils.stripIndents(
+						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
 • Error :: Tag \`${tagName}\` already exists!
@@ -135,7 +135,7 @@ export class NewCommand extends ExtendedCommand {
 		return await interaction.editReply({
 			embeds: [
 				{
-					description: Main.utils.stripIndents(
+					description: this.container.utilities.format.stripIndents(
 						`
 \`\`\`asciidoc
 • Success :: Tag \`${tagName}\` has been created!
@@ -159,7 +159,7 @@ export class NewCommand extends ExtendedCommand {
 			return await interaction.editReply({
 				embeds: [
 					{
-						description: Main.utils.stripIndents(
+						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
 • Error :: You need the following permissions: \`Manage Server\` to execute this command.
@@ -182,7 +182,7 @@ export class NewCommand extends ExtendedCommand {
 			return await interaction.editReply({
 				embeds: [
 					{
-						description: Main.utils.stripIndents(
+						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
 • Error :: Tag \`${tagName}\` does not exist! You can create a new one using \`/tag create\`.
@@ -205,7 +205,7 @@ export class NewCommand extends ExtendedCommand {
 		return await interaction.editReply({
 			embeds: [
 				{
-					description: Main.utils.stripIndents(
+					description: this.container.utilities.format.stripIndents(
 						`
 \`\`\`asciidoc
 • Success :: Tag \`${tagName}\` has been updated!
@@ -231,7 +231,7 @@ export class NewCommand extends ExtendedCommand {
 			return await interaction.editReply({
 				embeds: [
 					{
-						description: Main.utils.stripIndents(
+						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
 • Error :: You need the following permissions: \`Manage Server\` to execute this command.
@@ -253,7 +253,7 @@ export class NewCommand extends ExtendedCommand {
 			return await interaction.editReply({
 				embeds: [
 					{
-						description: Main.utils.stripIndents(
+						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
 • Error :: Tag \`${tagName}\` does not exist! You can create a new one using \`/tag create\`.
@@ -272,7 +272,7 @@ export class NewCommand extends ExtendedCommand {
 		return await interaction.editReply({
 			embeds: [
 				{
-					description: Main.utils.stripIndents(
+					description: this.container.utilities.format.stripIndents(
 						`
 \`\`\`asciidoc
 • Success :: Tag \`${tagName}\` has been deleted!
@@ -300,7 +300,7 @@ export class NewCommand extends ExtendedCommand {
 			return await interaction.editReply({
 				embeds: [
 					{
-						description: Main.utils.stripIndents(
+						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
 • Error :: There are no tags in this server!
@@ -343,7 +343,7 @@ export class NewCommand extends ExtendedCommand {
 			return await interaction.editReply({
 				embeds: [
 					{
-						description: Main.utils.stripIndents(
+						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
 • Error :: Tag \`${tagName}\` does not exist!
@@ -361,11 +361,11 @@ export class NewCommand extends ExtendedCommand {
 			content: tag
 				? `${
 						tagMention
-							? `__*${Main.utils.userMention(tagMention.id)} was mentioned in this tag... by ${Main.utils.userMention(
-									interaction.user.id
-							  )}*__`
+							? `__*${this.container.utilities.format.userMention(
+									tagMention.id
+							  )} was mentioned in this tag... by ${this.container.utilities.format.userMention(interaction.user.id)}*__`
 							: ''
-				  }\n${Main.utils.FormatPluginStringData(interaction.member!, tag.content ?? 'No content found for this tag.')}`
+				  }\n${this.container.utilities.format.FormatPluginStringData(interaction.member!, tag.content ?? 'No content found for this tag.')}`
 				: `Tag \`${name}\` doesn't exist for this server!`,
 			allowedMentions: {
 				users: tagMention ? [tagMention.id] : []
@@ -385,7 +385,7 @@ export class NewCommand extends ExtendedCommand {
 			return await interaction.editReply({
 				embeds: [
 					{
-						description: Main.utils.stripIndents(
+						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
 • Error :: You need the following permissions: \`Manage Server\` to execute this command.
@@ -404,7 +404,7 @@ export class NewCommand extends ExtendedCommand {
 		return await interaction.editReply({
 			embeds: [
 				{
-					description: Main.utils.stripIndents(
+					description: this.container.utilities.format.stripIndents(
 						`
 \`\`\`asciidoc
 • Success :: All tags have been deleted!

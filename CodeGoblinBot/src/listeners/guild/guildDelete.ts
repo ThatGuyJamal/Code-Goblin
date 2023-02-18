@@ -15,7 +15,6 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Events, Listener, ListenerOptions } from '@sapphire/framework';
 import type { Guild } from 'discord.js';
 import { GlobalStatsModel } from '../../database/mongodb/models/statistics';
-import { Main } from '../../index';
 
 @ApplyOptions<ListenerOptions>({
 	event: Events.GuildDelete
@@ -27,7 +26,7 @@ export class UserEvent extends Listener {
 		try {
 			let msg = `❌ ${client.user?.username} has been removed from \`${guild.name} | id:(${guild.id})\` **Now in** \`${client.guilds.cache.size} servers.\``;
 
-			await Main.utils.sendToLogChannel(guild.client, 'join-leave', msg, true);
+			await this.container.utilities.command.sendToLogChannel('join-leave', msg, true);
 
 			await GlobalStatsModel.UpdateGuildsLeft();
 		} catch (error) {

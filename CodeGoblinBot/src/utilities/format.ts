@@ -12,186 +12,23 @@
  GNU Affero General Public License for more details.
  */
 
-import {stripIndents} from 'common-tags';
-import {BrandingColors} from './constants.js';
-import {
-	ActionRowBuilder,
-	APIMessage,
-	ButtonBuilder,
-	ButtonStyle,
-	Client,
-	codeBlock,
-	CommandInteraction,
-	DMChannel,
-	Guild,
-	GuildMember,
-	Message,
-	TextChannel,
-	TimestampStylesString
-} from 'discord.js';
-import {Main} from '../index.js';
+import { Utility } from '@sapphire/plugin-utilities-store';
+import type { GuildMember, TimestampStylesString } from 'discord.js';
+import { stripIndents } from 'common-tags';
+import type { Colors } from './constants';
 
-/** Returns the guild ids to register commands in. */
-export function getGuildIds(): string[] {
-	return Main.config.IsInDevelopmentMode ? [Main.config.DevelopmentGuildId] : [];
+declare module '@sapphire/plugin-utilities-store' {
+	export interface Utilities {
+		format: FormatUtility;
+	}
 }
 
-export interface GuildMessage extends Message {
-	channel: TextChannel;
-	readonly guild: Guild;
-	readonly member: GuildMember;
-}
-
-export interface DMMessage extends Message {
-	channel: DMChannel;
-	readonly guild: null;
-	readonly member: null;
-}
-
-export type MessageAcknowledgeable = TextChannel | GuildMessage;
-
-export default class Utils {
-	/**
-	 * Sends a message to the log channels
-	 * @param client
-	 * @param type of log channel
-	 * @param message to send
-	 * @param custom if the message input needs custom formatting
-	 * @param name of the log
-	 * @returns
-	 */
-	public async sendToLogChannel(
-		client: Client,
-		type: 'error' | 'api' | 'premium' | 'join-leave',
-		message: string,
-		custom?: boolean,
-		name?: string
-	) {
-		const log = client.channels.cache.get(
-			type === 'error'
-				? Main.config.BotErrorLogChannelId
-				: type === 'api'
-				? Main.config.BotApiLogChannelId
-				: type === 'premium'
-				? Main.config.BotPremiumLogChannelId
-				: Main.config.BotJoinLeaveLogChannelId
-		) as TextChannel;
-
-		if (!log) return;
-
-		if (type === 'error') {
-			if (custom) {
-				await log.send({
-					embeds: [
-						{
-							description: message,
-							color: BrandingColors.Error,
-							timestamp: new Date().toISOString()
-						}
-					]
-				});
-			} else {
-				await log.send({
-					embeds: [
-						{
-							description: this.stripIndents(
-								`
-\`\`\`asciidoc
-• ${name ?? 'Error'} Log :: ${message}
-\`\`\`
-`
-							),
-							color: BrandingColors.Error,
-							timestamp: new Date().toISOString()
-						}
-					]
-				});
-			}
-		} else if (type === 'api') {
-			if (custom) {
-				await log.send({
-					embeds: [
-						{
-							description: message,
-							color: BrandingColors.Primary,
-							timestamp: new Date().toISOString()
-						}
-					]
-				});
-			} else {
-				await log.send({
-					embeds: [
-						{
-							description: this.stripIndents(
-								`
-\`\`\`asciidoc
-• ${name ?? 'Info'} Log :: ${message}
-\`\`\`
-`
-							),
-							color: BrandingColors.Primary,
-							timestamp: new Date().toISOString()
-						}
-					]
-				});
-			}
-		} else if (type === 'premium') {
-			if (custom) {
-				await log.send({
-					embeds: [
-						{
-							description: message,
-							color: BrandingColors.Primary,
-							timestamp: new Date().toISOString()
-						}
-					]
-				});
-			} else {
-				await log.send({
-					embeds: [
-						{
-							description: this.stripIndents(
-								`
-\`\`\`asciidoc
-• ${name ?? 'Premium'} Log :: ${message}
-\`\`\`
-`
-							),
-							color: BrandingColors.Primary,
-							timestamp: new Date().toISOString()
-						}
-					]
-				});
-			}
-		} else if (type === 'join-leave') {
-			if (custom) {
-				await log.send({
-					embeds: [
-						{
-							description: message,
-							color: BrandingColors.Primary,
-							timestamp: new Date().toISOString()
-						}
-					]
-				});
-			} else {
-				await log.send({
-					embeds: [
-						{
-							description: this.stripIndents(
-								`
-\`\`\`asciidoc
-• ${name ?? 'Join/Leave'} Log :: ${message}
-\`\`\`
-`
-							),
-							color: BrandingColors.Primary,
-							timestamp: new Date().toISOString()
-						}
-					]
-				});
-			}
-		}
+export class FormatUtility extends Utility {
+	public constructor(context: Utility.Context, options: Utility.Options) {
+		super(context, {
+			...options,
+			name: 'format'
+		});
 	}
 
 	/**
@@ -272,11 +109,6 @@ export default class Utils {
 	 */
 	public stripIndents(str: string) {
 		return stripIndents(str);
-	}
-
-	validateDate(date: string) {
-		const dateRegex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
-		return dateRegex.test(date);
 	}
 
 	/**
@@ -479,64 +311,14 @@ export default class Utils {
 	}
 
 	/**
-	 * Checks whether a message was sent in a guild.
-	 * @param message The message to check.
-	 * @returns Whether the message was sent in a guild.
-	 */
-	public isGuildMessage(message: Message): message is GuildMessage {
-		return message.guild !== null;
-	}
-
-	/**
-	 * Checks whether a message was sent in a DM channel.
-	 * @param message The message to check.
-	 * @returns Whether the message was sent in a DM channel.
-	 */
-	public isPrivateMessage(message: Message): message is DMMessage {
-		return message.guild === null;
-	}
-
-	/**
-	 * Checks whether a given message is an instance of {@link Message}, and not {@link APIMessage}
-	 * @param message The message to check
-	 * @returns `true` if the message is an instance of `Message`, false otherwise.
-	 */
-	public isMessageInstance(message: APIMessage | Message): message is Message {
-		return message instanceof Message;
-	}
-
-	public sendError(interaction: CommandInteraction, description: string, ephemeral = true) {
-		// Core sapphire errors end in ".", so that needs to be accounted for.
-		const parsedDescription = `❌ ${description.endsWith('.') ? description.slice(0, -1) : description}!`;
-
-		const payload = {
-			content: codeBlock('css', `[Notice] - ${parsedDescription}`),
-			// embeds: [createEmbed(parsedDescription, BrandingColors.Error)],
-			components: [
-				new ActionRowBuilder().addComponents(
-					new ButtonBuilder()
-						.setLabel('Need help')
-						.setEmoji('❓')
-						.setStyle(ButtonStyle.Link)
-						.setURL(`${Main.config.BotSupportServerInvite}`)
-				)
-			],
-			allowedMentions: { users: [interaction.user.id], roles: [] },
-			ephemeral
-		};
-
-		// eslint-disable-next-line @typescript-eslint/unbound-method
-		const replyFn = interaction.replied ? interaction.followUp : interaction.deferred ? interaction.editReply : (interaction.reply as any);
-		return replyFn.call(interaction, payload);
-	}
-
-	/**
 	 * Converts a set to an array
 	 * @param set
 	 */
 	public fromSetToArray(set: Set<any>): any[] {
 		return Array.from(set);
 	}
-}
 
-export const GlobalUtils = new Utils();
+	public colorToStyle(color: Colors): string {
+		return `color: #${color.toString(16)}`;
+	}
+}

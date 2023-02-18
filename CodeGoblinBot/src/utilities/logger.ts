@@ -1,24 +1,25 @@
 /**
  *  Code Goblin - A discord bot for programmers.
-    
-    Copyright (C) 2022, ThatGuyJamal and contributors
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Affero General Public License for more details.
+
+ Copyright (C) 2022, ThatGuyJamal and contributors
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
  */
 
 import winston from 'winston';
 import { format } from 'logform';
-import { Main } from '..';
+import { Main } from '../index';
 
 export class ILogger {
 	private instance;
 	private readonly IsInDevelopmentMode: boolean;
+
 	public constructor() {
 		this.IsInDevelopmentMode = Main.config.IsInDevelopmentMode;
 
@@ -27,9 +28,24 @@ export class ILogger {
 			format: winston.format.json(),
 			defaultMeta: { service: 'bot' },
 			transports: [
-				new winston.transports.File({ filename: './logs/info.log', level: 'info', maxsize: 100_000, maxFiles: 1 }),
-				new winston.transports.File({ filename: './logs/error.log', level: 'error', maxsize: 100_000, maxFiles: 2 }),
-				new winston.transports.File({ filename: './logs/debug.log', level: 'debug', maxsize: 100_000, maxFiles: 2 }),
+				new winston.transports.File({
+					filename: './logs/info.log',
+					level: 'info',
+					maxsize: 100_000,
+					maxFiles: 1
+				}),
+				new winston.transports.File({
+					filename: './logs/error.log',
+					level: 'error',
+					maxsize: 100_000,
+					maxFiles: 2
+				}),
+				new winston.transports.File({
+					filename: './logs/debug.log',
+					level: 'debug',
+					maxsize: 100_000,
+					maxFiles: 2
+				}),
 				new winston.transports.File({ filename: './logs/warn.log', level: 'warn', maxsize: 100_000, maxFiles: 1 })
 			]
 		});
@@ -93,6 +109,7 @@ export class ILogger {
 	public warn(message: string, ...args: any[]) {
 		if (this.IsInDevelopmentMode) this.instance.warn(message, ...args);
 	}
+
 	/**
 	 * Log a message at the 'debug' level
 	 * @param message
@@ -102,6 +119,7 @@ export class ILogger {
 	public debug(message: string, ...args: any[]) {
 		if (this.IsInDevelopmentMode) this.instance.debug(message, ...args);
 	}
+
 	/**
 	 * Log a message at the 'crit' level
 	 * @param message
@@ -111,6 +129,7 @@ export class ILogger {
 	public crit(message: string, ...args: any[]) {
 		if (this.IsInDevelopmentMode) this.instance.crit(message, ...args);
 	}
+
 	/**
 	 * Log a message at the 'notice' level
 	 * @param message

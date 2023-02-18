@@ -27,6 +27,7 @@
     "@sapphire/plugin-i18next": "^5.0.0",
     "@sapphire/plugin-logger": "^3.0.1",
     "@sapphire/plugin-subcommands": "^4.0.0",
+    "@sapphire/plugin-utilities-store": "^1.0.0",
     "@sapphire/ratelimits": "^2.4.5",
     "@sapphire/utilities": "^3.11.0",
     "@typegoose/typegoose": "^10.0.0",

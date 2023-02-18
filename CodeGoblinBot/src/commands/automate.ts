@@ -13,7 +13,7 @@
  */
 
 import { ChatInputCommand, Command, Events, RegisterBehavior } from '@sapphire/framework';
-import { getGuildIds } from '../utils/utils';
+import { getGuildIds } from '../utilities/utils';
 import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -23,7 +23,7 @@ import { Main } from '../index';
 import { GoodbyeModel } from '../database/mongodb/models/goodbye';
 import type { GuildMember } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField, TextChannel } from 'discord.js';
-import { ButtonCustomId } from '../utils/constants';
+import { ButtonCustomId } from '../utilities/constants';
 
 const AutomationChoices: APIApplicationCommandOptionChoice<string>[] = [
 	{
@@ -112,7 +112,7 @@ export class AutomateCommand extends ExtendedCommand {
 		}
 
 		return await interaction.reply({
-			content: `Welcome Channel: ${Main.utils.channelMention(data.channel_id)}\nWelcome message: ${data.content}`,
+			content: `Welcome Channel: ${this.container.utilities.format.channelMention(data.channel_id)}\nWelcome message: ${data.content}`,
 			allowedMentions: {
 				roles: [],
 				users: []
@@ -179,7 +179,7 @@ export class AutomateCommand extends ExtendedCommand {
 		}
 
 		return await interaction.reply({
-			content: `Goodbye Channel: ${Main.utils.channelMention(data.channel_id)}\nGoodbye message: ${data.content}`,
+			content: `Goodbye Channel: ${this.container.utilities.format.channelMention(data.channel_id)}\nGoodbye message: ${data.content}`,
 			allowedMentions: {
 				roles: [],
 				users: []
@@ -262,7 +262,7 @@ export class AutomateCommand extends ExtendedCommand {
 
 				if (!channel.permissionsFor(interaction.guild!.members.me!)?.has(PermissionsBitField.Flags.SendMessages)) {
 					return await interaction.reply({
-						content: `I do not have permission to send messages in ${Main.utils.channelMention(data.channel_id)}!}`,
+						content: `I do not have permission to send messages in ${this.container.utilities.format.channelMention(data.channel_id)}!}`,
 						ephemeral: true
 					});
 				}

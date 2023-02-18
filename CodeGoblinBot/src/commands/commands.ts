@@ -13,12 +13,12 @@
  */
 
 import { ChatInputCommand, Command, RegisterBehavior } from '@sapphire/framework';
-import { getGuildIds } from '../utils/utils';
+import { getGuildIds } from '../utilities/utils';
 import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedBuilder } from '@discordjs/builders';
-import { BrandingColors, ButtonCustomId } from '../utils/constants';
+import { BrandingColors, ButtonCustomId } from '../utilities/constants';
 import { Main } from '../index';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, TextChannel } from 'discord.js';
 
@@ -33,7 +33,7 @@ export class HelpCommand extends ExtendedCommand {
 		const commandsList = this.container.stores
 			.get('commands')
 			.map((command) => command.name)
-			.map((name) => `${Main.utils.miniCodeBlock(`/${name}`)}`)
+			.map((name) => `${this.container.utilities.format.miniCodeBlock(`/${name}`)}`)
 			.join(', ');
 
 		const title = await this.t(interaction.channel as TextChannel, 'commands/general:cmd_commands.embed_title');

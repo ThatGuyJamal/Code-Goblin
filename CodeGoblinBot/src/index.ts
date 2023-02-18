@@ -15,11 +15,11 @@
 import '@sapphire/plugin-hmr/register';
 import '@sapphire/plugin-logger/register';
 import '@sapphire/plugin-i18next/register';
+import '@sapphire/plugin-utilities-store/register';
 
 import { Config, configValues, type IConfig } from './config';
-import Utils from './utils/utils.js';
 import { MongodbDatabase } from './database/mongodb/db.js';
-import { il8n as _il8n } from './utils/il8n.js';
+import { il8n as _il8n } from './utilities/il8n';
 import { LogLevel, SapphireClient } from '@sapphire/framework';
 import { GatewayIntentBits, Options } from 'discord.js';
 import { config } from 'dotenv';
@@ -41,7 +41,6 @@ declare module '@sapphire/pieces' {
 
 export class MainClass {
 	config: IConfig;
-	utils: Utils;
 	il8n: _il8n;
 	database: {
 		mongodb: MongodbDatabase;
@@ -50,7 +49,6 @@ export class MainClass {
 
 	public constructor() {
 		this.config = new Config(configValues).data;
-		this.utils = new Utils();
 		this.database = {
 			mongodb: new MongodbDatabase()
 		};
@@ -70,8 +68,8 @@ export class MainClass {
 				silent: false
 			},
 			defaultCooldown: {
-				// Ignored by Cooldown.
-				filteredUsers: this.utils.fromSetToArray(this.config.SuperUsers)
+				// Ignored by Command Cooldown.
+				filteredUsers: Array.from(this.config.SuperUsers)
 			},
 			i18n: this.il8n.parseInternationalizationOptions,
 			makeCache: Options.cacheWithLimits({
@@ -94,14 +92,6 @@ export class MainClass {
 				ReactionUserManager: 0, // reaction.users
 				StageInstanceManager: 0, // guild.stageInstances
 				ThreadManager: 0,
-				//  {
-				//      sweepInterval: hours(1),
-				//      maxSize: 100,
-				//      sweepFilter: Sweepers.filterByLifetime({
-				//          getComparisonTimestamp: e => e.archiveTimestamp ?? e.createdTimestamp,
-				//          excludeFromSweep: e => !e.archived,
-				//        }),
-				//  }
 				ThreadMemberManager: {
 					maxSize: 0
 				}, // thread-channel.members
@@ -112,7 +102,7 @@ export class MainClass {
 			})
 		});
 
-		this.discord.login(this.config.BotToken);
+		this.discord.login(this.config.BotToken).then(() => {});
 	}
 }
 

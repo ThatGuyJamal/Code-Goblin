@@ -13,7 +13,6 @@
  */
 
 import { ChatInputCommandErrorPayload, container, Events, Listener, LogLevel, UserError } from '@sapphire/framework';
-import { Main } from '../..';
 import { bold, redBright } from 'colorette';
 import { ApplyOptions } from '@sapphire/decorators';
 import { GlobalStatsModel } from '../../database/mongodb/models/statistics';
@@ -28,12 +27,12 @@ export class UserListener extends Listener {
 			await GlobalStatsModel.UpdateCommandsFailed();
 
 			if (error instanceof UserError) {
-				return Main.utils.sendError(interaction, error.message);
+				return this.container.utilities.command.sendError(interaction, error.message);
 			}
 
 			this.container.logger.fatal(`${redBright(bold(`[/${command.name}]`))} ${error.stack || error.message}`);
 
-			return await Main.utils.sendError(
+			return await this.container.utilities.command.sendError(
 				interaction,
 				`${command.name} has encountered an error. Please try again later.\n${error.message || error.stack || 'No error message'}`
 			);
