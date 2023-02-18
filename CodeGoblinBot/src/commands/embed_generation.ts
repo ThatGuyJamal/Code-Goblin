@@ -18,6 +18,7 @@ import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedBuilder } from '@discordjs/builders';
+import { Main } from '../index';
 
 @ApplyOptions<ExtendedCommandOptions>({
 	name: 'embed-generate',
@@ -159,7 +160,7 @@ export class NewCommand extends ExtendedCommand {
 					),
 			{
 				guildIds: getGuildIds(),
-				registerCommandIfMissing: true,
+				registerCommandIfMissing: Main.config.commands.register,
 				behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
 				idHints: []
 			}

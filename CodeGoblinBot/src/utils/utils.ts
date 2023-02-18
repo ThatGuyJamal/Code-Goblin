@@ -68,7 +68,13 @@ export default class Utils {
 		name?: string
 	) {
 		const log = client.channels.cache.get(
-			type === 'error' ? Main.config.BotErrorLogChannelId : type === 'api' ? Main.config.BotApiLogChannelId : Main.config.BotPremiumLogChannelId
+			type === 'error'
+				? Main.config.BotErrorLogChannelId
+				: type === 'api'
+				? Main.config.BotApiLogChannelId
+				: type === 'premium'
+				? Main.config.BotPremiumLogChannelId
+				: Main.config.BotJoinLeaveLogChannelId
 		) as TextChannel;
 
 		if (!log) return;

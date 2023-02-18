@@ -1,23 +1,23 @@
 /**
  *  Code Goblin - A discord bot for programmers.
-    
-    Copyright (C) 2022, ThatGuyJamal and contributors
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Affero General Public License for more details.
+
+ Copyright (C) 2022, ThatGuyJamal and contributors
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
  */
 
 import { ChatInputCommand, Command, RegisterBehavior } from '@sapphire/framework';
 import { getGuildIds, GlobalUtils } from '../utils/utils';
 import { Time } from '@sapphire/duration';
 import type { CreateImageRequest } from 'openai';
-import { OpenAIImageWrapper } from '../openai/image';
 import { Configuration } from 'openai';
+import { OpenAIImageWrapper } from '../openai/image';
 import { AttachmentBuilder, TextChannel } from 'discord.js';
 import { Main } from '..';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
@@ -102,6 +102,7 @@ export class ImagineCommand extends ExtendedCommand {
 			files: [att]
 		});
 	}
+
 	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
 		registry.registerChatInputCommand(
 			(builder) =>
@@ -113,7 +114,7 @@ export class ImagineCommand extends ExtendedCommand {
 					}),
 			{
 				guildIds: getGuildIds(),
-				registerCommandIfMissing: true,
+				registerCommandIfMissing: Main.config.commands.register,
 				behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
 				idHints: ['1075595494702715031']
 			}

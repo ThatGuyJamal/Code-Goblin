@@ -454,7 +454,7 @@ export class NewCommand extends ExtendedCommand {
 					.addSubcommand((subcommand) => subcommand.setName('clear').setDescription('Clear all tags.')),
 			{
 				guildIds: getGuildIds(),
-				registerCommandIfMissing: true,
+				registerCommandIfMissing: Main.config.commands.register,
 				behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
 				idHints: ['1076313769715712000']
 			}

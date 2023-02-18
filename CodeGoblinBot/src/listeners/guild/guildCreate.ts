@@ -28,7 +28,7 @@ export class UserEvent extends Listener {
 		try {
 			let msg = `✅ ${client.user?.username} has been added to \`${guild.name} | id:(${guild.id})\` **Now in** \`${client.guilds.cache.size} servers.\``;
 
-			await Main.utils.sendToLogChannel(guild.client, 'join-leave', msg);
+			await Main.utils.sendToLogChannel(guild.client, 'join-leave', msg, true);
 
 			await GlobalStatsModel.UpdateGuildsJoined();
 		} catch (error) {

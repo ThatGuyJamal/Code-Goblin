@@ -16,21 +16,23 @@ import { config } from 'dotenv';
 
 config();
 
+const dev = false;
+
 export const configValues = {
-	BotToken: process.env.DISCORD_BOT_TOKEN!,
+	BotToken: dev ? process.env.DISCORD_BOT_TOKEN_DEV! : process.env.DISCORD_BOT_TOKEN!,
 	DevelopmentGuildId: process.env.DISCORD_BOT_DEV_GUILD!,
-	IsInDevelopmentMode: true,
-	MONGODB_URI: process.env.MONGODB_URI!,
-	BotPrefix: process.env.DISCORD_BOT_PREFIX!,
+	IsInDevelopmentMode: dev,
+	MONGODB_URI: dev ? process.env._DEV! : process.env.MONGODB_URI!,
 	OpenAPIkey: process.env.DISCORD_OPENAI_API_KEY!,
 
 	commands: {
-		delete: false
+		delete: false,
+		register: false
 	},
 	BotErrorLogChannelId: '1056339397194297384',
 	BotApiLogChannelId: '1056292297756639342',
 	BotPremiumLogChannelId: '1064732671399432202',
-	BotJoinLeaveLogChannelId: '1006242588535296062',
+	BotJoinLeaveLogChannelId: '1056292297756639342',
 	BotGitHubRepo: 'https://github.com/ThatGuyJamal/Code-Goblin',
 	BotSupportServerInvite: 'https://discord.gg/MSTrBrNaGn',
 	BotOauthInviteLong:

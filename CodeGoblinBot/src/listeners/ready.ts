@@ -54,11 +54,19 @@ export class UserEvent extends Listener {
 		if (!enabled) return;
 		else {
 			const { client } = this.container;
-			// Loop over each test server and clear the application commands
-			for (const id of [Main.config.DevelopmentGuildId]) {
-				await client.application?.commands.set([], id).then((res) => {
-					if (res) this.container.logger.warn(`Cleared application commands in ${id}`);
-					else this.container.logger.warn(`Failed to clear application commands in ${id}`);
+			if (Main.config.IsInDevelopmentMode) {
+				// Loop over each test server and clear the application commands
+				for (const id of [Main.config.DevelopmentGuildId]) {
+					await client.application?.commands.set([], id).then((res) => {
+						if (res) this.container.logger.warn(`Cleared application commands in ${id}`);
+						else this.container.logger.warn(`Failed to clear application commands in ${id}`);
+					});
+				}
+			} else {
+				// Clear the application commands in the main server
+				await client.application?.commands.set([]).then((res) => {
+					if (res) this.container.logger.warn('Cleared application commands in main server');
+					else this.container.logger.warn('Failed to clear application commands in main server');
 				});
 			}
 			client.logger.fatal('Application commands have been cleared!');

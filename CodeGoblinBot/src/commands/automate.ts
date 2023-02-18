@@ -391,7 +391,7 @@ export class AutomateCommand extends ExtendedCommand {
 					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild),
 			{
 				guildIds: getGuildIds(),
-				registerCommandIfMissing: true,
+				registerCommandIfMissing: Main.config.commands.register,
 				behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
 				idHints: []
 			}

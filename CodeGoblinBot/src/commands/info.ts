@@ -53,7 +53,7 @@ export class NewCommand extends ExtendedCommand {
 • Memory Usage      :: ${this.getMemoryUsage().usage}/${this.getMemoryUsage().total}%
 • Guilds Cached     :: ${guilds.cache.size}
 • Users Cached      :: ${users.cache.size}
-• Bot API Library   :: Oceanic.js-v1.4.1
+• Bot API Library   :: Discord.js
 • Bot Language      :: TypeScript
 • Bot Developer     :: ThatGuyJamal#2695
 \`\`\`
@@ -111,7 +111,7 @@ export class NewCommand extends ExtendedCommand {
 	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
 		registry.registerChatInputCommand((builder) => builder.setName(this.name).setDescription(this.description), {
 			guildIds: getGuildIds(),
-			registerCommandIfMissing: true,
+			registerCommandIfMissing: Main.config.commands.register,
 			behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
 			idHints: ['1076300493208428666']
 		});
