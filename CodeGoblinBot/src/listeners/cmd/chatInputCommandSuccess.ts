@@ -15,6 +15,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener, container, LogLevel, Events, ChatInputCommandSuccessPayload } from '@sapphire/framework';
 import { bold, cyan } from 'colorette';
+import { GlobalStatsModel } from '../../database/mongodb/models/statistics';
 
 @ApplyOptions<Listener.Options>({
 	event: Events.ChatInputCommandSuccess,
@@ -26,5 +27,7 @@ export class UserListener extends Listener {
 		const message = `${cyan(bold(`[/${payload.command.name}]`))} - Command executed by ${author.tag} (${author.id})`;
 
 		this.container.logger.debug(message);
+
+		await GlobalStatsModel.UpdateCommandsExecuted();
 	}
 }

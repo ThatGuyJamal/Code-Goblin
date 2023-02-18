@@ -18,8 +18,9 @@ import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedBuilder } from '@discordjs/builders';
-import { BrandingColors } from '../utils/constants';
+import { BrandingColors, ButtonCustomId } from '../utils/constants';
 import { Main } from '../index';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, TextChannel } from 'discord.js';
 
 @ApplyOptions<ExtendedCommandOptions>({
 	name: 'commands',
@@ -35,9 +36,24 @@ export class HelpCommand extends ExtendedCommand {
 			.map((name) => `${Main.utils.miniCodeBlock(`/${name}`)}`)
 			.join(', ');
 
-		const embed = new EmbedBuilder().setTitle('Commands').setDescription(commandsList).setColor(BrandingColors.Primary);
+		const title = await this.t(interaction.channel as TextChannel, 'commands/general:cmd_commands.embed_title');
 
-		return await interaction.reply({ embeds: [embed], ephemeral: true });
+		const embed = new EmbedBuilder()
+			.setTitle(title)
+			.setDescription(commandsList)
+			.setColor(BrandingColors.Primary)
+			.setTimestamp()
+			.setThumbnail(interaction.client.user.avatarURL({ extension: 'png' }));
+
+		const row = new ActionRowBuilder<ButtonBuilder>()
+			.addComponents(new ButtonBuilder().setURL(Main.config.BotSupportServerInvite).setLabel('Support Server').setStyle(ButtonStyle.Link))
+			.addComponents(new ButtonBuilder().setURL(Main.config.BotOauthInviteLong).setLabel('Invite').setStyle(ButtonStyle.Link))
+			.addComponents(new ButtonBuilder().setCustomId(ButtonCustomId.HELP_COMMAND_DELETE).setLabel('Delete').setStyle(ButtonStyle.Danger))
+			.addComponents(
+				new ButtonBuilder().setCustomId(ButtonCustomId.HELP_COMMAND_INFO).setLabel('More information').setStyle(ButtonStyle.Primary)
+			);
+
+		return await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
 	}
 
 	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {

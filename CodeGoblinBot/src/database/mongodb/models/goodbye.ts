@@ -1,18 +1,18 @@
 /**
  *  Code Goblin - A discord bot for programmers.
-    
-    Copyright (C) 2022, ThatGuyJamal and contributors
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Affero General Public License for more details.
+
+ Copyright (C) 2022, ThatGuyJamal and contributors
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
  */
 
-import { prop, ReturnModelType, ModelOptions, getModelForClass } from '@typegoose/typegoose';
+import { getModelForClass, ModelOptions, prop, ReturnModelType } from '@typegoose/typegoose';
 
 @ModelOptions({
 	schemaOptions: {
@@ -36,7 +36,6 @@ export class GoodbyeTypegooseSchema {
 
 	/**
 	 * Creates a Goodbye document for a guild
-	 * @param this
 	 * @param data
 	 * @returns
 	 */
@@ -46,11 +45,7 @@ export class GoodbyeTypegooseSchema {
 
 	/**
 	 * Updates a Goodbye message for a guild
-	 * @param guildId
-	 * @param channelId
-	 * @param contentType
-	 * @param content
-	 * @param enabled
+	 * @param data
 	 * @returns
 	 */
 	public static async UpdateGoodbye(this: ReturnModelType<typeof GoodbyeTypegooseSchema>, data: GoodbyeTypegooseSchema): Promise<boolean> {
@@ -59,7 +54,11 @@ export class GoodbyeTypegooseSchema {
 				guild_id: data.guild_id
 			},
 			{
-				data
+				$set: {
+					channel_id: data.channel_id,
+					content: data.content,
+					enabled: data.enabled
+				}
 			},
 			{
 				new: true,
@@ -75,7 +74,7 @@ export class GoodbyeTypegooseSchema {
 	 * @param guildId
 	 */
 	public static async DeleteGoodbye(this: ReturnModelType<typeof GoodbyeTypegooseSchema>, guildId: string): Promise<boolean> {
-		return (await this.deleteOne({ guild_id: guildId })) ? true : false;
+		return !!(await this.deleteOne({ guild_id: guildId }));
 	}
 
 	/**
@@ -84,7 +83,7 @@ export class GoodbyeTypegooseSchema {
 	 * @returns
 	 */
 	public static async GetGoodbye(this: ReturnModelType<typeof GoodbyeTypegooseSchema>, guildId: string): Promise<GoodbyeTypegooseSchema | null> {
-		return await this.findOne({ guild_id: guildId });
+		return this.findOne({ guild_id: guildId });
 	}
 }
 

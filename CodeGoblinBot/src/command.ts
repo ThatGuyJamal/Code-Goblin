@@ -38,6 +38,7 @@ export abstract class ExtendedCommand extends SapphireCommand<Args, ExtendedComm
 		super(context, {
 			...options,
 			requiredClientPermissions: ['SendMessages', 'EmbedLinks', 'UseApplicationCommands'],
+			requiredUserPermissions: ['SendMessages'],
 			preconditions: ['GuildOnly'],
 			nsfw: false,
 			generateDashLessAliases: true,

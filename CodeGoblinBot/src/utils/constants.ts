@@ -1,32 +1,22 @@
 /**
  *  Code Goblin - A discord bot for programmers.
-    
-    Copyright (C) 2022, ThatGuyJamal and contributors
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Affero General Public License for more details.
+
+ Copyright (C) 2022, ThatGuyJamal and contributors
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
  */
 
-export default {
-	strings: {
-		not_implemented: 'This function is not implemented yet.',
-		events: {
-			interactionProcess: {
-				premiumOnly: `This command can only be used by premium users.`,
-				helpersOnly: `This command can only be used by helper users.`,
-				superUsersOnly: `This command can only be used by super users.`,
-				commandDisabled: `This command is currently disabled.`,
-				botPermissions: `I do not have the required permissions to run this command.`,
-				userPermissions: `You do not have the required permissions to run this command.`
-			}
-		}
-	}
-};
+export const enum ButtonCustomId {
+	HELP_COMMAND_DELETE = 'help_command_delete',
+	HELP_COMMAND_INFO = 'help_command_info',
+	AUTOMATION_INFO = 'automation_info'
+}
 
 export const API_VERSION = 10;
 
@@ -79,6 +69,6 @@ export function colorToStyle(color: Colors): string {
 }
 
 export enum BrandingColors {
-	Primary = Colors.LightGreen,
+	Primary = 0x0e5519,
 	Error = Colors.Red
 }

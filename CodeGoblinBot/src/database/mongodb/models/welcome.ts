@@ -1,15 +1,15 @@
 /**
  *  Code Goblin - A discord bot for programmers.
-    
-    Copyright (C) 2022, ThatGuyJamal and contributors
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Affero General Public License for more details.
+
+ Copyright (C) 2022, ThatGuyJamal and contributors
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
  */
 
 import { getModelForClass, ModelOptions, prop, type ReturnModelType } from '@typegoose/typegoose';
@@ -36,7 +36,6 @@ export class WelcomeTypegooseSchema {
 
 	/**
 	 * Creates a Welcome document for a guild
-	 * @param this
 	 * @param data
 	 * @returns
 	 */
@@ -46,11 +45,7 @@ export class WelcomeTypegooseSchema {
 
 	/**
 	 * Updates a Welcome message for a guild
-	 * @param guildId
-	 * @param channelId
-	 * @param contentType
-	 * @param content
-	 * @param enabled
+	 * @param data
 	 * @returns
 	 */
 	public static async UpdateWelcome(this: ReturnModelType<typeof WelcomeTypegooseSchema>, data: WelcomeTypegooseSchema): Promise<boolean> {
@@ -59,7 +54,11 @@ export class WelcomeTypegooseSchema {
 				guild_id: data.guild_id
 			},
 			{
-				data
+				$set: {
+					channel_id: data.channel_id,
+					content: data.content,
+					enabled: data.enabled
+				}
 			},
 			{
 				new: true,
@@ -75,7 +74,7 @@ export class WelcomeTypegooseSchema {
 	 * @param guildId
 	 */
 	public static async DeleteWelcome(this: ReturnModelType<typeof WelcomeTypegooseSchema>, guildId: string): Promise<boolean> {
-		return (await this.deleteOne({ guild_id: guildId })) ? true : false;
+		return !!(await this.deleteOne({ guild_id: guildId }));
 	}
 
 	/**
@@ -84,7 +83,7 @@ export class WelcomeTypegooseSchema {
 	 * @returns
 	 */
 	public static async GetWelcome(this: ReturnModelType<typeof WelcomeTypegooseSchema>, guildId: string): Promise<WelcomeTypegooseSchema | null> {
-		return await this.findOne({ guild_id: guildId });
+		return this.findOne({ guild_id: guildId });
 	}
 }
 

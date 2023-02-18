@@ -1,33 +1,33 @@
 /**
  *  Code Goblin - A discord bot for programmers.
-    
-    Copyright (C) 2022, ThatGuyJamal and contributors
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Affero General Public License for more details.
+
+ Copyright (C) 2022, ThatGuyJamal and contributors
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
  */
 
 import { stripIndents } from 'common-tags';
 import { BrandingColors } from './constants.js';
 import {
-	Client,
-	TextChannel,
-	TimestampStylesString,
-	GuildMember,
-	APIMessage,
-	Message,
-	DMChannel,
-	Guild,
 	ActionRowBuilder,
+	APIMessage,
 	ButtonBuilder,
 	ButtonStyle,
+	Client,
 	codeBlock,
-	CommandInteraction
+	CommandInteraction,
+	DMChannel,
+	Guild,
+	GuildMember,
+	Message,
+	TextChannel,
+	TimestampStylesString
 } from 'discord.js';
 import { Main } from '../index.js';
 
@@ -135,13 +135,13 @@ export default class Utils {
 	public FormatPluginStringData(member: GuildMember, str: string): string {
 		return str
 			.replaceAll(/{user}/g, this.userMention(member.id))
-			.replaceAll(/{user_id}/g, member.id)
-			.replaceAll(/{user_tag}/g, member.user.tag)
-			.replaceAll(/{user_username}/g, member.user.username)
-			.replaceAll(/{user_discriminator}/g, member.user.discriminator)
-			.replaceAll(/{user_createdAt}/g, member.user.createdAt.toString())
-			.replaceAll(/{server}/g, member.guild.name)
-			.replaceAll(/{server_id}/g, member.guild.id)
+			.replaceAll(/{user.id}/g, member.id)
+			.replaceAll(/{user.tag}/g, member.user.tag)
+			.replaceAll(/{user.username}/g, member.user.username)
+			.replaceAll(/{user.discriminator}/g, member.user.discriminator)
+			.replaceAll(/{user.createdAt}/g, member.user.createdAt.toString())
+			.replaceAll(/{server.name}/g, member.guild.name)
+			.replaceAll(/{server.id}/g, member.guild.id)
 			.replaceAll(/{memberCount}/g, member.guild.memberCount.toString());
 	}
 
@@ -444,12 +444,7 @@ export default class Utils {
 		const parsedDescription = `❌ ${description.endsWith('.') ? description.slice(0, -1) : description}!`;
 
 		const payload = {
-			content: codeBlock(
-				'css',
-				`
-     [Notice] - ${parsedDescription}
-    `
-			),
+			content: codeBlock('css', `[Notice] - ${parsedDescription}`),
 			// embeds: [createEmbed(parsedDescription, BrandingColors.Error)],
 			components: [
 				new ActionRowBuilder().addComponents(

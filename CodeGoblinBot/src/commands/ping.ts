@@ -31,7 +31,6 @@ export class PingCommand extends ExtendedCommand {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const msg = await interaction.reply({
 			content: await this.t(interaction.channel as TextChannel, 'commands/general:ping_command.loading'),
-			ephemeral: true,
 			fetchReply: true
 		});
 
@@ -39,6 +38,7 @@ export class PingCommand extends ExtendedCommand {
 			const diff = ms(msg.createdTimestamp - interaction.createdTimestamp, { long: true });
 			const ping = ms(this.container.client.ws.ping, { long: true });
 			const uptime = ms(this.container.client.uptime ?? 0, { long: true });
+
 			return await interaction.editReply({
 				content: await this.t(interaction.channel as TextChannel, 'commands/general:ping_command.success', {
 					replace: {

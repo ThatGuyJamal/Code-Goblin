@@ -12,10 +12,11 @@
  GNU Affero General Public License for more details.
  */
 
-import { Listener, Events, container, LogLevel, ChatInputCommandErrorPayload, UserError } from '@sapphire/framework';
+import { ChatInputCommandErrorPayload, container, Events, Listener, LogLevel, UserError } from '@sapphire/framework';
 import { Main } from '../..';
 import { bold, redBright } from 'colorette';
 import { ApplyOptions } from '@sapphire/decorators';
+import { GlobalStatsModel } from '../../database/mongodb/models/statistics';
 
 @ApplyOptions<Listener.Options>({
 	event: Events.ChatInputCommandError,
@@ -24,16 +25,17 @@ import { ApplyOptions } from '@sapphire/decorators';
 export class UserListener extends Listener {
 	public async run(error: Error, { command, interaction }: ChatInputCommandErrorPayload) {
 		try {
+			await GlobalStatsModel.UpdateCommandsFailed();
+
 			if (error instanceof UserError) {
 				return Main.utils.sendError(interaction, error.message);
 			}
+
 			this.container.logger.fatal(`${redBright(bold(`[/${command.name}]`))} ${error.stack || error.message}`);
 
 			return await Main.utils.sendError(
 				interaction,
-				`${command.name} has encountered an error. Please try again later.\n${Main.utils.codeBlock(
-					error.message || error.stack || 'No error message'
-				)}`
+				`${command.name} has encountered an error. Please try again later.\n${error.message || error.stack || 'No error message'}`
 			);
 		} catch (err) {
 			return this.container.logger.error(err);
