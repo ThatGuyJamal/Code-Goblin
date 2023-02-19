@@ -126,3 +126,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Yarn v3 files
+.yarn/install-state.gz
+.yarn/build-state.yml
