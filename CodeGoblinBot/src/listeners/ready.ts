@@ -17,6 +17,11 @@ import { Events, Listener, ListenerOptions, Store } from '@sapphire/framework';
 import { ActivityType, Message } from 'discord.js';
 import { blue, gray, green, magenta, magentaBright, white, yellow } from 'colorette';
 import { Main } from '..';
+import { ServerConfigModel } from '../database/mongodb/models/config';
+import { PremiumUserModel } from '../database/mongodb/models/premium';
+import { TagModel } from '../database/mongodb/models/tag';
+import { WelcomeModel } from '../database/mongodb/models/welcome';
+import { GoodbyeModel } from '../database/mongodb/models/goodbye';
 
 const dev = Main.config.IsInDevelopmentMode;
 
@@ -45,6 +50,11 @@ export class UserEvent extends Listener {
 
 	private async initializeFunctions() {
 		await Main.database.mongodb.init();
+		await ServerConfigModel.initCache();
+		await PremiumUserModel.initCache();
+		await TagModel.initCache();
+		await WelcomeModel.initCache();
+		await GoodbyeModel.initCache();
 		await this.clearApplicationCommands(Main.config.commands.delete);
 		UserEvent.printBanner();
 		this.printStoreDebugInformation();

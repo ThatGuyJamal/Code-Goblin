@@ -13,7 +13,7 @@
  */
 
 import { ChatInputCommand, Command, RegisterBehavior } from '@sapphire/framework';
-import { getGuildIds } from '../utilities/utils';
+import { getGuildIds } from '../utils/utils';
 import { Time } from '@sapphire/duration';
 import type { CreateImageRequest } from 'openai';
 import { Configuration } from 'openai';
@@ -116,7 +116,7 @@ export class ImagineCommand extends ExtendedCommand {
 				guildIds: getGuildIds(),
 				registerCommandIfMissing: Main.config.commands.register,
 				behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
-				idHints: ['1075595494702715031']
+				idHints: ['1076660990290178110']
 			}
 		);
 	}

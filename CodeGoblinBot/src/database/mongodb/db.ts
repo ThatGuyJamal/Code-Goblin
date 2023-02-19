@@ -1,15 +1,15 @@
 /**
  *  Code Goblin - A discord bot for programmers.
-    
-    Copyright (C) 2022, ThatGuyJamal and contributors
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation, either version 3 of the
-    License, or (at your option) any later version.
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Affero General Public License for more details.
+
+ Copyright (C) 2022, ThatGuyJamal and contributors
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
  */
 
 import mongoose from 'mongoose';
@@ -20,6 +20,7 @@ import { TagModel } from './models/tag';
 import { WelcomeModel } from './models/welcome';
 import { container } from '@sapphire/framework';
 import { Main } from '../..';
+import { ServerConfigModel } from './models/config';
 
 export class MongodbDatabase {
 	/** Access core methods for the database */
@@ -33,7 +34,8 @@ export class MongodbDatabase {
 			},
 			tag: TagModel,
 			premiumUser: PremiumUserModel,
-			statistics: GlobalStatsModel
+			statistics: GlobalStatsModel,
+			serverConfig: ServerConfigModel
 		};
 	}
 

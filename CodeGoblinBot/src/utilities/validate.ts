@@ -14,7 +14,7 @@
 
 import { Utility } from '@sapphire/plugin-utilities-store';
 import { APIMessage, Message } from 'discord.js';
-import type { DMMessage, GuildMessage } from './types';
+import type { DMMessage, GuildMessage } from '../utils/types';
 
 declare module '@sapphire/plugin-utilities-store' {
 	export interface Utilities {

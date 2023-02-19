@@ -14,6 +14,8 @@
 
 import type { DMChannel, Guild, GuildMember, Message, TextChannel } from 'discord.js';
 
+``;
+
 export interface GuildMessage extends Message {
 	channel: TextChannel;
 	readonly guild: Guild;

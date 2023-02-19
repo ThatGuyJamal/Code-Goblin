@@ -19,8 +19,8 @@ import '@sapphire/plugin-utilities-store/register';
 
 import { Config, configValues, type IConfig } from './config';
 import { MongodbDatabase } from './database/mongodb/db.js';
-import { il8n as _il8n } from './utilities/il8n';
-import { LogLevel, SapphireClient } from '@sapphire/framework';
+import { il8n as _il8n } from './utils/il8n';
+import { container, LogLevel, SapphireClient } from '@sapphire/framework';
 import { GatewayIntentBits, Options } from 'discord.js';
 import { config } from 'dotenv';
 
@@ -107,3 +107,26 @@ export class MainClass {
 }
 
 export const Main = new MainClass();
+
+process
+	.on('unhandledRejection', (err, promise) => {
+		container.logger.error('Unhandled Rejection:', err, promise);
+	})
+	.on('uncaughtException', (err) => {
+		container.logger.error('Uncaught Exception:', err);
+	})
+	.on('uncaughtExceptionMonitor', (err, origin) => {
+		container.logger.error('Uncaught Exception Monitor:', err, origin);
+	})
+	.on('warning', (warning) => {
+		container.logger.warn('Warning:', warning);
+	})
+	// .on('rejectionHandled', (promise) => {
+	// 	container.logger.warn('Rejection Handled:', promise);
+	// })
+	// .on('multipleResolves', (type, promise, reason) => {
+	// 	container.logger.warn('Multiple Resolves:', type, promise, reason);
+	// })
+	.on('exit', (code) => {
+		container.logger.info('Exit:', code);
+	});

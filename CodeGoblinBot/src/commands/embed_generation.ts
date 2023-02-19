@@ -13,19 +13,21 @@
  */
 
 import { ChatInputCommand, Command, RegisterBehavior } from '@sapphire/framework';
-import { getGuildIds } from '../utilities/utils';
+import { getGuildIds } from '../utils/utils';
 import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedBuilder } from '@discordjs/builders';
 import { Main } from '../index';
+import type { TextChannel } from 'discord.js';
+import { PermissionsBitField } from 'discord.js';
 
 @ApplyOptions<ExtendedCommandOptions>({
 	name: 'embed-generate',
 	description: 'Create custom embed messages',
 	cooldownDelay: Time.Second * 6,
 	enabled: true,
-	requiredUserPermissions: ['ManageMessages']
+	requiredUserPermissions: ['ManageGuild']
 })
 export class NewCommand extends ExtendedCommand {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
@@ -59,42 +61,62 @@ export class NewCommand extends ExtendedCommand {
 			!timestampArgument
 		) {
 			return await interaction.editReply({
-				content: `You can't build an embed with no argument's... please try again.`
+				content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.no_args')
 			});
 		}
 
 		const embed = new EmbedBuilder();
 
 		if (titleArgument) {
-			if (titleArgument.length > 256) return await interaction.followUp('The title is too long. Must be less than 256 characters.');
+			if (titleArgument.length > 256)
+				return await interaction.followUp({
+					content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.title_too_long')
+				});
 			embed.setTitle(titleArgument);
 		}
 
 		if (descriptionArgument) {
-			if (descriptionArgument.length > 4096) return await interaction.followUp('Description is too long. Cant be over 2048 characters.');
+			if (descriptionArgument.length > 4096)
+				return await interaction.followUp({
+					content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.description_too_long')
+				});
 			embed.setDescription(descriptionArgument);
 		}
 
 		if (colorArgument) {
-			if (!colorArgument.match(/^#[0-9A-F]{6}$/i)) return await interaction.followUp(`Your color must be a hexadecimal color code.`);
+			if (!colorArgument.match(/^#[0-9A-F]{6}$/i))
+				return await interaction.followUp({
+					content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.invalid_color')
+				});
 			let convertedColor = parseInt(colorArgument.replace('#', ''), 16);
 			embed.setColor(convertedColor);
 		}
 
 		if (thumbnailArgument) {
 			if (!thumbnailArgument.startsWith('http' || 'https'))
-				return await interaction.followUp('Invalid thumbnail URL. Must start with http or https.');
+				return await interaction.followUp({
+					content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.invalid_thumbnail')
+				});
 			embed.setThumbnail(thumbnailArgument);
 		}
 
 		if (imageArgument) {
-			if (!imageArgument.startsWith('http' || 'https')) return await interaction.followUp('Invalid image URL. Must start with http or https.');
+			if (!imageArgument.startsWith('http' || 'https'))
+				return await interaction.followUp({
+					content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.invalid_image')
+				});
 			embed.setImage(imageArgument);
 		}
 
 		if (authorNameArgument) {
-			if (!descriptionArgument) return await interaction.followUp("You can't have author argument without a description field.");
-			if (authorNameArgument.length > 256) return await interaction.followUp('The author name is too long. Must be less than 256 characters.');
+			if (!descriptionArgument)
+				return await interaction.followUp({
+					content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.no_description_with_author')
+				});
+			if (authorNameArgument.length > 256)
+				return await interaction.followUp({
+					content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.author_too_long')
+				});
 			embed.setAuthor({
 				name: authorNameArgument,
 				iconURL: authorIconArgument ?? undefined,
@@ -103,7 +125,10 @@ export class NewCommand extends ExtendedCommand {
 		}
 
 		if (footerArgument) {
-			if (footerArgument.length > 2048) return await interaction.followUp('The footer is too long. Must be less than 2048 characters.');
+			if (footerArgument.length > 2048)
+				return await interaction.followUp({
+					content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.footer_too_long')
+				});
 			embed.setFooter({
 				text: footerArgument,
 				iconURL: footerIconArgument ?? undefined
@@ -115,7 +140,7 @@ export class NewCommand extends ExtendedCommand {
 		}
 
 		await interaction.editReply({
-			content: `Custom Embed created.`
+			content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.success')
 		});
 
 		return await interaction.channel
@@ -123,10 +148,10 @@ export class NewCommand extends ExtendedCommand {
 				content: contentArgument ?? undefined,
 				embeds: [embed]
 			})
-			.catch(() => {
+			.catch(async () => {
 				// this.container.client.logger.error(err);
-				interaction.editReply({
-					content: `Failed to create embed. This is probably due to you have invalid field options.`
+				await interaction.editReply({
+					content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.failed')
 				});
 			});
 	}
@@ -157,12 +182,13 @@ export class NewCommand extends ExtendedCommand {
 					.addStringOption((builder) => builder.setName('content').setDescription('The content with the embed').setRequired(false))
 					.addBooleanOption((builder) =>
 						builder.setName('timestamp').setDescription('If the embed should have a timestamp').setRequired(false)
-					),
+					)
+					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild),
 			{
 				guildIds: getGuildIds(),
 				registerCommandIfMissing: Main.config.commands.register,
 				behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
-				idHints: []
+				idHints: ['1076660989510025257']
 			}
 		);
 	}

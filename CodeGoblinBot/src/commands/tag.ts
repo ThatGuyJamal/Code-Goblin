@@ -13,14 +13,14 @@
  */
 
 import { ChatInputCommand, Command, RegisterBehavior } from '@sapphire/framework';
-import { getGuildIds } from '../utilities/utils';
+import { getGuildIds } from '../utils/utils';
 import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Main } from '../index';
-import { PermissionsBitField } from 'discord.js';
+import { PermissionsBitField, TextChannel } from 'discord.js';
 import { TagLimits, TagModel } from '../database/mongodb/models/tag';
-import { BrandingColors } from '../utilities/constants';
+import { BrandingColors } from '../utils/constants';
 
 @ApplyOptions<ExtendedCommandOptions>({
 	name: 'tag',
@@ -70,7 +70,11 @@ export class NewCommand extends ExtendedCommand {
 						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: You need the following permissions: \`Manage Server\` to execute this command.
+• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:invalid_bot_permissions', {
+								replace: {
+									permissions: this.container.utilities.format.permissionsToString(PermissionsBitField.Flags.ManageGuild)
+								}
+							})}
 \`\`\`
 `
 						),
@@ -93,7 +97,11 @@ export class NewCommand extends ExtendedCommand {
 						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: You have reached the max tag limit of ${TagLimits.MAX_CREATED_TAGS}! You can delete a tag to create a new one.
+• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.create_limit_reached', {
+								replace: {
+									limit: TagLimits.MAX_CREATED_TAGS
+								}
+							})}
 \`\`\`
 `
 						),
@@ -113,7 +121,11 @@ export class NewCommand extends ExtendedCommand {
 						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: Tag \`${tagName}\` already exists!
+• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.exists', {
+								replace: {
+									name: tagName
+								}
+							})}
 \`\`\`
 `
 						),
@@ -138,7 +150,11 @@ export class NewCommand extends ExtendedCommand {
 					description: this.container.utilities.format.stripIndents(
 						`
 \`\`\`asciidoc
-• Success :: Tag \`${tagName}\` has been created!
+• Success :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.created', {
+							replace: {
+								name: tagName
+							}
+						})}
 \`\`\`
 `
 					)
@@ -162,7 +178,11 @@ export class NewCommand extends ExtendedCommand {
 						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: You need the following permissions: \`Manage Server\` to execute this command.
+• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:invalid_bot_permissions', {
+								replace: {
+									permissions: this.container.utilities.format.permissionsToString(PermissionsBitField.Flags.ManageGuild)
+								}
+							})}
 \`\`\`
 `
 						),
@@ -185,7 +205,11 @@ export class NewCommand extends ExtendedCommand {
 						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: Tag \`${tagName}\` does not exist! You can create a new one using \`/tag create\`.
+• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.does_not_exist', {
+								replace: {
+									name: tagName
+								}
+							})}
 \`\`\`
 `
 						),
@@ -208,7 +232,11 @@ export class NewCommand extends ExtendedCommand {
 					description: this.container.utilities.format.stripIndents(
 						`
 \`\`\`asciidoc
-• Success :: Tag \`${tagName}\` has been updated!
+• Success :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.edited', {
+							replace: {
+								name: tagName
+							}
+						})}
 \`\`\`
 `
 					),
@@ -234,7 +262,11 @@ export class NewCommand extends ExtendedCommand {
 						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: You need the following permissions: \`Manage Server\` to execute this command.
+• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:invalid_bot_permissions', {
+								replace: {
+									permissions: this.container.utilities.format.permissionsToString(PermissionsBitField.Flags.ManageGuild)
+								}
+							})}
 \`\`\`
 `
 						),
@@ -256,7 +288,11 @@ export class NewCommand extends ExtendedCommand {
 						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: Tag \`${tagName}\` does not exist! You can create a new one using \`/tag create\`.
+• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.does_not_exist', {
+								replace: {
+									name: tagName
+								}
+							})}
 \`\`\`
 `
 						),
@@ -275,7 +311,11 @@ export class NewCommand extends ExtendedCommand {
 					description: this.container.utilities.format.stripIndents(
 						`
 \`\`\`asciidoc
-• Success :: Tag \`${tagName}\` has been deleted!
+• Success :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.deleted', {
+							replace: {
+								name: tagName
+							}
+						})}
 \`\`\`
 `
 					),
@@ -303,7 +343,7 @@ export class NewCommand extends ExtendedCommand {
 						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: There are no tags in this server!
+• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.no_data')}
 \`\`\`
 `
 						),
@@ -314,11 +354,20 @@ export class NewCommand extends ExtendedCommand {
 			});
 		}
 
+		const t = tags.map((tag) => {
+			if (tag.name) {
+				return tag.name;
+			} else {
+				return '';
+			}
+		});
+		const displayFormattedTags = this.container.utilities.format.arrayOfStringsToStyle(t, true);
+
 		return await interaction.editReply({
 			embeds: [
 				{
 					title: 'All tags',
-					description: tags.map((tag) => `\`${tag.name}\``).join(', '),
+					description: displayFormattedTags,
 					color: BrandingColors.Primary,
 					timestamp: new Date().toISOString()
 				}
@@ -346,7 +395,11 @@ export class NewCommand extends ExtendedCommand {
 						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: Tag \`${tagName}\` does not exist!
+• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.does_not_exist', {
+								replace: {
+									name: tagName
+								}
+							})}
 \`\`\`
 `
 						),
@@ -361,12 +414,18 @@ export class NewCommand extends ExtendedCommand {
 			content: tag
 				? `${
 						tagMention
-							? `__*${this.container.utilities.format.userMention(
-									tagMention.id
-							  )} was mentioned in this tag... by ${this.container.utilities.format.userMention(interaction.user.id)}*__`
+							? await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.mentioned', {
+									replace: {
+										user: this.container.utilities.format.userMention(tagMention.id),
+										author: this.container.utilities.format.userMention(interaction.user.id)
+									}
+							  })
 							: ''
-				  }\n${this.container.utilities.format.FormatPluginStringData(interaction.member!, tag.content ?? 'No content found for this tag.')}`
-				: `Tag \`${name}\` doesn't exist for this server!`,
+				  }\n${this.container.utilities.format.FormatPluginStringData(
+						interaction.member,
+						tag.content ?? (await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.not_content'))
+				  )}`
+				: await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.does_not_exist'),
 			allowedMentions: {
 				users: tagMention ? [tagMention.id] : []
 			}
@@ -388,7 +447,11 @@ export class NewCommand extends ExtendedCommand {
 						description: this.container.utilities.format.stripIndents(
 							`
 \`\`\`asciidoc
-• Error :: You need the following permissions: \`Manage Server\` to execute this command.
+• Error :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:invalid_bot_permissions', {
+								replace: {
+									permissions: this.container.utilities.format.permissionsToString(PermissionsBitField.Flags.ManageGuild)
+								}
+							})}
 \`\`\`
 `
 						),
@@ -407,7 +470,7 @@ export class NewCommand extends ExtendedCommand {
 					description: this.container.utilities.format.stripIndents(
 						`
 \`\`\`asciidoc
-• Success :: All tags have been deleted!
+• Success :: ${await this.t(interaction.channel as TextChannel, 'commands/plugin:tag_command.cleared')}
 \`\`\`
 `
 					),

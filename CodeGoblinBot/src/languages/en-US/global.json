@@ -1,3 +1,6 @@
 {
-    "default": "{{key}} has not been localized for en-US yet."
+    "default": "{{key}} has not been localized for en-US yet.",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning"
 }

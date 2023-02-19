@@ -13,12 +13,12 @@
  */
 
 import { ChatInputCommand, Command, RegisterBehavior } from '@sapphire/framework';
-import { getGuildIds } from '../utilities/utils';
+import { getGuildIds } from '../utils/utils';
 import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedBuilder } from '@discordjs/builders';
-import { BrandingColors, ButtonCustomId } from '../utilities/constants';
+import { BrandingColors, ButtonCustomId } from '../utils/constants';
 import { Main } from '../index';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, TextChannel } from 'discord.js';
 
@@ -37,20 +37,33 @@ export class HelpCommand extends ExtendedCommand {
 			.join(', ');
 
 		const title = await this.t(interaction.channel as TextChannel, 'commands/general:cmd_commands.embed_title');
+		const notice = await this.t(interaction.channel as TextChannel, 'commands/general:cmd_commands.embed_notice');
 
 		const embed = new EmbedBuilder()
 			.setTitle(title)
 			.setDescription(commandsList)
 			.setColor(BrandingColors.Primary)
+			.addFields([
+				{
+					name: 'Notice',
+					value: notice
+				}
+			])
 			.setTimestamp()
 			.setThumbnail(interaction.client.user.avatarURL({ extension: 'png' }));
 
 		const row = new ActionRowBuilder<ButtonBuilder>()
 			.addComponents(new ButtonBuilder().setURL(Main.config.BotSupportServerInvite).setLabel('Support Server').setStyle(ButtonStyle.Link))
 			.addComponents(new ButtonBuilder().setURL(Main.config.BotOauthInviteLong).setLabel('Invite').setStyle(ButtonStyle.Link))
-			.addComponents(new ButtonBuilder().setCustomId(ButtonCustomId.HELP_COMMAND_DELETE).setLabel('Delete').setStyle(ButtonStyle.Danger))
 			.addComponents(
-				new ButtonBuilder().setCustomId(ButtonCustomId.HELP_COMMAND_INFO).setLabel('More information').setStyle(ButtonStyle.Primary)
+				new ButtonBuilder().setCustomId(ButtonCustomId.HELP_COMMAND_DELETE).setLabel('Delete').setStyle(ButtonStyle.Danger).setEmoji('🗑️')
+			)
+			.addComponents(
+				new ButtonBuilder()
+					.setCustomId(ButtonCustomId.HELP_COMMAND_INFO)
+					.setLabel('More information')
+					.setStyle(ButtonStyle.Primary)
+					.setEmoji('ℹ️')
 			);
 
 		return await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
@@ -61,7 +74,7 @@ export class HelpCommand extends ExtendedCommand {
 			guildIds: getGuildIds(),
 			registerCommandIfMissing: Main.config.commands.register,
 			behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
-			idHints: []
+			idHints: ['1076660988822159400']
 		});
 	}
 }

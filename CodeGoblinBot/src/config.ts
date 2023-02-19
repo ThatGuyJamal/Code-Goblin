@@ -16,6 +16,8 @@ import { config } from 'dotenv';
 
 config();
 
+// The state of the development environment
+// false = production
 const dev = true;
 
 export const configValues = {
@@ -25,8 +27,19 @@ export const configValues = {
 	MONGODB_URI: dev ? process.env.MONGODB_URI_DEV! : process.env.MONGODB_URI!,
 	OpenAPIkey: process.env.DISCORD_OPENAI_API_KEY!,
 
+	caching: {
+		serverConfig: true,
+		goodbye: true,
+		welcome: true,
+		premium: true,
+		// todo - fix bug in caching where tags cant be searched for correctly
+		// this bug only happens when caching is enabled
+		tag: false
+	},
 	commands: {
+		// If commands should be deleted on startup
 		delete: false,
+		// If commands should be registered on startup (if they are not already registered)
 		register: true
 	},
 	BotErrorLogChannelId: '1056339397194297384',

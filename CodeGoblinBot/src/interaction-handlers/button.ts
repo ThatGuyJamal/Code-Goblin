@@ -15,7 +15,7 @@
 import { InteractionHandler, InteractionHandlerTypes, PieceContext } from '@sapphire/framework';
 import type { ButtonInteraction } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { ButtonCustomId } from '../utilities/constants';
+import { ButtonCustomId } from '../utils/constants';
 import { Main } from '../index';
 
 export class ButtonHandler extends InteractionHandler {
@@ -84,11 +84,23 @@ export class ButtonHandler extends InteractionHandler {
 	private async showHelp(interaction: ButtonInteraction) {
 		const row = new ActionRowBuilder<ButtonBuilder>()
 			.addComponents(
-				new ButtonBuilder().setURL(Main.config.BotGitHubRepo).setLabel('Source Code').setStyle(ButtonStyle.Link).setDisabled(false)
+				new ButtonBuilder()
+					.setURL(Main.config.BotGitHubRepo)
+					.setLabel('Source Code')
+					.setStyle(ButtonStyle.Link)
+					.setDisabled(false)
+					.setEmoji('📝')
 			)
-			.addComponents(new ButtonBuilder().setURL('http://localhost:8080').setLabel('Dashboard').setStyle(ButtonStyle.Link).setDisabled(true))
 			.addComponents(
-				new ButtonBuilder().setURL('http://localhost:8080').setLabel('Documentation').setStyle(ButtonStyle.Link).setDisabled(true)
+				new ButtonBuilder().setURL('http://localhost:8080').setLabel('Dashboard').setStyle(ButtonStyle.Link).setDisabled(true).setEmoji('📊')
+			)
+			.addComponents(
+				new ButtonBuilder()
+					.setURL('http://localhost:8080')
+					.setLabel('Documentation')
+					.setStyle(ButtonStyle.Link)
+					.setDisabled(true)
+					.setEmoji('📚')
 			);
 
 		await interaction.reply({

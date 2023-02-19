@@ -1,0 +1,10 @@
+{
+  "invalid_subcommand": "Invalid subcommand!",
+  "language": {
+    "success": "Successfully set the server language to {{language}}!",
+    "failed": "Failed to set the server language to {{language}}!"
+  },
+  "view": {
+    "success": "**Current Server Configuration**\n\n__Language__: `{{language}}`"
+  }
+}

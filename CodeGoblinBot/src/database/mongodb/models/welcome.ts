@@ -13,6 +13,10 @@
  */
 
 import { getModelForClass, ModelOptions, prop, type ReturnModelType } from '@typegoose/typegoose';
+import { configValues } from '../../../config';
+import { Collection } from 'discord.js';
+import { container } from '@sapphire/framework';
+import { GoodbyeModel } from './goodbye';
 
 @ModelOptions({
 	schemaOptions: {
@@ -34,13 +38,35 @@ export class WelcomeTypegooseSchema {
 	@prop({ type: Boolean, default: false })
 	enabled?: boolean;
 
+	private static caching: boolean = configValues.caching.welcome;
+	private static cache: Collection<string, WelcomeTypegooseSchema> = new Collection();
+
+	static async initCache() {
+		if (!this.caching) return;
+		const configs = await GoodbyeModel.find();
+		for (const config of configs) {
+			this.cache.set(config.guild_id!, config);
+		}
+
+		container.logger.debug('Welcome Cache', `Loaded ${this.cache.size} server configs into cache.`);
+	}
+
 	/**
 	 * Creates a Welcome document for a guild
 	 * @param data
 	 * @returns
 	 */
 	public static async CreateWelcome(this: ReturnModelType<typeof WelcomeTypegooseSchema>, data: WelcomeTypegooseSchema) {
-		await this.create(data);
+		if (this.caching) this.cache.set(data.guild_id!, data);
+		await this.create(data)
+			.then((data) => {
+				container.logger.debug(`[NEW WELCOME]`, data);
+				return true;
+			})
+			.catch(() => {
+				container.logger.debug(`[NEW WELCOME]`, `Failed to create welcome for ${data.guild_id}`);
+				return false;
+			});
 	}
 
 	/**
@@ -49,6 +75,14 @@ export class WelcomeTypegooseSchema {
 	 * @returns
 	 */
 	public static async UpdateWelcome(this: ReturnModelType<typeof WelcomeTypegooseSchema>, data: WelcomeTypegooseSchema): Promise<boolean> {
+		if (this.caching) {
+			const cached = this.cache.get(data.guild_id!);
+			if (cached) {
+				this.cache.set(data.guild_id!, { ...cached, ...data });
+			} else {
+				this.cache.set(data.guild_id!, data);
+			}
+		}
 		return await this.updateOne(
 			{
 				guild_id: data.guild_id
@@ -65,8 +99,14 @@ export class WelcomeTypegooseSchema {
 				upsert: true
 			}
 		)
-			.then((res) => res.acknowledged)
-			.catch(() => false);
+			.then((res) => {
+				container.logger.debug('[WELCOME UPDATE]', res);
+				return res.acknowledged;
+			})
+			.catch(() => {
+				container.logger.debug('[WELCOME UPDATE]', 'Failed to update welcome');
+				return false;
+			});
 	}
 
 	/**
@@ -74,6 +114,12 @@ export class WelcomeTypegooseSchema {
 	 * @param guildId
 	 */
 	public static async DeleteWelcome(this: ReturnModelType<typeof WelcomeTypegooseSchema>, guildId: string): Promise<boolean> {
+		if (this.caching) {
+			container.logger.debug('[WELCOME DELETE CACHE]', `Deleted ${guildId} from cache`);
+			this.cache.delete(guildId);
+		}
+
+		container.logger.debug('[WELCOME DELETE]', `Deleted ${guildId} from database`);
 		return !!(await this.deleteOne({ guild_id: guildId }));
 	}
 
@@ -83,6 +129,12 @@ export class WelcomeTypegooseSchema {
 	 * @returns
 	 */
 	public static async GetWelcome(this: ReturnModelType<typeof WelcomeTypegooseSchema>, guildId: string): Promise<WelcomeTypegooseSchema | null> {
+		if (this.caching) {
+			container.logger.debug('[WELCOME GET CACHE]', `Got ${guildId} from cache`);
+			return this.cache.get(guildId) ?? null;
+		}
+
+		container.logger.debug('[WELCOME GET]', `Got ${guildId} from database`);
 		return this.findOne({ guild_id: guildId });
 	}
 }

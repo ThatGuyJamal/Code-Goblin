@@ -15,7 +15,8 @@
 import { Utility } from '@sapphire/plugin-utilities-store';
 import type { GuildMember, TimestampStylesString } from 'discord.js';
 import { stripIndents } from 'common-tags';
-import type { Colors } from './constants';
+import type { Colors } from '../utils/constants';
+import { isNullishOrEmpty } from '@sapphire/utilities';
 
 declare module '@sapphire/plugin-utilities-store' {
 	export interface Utilities {
@@ -321,4 +322,87 @@ export class FormatUtility extends Utility {
 	public colorToStyle(color: Colors): string {
 		return `color: #${color.toString(16)}`;
 	}
+
+	/**
+	 * Converts an array of strings to a string with a new line and space between each element
+	 * @param array
+	 * @param codeBlock
+	 */
+	public arrayOfStringsToStyle(array: string[], codeBlock: boolean): string {
+		let str = array.filter((string) => !isNullishOrEmpty(string)).map((string) => string);
+		if (codeBlock) {
+			return str.map((string, index) => `${index + 1} - ${this.miniCodeBlock(string)}`).join('\n');
+		}
+		return str.map((string, index) => `${index + 1} - ${string}`).join('\n');
+	}
+
+	/**
+	 * Converts a permission number to a string to display
+	 * @param permissions
+	 * @returns {string} The permissions as a string
+	 */
+	public permissionsToString(permissions: bigint | bigint[]): string {
+		if (typeof permissions === 'bigint') {
+			return this.permissionsToString([permissions]);
+		}
+
+		const permissionsArray: string[] = [];
+
+		for (const permission of permissions) {
+			for (const [key, value] of Object.entries(permissionBits)) {
+				if ((permission & value) === value) {
+					permissionsArray.push(key);
+				}
+			}
+		}
+
+		return permissionsArray.join(', ');
+	}
 }
+
+/**
+ * The bits for each permission
+ * @see https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags
+ */
+const permissionBits = {
+	CREATE_INSTANT_INVITE: 1n << 0n,
+	KICK_MEMBERS: 1n << 1n,
+	BAN_MEMBERS: 1n << 2n,
+	ADMINISTRATOR: 1n << 3n,
+	MANAGE_CHANNELS: 1n << 4n,
+	MANAGE_GUILD: 1n << 5n,
+	ADD_REACTIONS: 1n << 6n,
+	VIEW_AUDIT_LOG: 1n << 7n,
+	PRIORITY_SPEAKER: 1n << 8n,
+	STREAM: 1n << 9n,
+	VIEW_CHANNEL: 1n << 10n,
+	SEND_MESSAGES: 1n << 11n,
+	SEND_TTS_MESSAGES: 1n << 12n,
+	MANAGE_MESSAGES: 1n << 13n,
+	EMBED_LINKS: 1n << 14n,
+	ATTACH_FILES: 1n << 15n,
+	READ_MESSAGE_HISTORY: 1n << 16n,
+	MENTION_EVERYONE: 1n << 17n,
+	USE_EXTERNAL_EMOJIS: 1n << 18n,
+	VIEW_GUILD_INSIGHTS: 1n << 19n,
+	CONNECT: 1n << 20n,
+	SPEAK: 1n << 21n,
+	MUTE_MEMBERS: 1n << 22n,
+	DEAFEN_MEMBERS: 1n << 23n,
+	MOVE_MEMBERS: 1n << 24n,
+	USE_VAD: 1n << 25n,
+	CHANGE_NICKNAME: 1n << 26n,
+	MANAGE_NICKNAMES: 1n << 27n,
+	MANAGE_ROLES: 1n << 28n,
+	MANAGE_WEBHOOKS: 1n << 29n,
+	MANAGE_EMOJIS: 1n << 30n,
+	USE_APPLICATION_COMMANDS: 1n << 31n,
+	REQUEST_TO_SPEAK: 1n << 32n,
+	MANAGE_THREADS: 1n << 34n,
+	USE_PUBLIC_THREADS: 1n << 35n,
+	USE_PRIVATE_THREADS: 1n << 36n,
+	USE_EXTERNAL_STICKERS: 1n << 37n,
+	SEND_MESSAGES_IN_THREADS: 1n << 38n,
+	START_EMBEDDED_ACTIVITIES: 1n << 39n,
+	MODERATE_MEMBERS: 1n << 40n
+};

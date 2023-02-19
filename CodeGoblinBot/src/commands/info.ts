@@ -13,7 +13,7 @@
  */
 
 import { ChatInputCommand, Command, RegisterBehavior } from '@sapphire/framework';
-import { getGuildIds } from '../utilities/utils';
+import { getGuildIds } from '../utils/utils';
 import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -21,7 +21,7 @@ import * as os from 'os';
 import { GlobalStatsModel } from '../database/mongodb/models/statistics';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { Main } from '../index';
-import { BrandingColors } from '../utilities/constants';
+import { BrandingColors } from '../utils/constants';
 
 type CPUUsage = { usage: number; cores: number };
 type MemoryUsage = { usage: number; total: number; free: number };

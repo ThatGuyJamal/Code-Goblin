@@ -1,0 +1,36 @@
+{
+  "invalid_sub_command": "Please provide a valid subcommand!",
+  "invalid_bot_permissions": "I don't have the required permissions {{permissions}} to execute this function!",
+  "automate_welcome": {
+    "no_data": "No data found for this server!",
+    "no_channel_or_message": "Please provide a welcome channel and a welcome message!",
+    "created": "Welcome automation created!",
+    "deleted": "Welcome automation deleted!",
+    "updated": "Welcome automation updated!",
+    "view": "Welcome Channel: {{channel}}\nWelcome Message: {{message}}",
+    "no_channel": "The channel set as welcome channel could not be found!",
+    "simulated": "Welcome automation simulated!"
+  },
+  "automate_goodbye": {
+    "no_data": "No data found for this server!",
+    "no_channel_or_message": "Please provide a goodbye channel and a goodbye message!",
+    "created": "Goodbye automation created!",
+    "deleted": "Goodbye automation deleted!",
+    "updated": "Goodbye automation updated!",
+    "view": "Goodbye Channel: {{channel}}\nGoodbye Message: {{message}}",
+    "no_channel": "The channel set as goodbye channel could not be found!",
+    "simulated": "Goodbye automation simulated!"
+  },
+  "tag_command": {
+    "create_limit_reached": "You have reached the max tag limit of {{limit}} You can delete a tag to create a new one.",
+    "exists": "Tag {{name}} already exists!",
+    "created": "Tag {{name}} created!",
+    "does_not_exist": "Tag {{name}} does not exist!",
+    "deleted": "Tag {{name}} deleted!",
+    "updated": "Tag {{name}} updated!",
+    "no_data": "No data found for this server!",
+    "not_content": "No content found for this tag.",
+    "mentioned": "__*{{user}} was mentioned in this tag... by {{author}}*__",
+    "cleared": "All tags deleted!"
+  }
+}

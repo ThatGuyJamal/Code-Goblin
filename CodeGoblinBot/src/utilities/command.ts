@@ -15,7 +15,7 @@
 import { Utility } from '@sapphire/plugin-utilities-store';
 import { Main } from '../index';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, codeBlock, CommandInteraction, TextChannel } from 'discord.js';
-import { BrandingColors } from './constants';
+import { BrandingColors } from '../utils/constants';
 
 declare module '@sapphire/plugin-utilities-store' {
 	export interface Utilities {

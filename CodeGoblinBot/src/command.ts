@@ -17,7 +17,7 @@ import {fetchLanguage, resolveKey, TOptions} from '@sapphire/plugin-i18next';
 import type {PermissionResolvable, TextChannel} from 'discord.js';
 import {Main} from '.';
 import type {SubcommandOptions} from '@sapphire/plugin-subcommands';
-import type {GuildMessage} from './utilities/types';
+import type {GuildMessage} from './utils/types';
 
 /**
  * The base class for all commands. Extends @SapphireCommand to add more functionally for our bot
@@ -37,6 +37,7 @@ export abstract class ExtendedCommand extends SapphireCommand<Args, ExtendedComm
 	public constructor(context: Piece.Context, options: ExtendedCommandOptions) {
 		super(context, {
 			...options,
+			// Sets the default options for all commands without having to set them explicitly in each command.
 			requiredClientPermissions: ['SendMessages', 'EmbedLinks', 'UseApplicationCommands'],
 			requiredUserPermissions: ['SendMessages'],
 			preconditions: ['GuildOnly'],
@@ -67,11 +68,11 @@ export abstract class ExtendedCommand extends SapphireCommand<Args, ExtendedComm
 		}
 	}
 
-	public onLoad() {
+	public override onLoad() {
 		this.container.logger.debug(`[COMMAND]`, `Loaded ${this.name}.`);
 	}
 
-	public onUnload() {
+	public override onUnload() {
 		this.container.logger.debug(`[COMMAND]`, `Unloaded ${this.name}.`);
 	}
 
@@ -108,8 +109,8 @@ export interface ICommandExtendedDescription {
 
 /**
  * @description The Bot command options interface.
- * @typedef {Object} ICommandOptions
- * @extends SubCommandPluginCommandOptions
+ * @typedef {Object} ExtendedCommandOptions
+ * @extends SubcommandOptions
  */
 export interface ExtendedCommandOptions extends SubcommandOptions {
 	name: string;

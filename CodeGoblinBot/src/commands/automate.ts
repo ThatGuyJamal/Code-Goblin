@@ -13,7 +13,7 @@
  */
 
 import { ChatInputCommand, Command, Events, RegisterBehavior } from '@sapphire/framework';
-import { getGuildIds } from '../utilities/utils';
+import { getGuildIds } from '../utils/utils';
 import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -23,7 +23,7 @@ import { Main } from '../index';
 import { GoodbyeModel } from '../database/mongodb/models/goodbye';
 import type { GuildMember } from 'discord.js';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField, TextChannel } from 'discord.js';
-import { ButtonCustomId } from '../utilities/constants';
+import { BrandingColors, ButtonCustomId } from '../utils/constants';
 
 const AutomationChoices: APIApplicationCommandOptionChoice<string>[] = [
 	{
@@ -64,7 +64,7 @@ export class AutomateCommand extends ExtendedCommand {
 				return await this.simulatePlugin(interaction);
 			default:
 				return await interaction.reply({
-					content: 'Please provide a valid subcommand!',
+					content: await this.t(interaction.channel as TextChannel, 'commands/plugin:invalid_sub_command'),
 					ephemeral: true
 				});
 		}
@@ -76,7 +76,7 @@ export class AutomateCommand extends ExtendedCommand {
 
 		if (!welcomeChannel && !welcomeMessage) {
 			return await interaction.reply({
-				content: 'Please provide a welcome channel and a welcome message!',
+				content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_welcome.no_channel_or_message'),
 				ephemeral: true
 			});
 		}
@@ -96,7 +96,7 @@ export class AutomateCommand extends ExtendedCommand {
 		});
 
 		return await interaction.reply({
-			content: `Welcome automation created!`,
+			content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_welcome.created'),
 			components: [this.buildInfoButton()]
 		});
 	}
@@ -106,13 +106,18 @@ export class AutomateCommand extends ExtendedCommand {
 
 		if (!data || !data.content) {
 			return await interaction.reply({
-				content: `No data found for this server!`,
+				content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_welcome.no_data'),
 				ephemeral: true
 			});
 		}
 
 		return await interaction.reply({
-			content: `Welcome Channel: ${this.container.utilities.format.channelMention(data.channel_id)}\nWelcome message: ${data.content}`,
+			content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_welcome.view', {
+				replace: {
+					channel: this.container.utilities.format.channelMention(data.channel_id),
+					message: data.content
+				}
+			}),
 			allowedMentions: {
 				roles: [],
 				users: []
@@ -125,7 +130,7 @@ export class AutomateCommand extends ExtendedCommand {
 
 		if (!data) {
 			return await interaction.reply({
-				content: `No data found for this server!`,
+				content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_welcome.no_data'),
 				ephemeral: true
 			});
 		}
@@ -133,7 +138,7 @@ export class AutomateCommand extends ExtendedCommand {
 		await WelcomeModel.deleteOne({ guild_id: interaction.guildId! });
 
 		return await interaction.reply({
-			content: `Welcome automation deleted!`
+			content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_welcome.deleted')
 		});
 	}
 
@@ -143,7 +148,7 @@ export class AutomateCommand extends ExtendedCommand {
 
 		if (!goodbyeChannel && !goodbyeMessage) {
 			return await interaction.reply({
-				content: 'Please provide a goodbye channel and a goodbye message!',
+				content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_goodbye.no_channel_or_message'),
 				ephemeral: true
 			});
 		}
@@ -163,7 +168,7 @@ export class AutomateCommand extends ExtendedCommand {
 		});
 
 		return await interaction.reply({
-			content: `Goodbye automation created!`,
+			content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_goodbye.created'),
 			components: [this.buildInfoButton()]
 		});
 	}
@@ -173,13 +178,18 @@ export class AutomateCommand extends ExtendedCommand {
 
 		if (!data || !data.content || !data.channel_id) {
 			return await interaction.reply({
-				content: `No data found for this server!`,
+				content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_goodbye.no_data'),
 				ephemeral: true
 			});
 		}
 
 		return await interaction.reply({
-			content: `Goodbye Channel: ${this.container.utilities.format.channelMention(data.channel_id)}\nGoodbye message: ${data.content}`,
+			content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_goodbye.view', {
+				replace: {
+					channel: this.container.utilities.format.channelMention(data.channel_id),
+					message: data.content
+				}
+			}),
 			allowedMentions: {
 				roles: [],
 				users: []
@@ -192,7 +202,7 @@ export class AutomateCommand extends ExtendedCommand {
 
 		if (!data) {
 			return await interaction.reply({
-				content: `No data found for this server!`,
+				content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_goodbye.no_data'),
 				ephemeral: true
 			});
 		}
@@ -200,7 +210,7 @@ export class AutomateCommand extends ExtendedCommand {
 		await GoodbyeModel.deleteOne({ guild_id: interaction.guildId! });
 
 		return await interaction.reply({
-			content: `Goodbye automation deleted!`
+			content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_goodbye.deleted')
 		});
 	}
 
@@ -215,7 +225,7 @@ export class AutomateCommand extends ExtendedCommand {
 				});
 
 				return await interaction.reply({
-					content: `Welcome automation updated!`,
+					content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_welcome.updated'),
 					components: [this.buildInfoButton()]
 				});
 			case 'goodbye':
@@ -227,12 +237,12 @@ export class AutomateCommand extends ExtendedCommand {
 				});
 
 				return await interaction.reply({
-					content: `Goodbye automation updated!`,
+					content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_goodbye.updated'),
 					components: [this.buildInfoButton()]
 				});
 			default:
 				return await interaction.reply({
-					content: 'Please provide a valid subcommand!'
+					content: await this.t(interaction.channel as TextChannel, 'commands/plugin:invalid_sub_command')
 				});
 		}
 	}
@@ -246,7 +256,7 @@ export class AutomateCommand extends ExtendedCommand {
 
 				if (!data || !data.content || !data.channel_id) {
 					return await interaction.reply({
-						content: `No data found for this server!`,
+						content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_welcome.no_data'),
 						ephemeral: true
 					});
 				}
@@ -255,14 +265,18 @@ export class AutomateCommand extends ExtendedCommand {
 
 				if (!channel) {
 					return await interaction.reply({
-						content: `No channel found!`,
+						content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_welcome.no_channel'),
 						ephemeral: true
 					});
 				}
 
 				if (!channel.permissionsFor(interaction.guild!.members.me!)?.has(PermissionsBitField.Flags.SendMessages)) {
 					return await interaction.reply({
-						content: `I do not have permission to send messages in ${this.container.utilities.format.channelMention(data.channel_id)}!}`,
+						content: await this.t(interaction.channel as TextChannel, 'commands/plugin:invalid_bot_permissions', {
+							replace: {
+								permissions: this.container.utilities.format.permissionsToString(PermissionsBitField.Flags.SendMessages)
+							}
+						}),
 						ephemeral: true
 					});
 				}
@@ -272,7 +286,8 @@ export class AutomateCommand extends ExtendedCommand {
 				return await interaction.reply({
 					embeds: [
 						{
-							description: `Welcome automation simulated!`
+							description: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_welcome.simulated'),
+							color: BrandingColors.Primary
 						}
 					]
 				});
@@ -281,7 +296,7 @@ export class AutomateCommand extends ExtendedCommand {
 
 				if (!data2 || !data2.content || !data2.channel_id) {
 					return await interaction.reply({
-						content: `No data found for this server!`,
+						content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_goodbye.no_data'),
 						ephemeral: true
 					});
 				}
@@ -290,14 +305,18 @@ export class AutomateCommand extends ExtendedCommand {
 
 				if (!channel2) {
 					return await interaction.reply({
-						content: `No channel found!`,
+						content: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_goodbye.no_channel'),
 						ephemeral: true
 					});
 				}
 
 				if (!channel2.permissionsFor(interaction.guild!.members.me!)?.has(PermissionsBitField.Flags.SendMessages)) {
 					return await interaction.reply({
-						content: `I do not have permission to send messages!`,
+						content: await this.t(interaction.channel as TextChannel, 'commands/plugin:invalid_bot_permissions', {
+							replace: {
+								permissions: this.container.utilities.format.permissionsToString(PermissionsBitField.Flags.SendMessages)
+							}
+						}),
 						ephemeral: true
 					});
 				}
@@ -307,7 +326,8 @@ export class AutomateCommand extends ExtendedCommand {
 				return await interaction.reply({
 					embeds: [
 						{
-							description: `Goodbye automation simulated!`
+							description: await this.t(interaction.channel as TextChannel, 'commands/plugin:automate_goodbye.simulated'),
+							color: BrandingColors.Primary
 						}
 					]
 				});
@@ -320,7 +340,7 @@ export class AutomateCommand extends ExtendedCommand {
 
 	private buildInfoButton(): ActionRowBuilder<ButtonBuilder> {
 		return new ActionRowBuilder<ButtonBuilder>().addComponents(
-			new ButtonBuilder().setCustomId(ButtonCustomId.AUTOMATION_INFO).setLabel('More Info').setStyle(ButtonStyle.Primary)
+			new ButtonBuilder().setCustomId(ButtonCustomId.AUTOMATION_INFO).setLabel('More Info').setStyle(ButtonStyle.Primary).setEmoji('ℹ️')
 		);
 	}
 
@@ -393,7 +413,7 @@ export class AutomateCommand extends ExtendedCommand {
 				guildIds: getGuildIds(),
 				registerCommandIfMissing: Main.config.commands.register,
 				behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
-				idHints: []
+				idHints: ['1076660987459010752']
 			}
 		);
 	}
