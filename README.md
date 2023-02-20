@@ -4,15 +4,15 @@ A programmers best friend.
 
 ## `Quick Links`
 
-- [Discord Server](https://discord.gg/MSTrBrNaGn)
+*   [Discord Server](https://discord.gg/MSTrBrNaGn)
 
-- [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=1055671501870874634&permissions=148981992464&scope=applications.commands%20bot)
+*   [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=1055671501870874634\&permissions=148981992464\&scope=applications.commands%20bot)
 
 ## `Commands`
 
 | Name            | Sub-commands                                                                                                                                                              | Access Level        |
 | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------------ |
-| Automate        | welcome/goodbye \[create, view, delete] and simulate                                                                                                                      | Server Managers     |
+| Automate        | welcome/goodbye \[create, view, delete],simulate                                                                                                                          | Server Managers     |
 | commands        | None                                                                                                                                                                      | Everyone            |
 | Embed Generator | None                                                                                                                                                                      | Server Managers     |
 | Imagine         | None                                                                                                                                                                      | Premium Users       |
@@ -26,9 +26,9 @@ A programmers best friend.
 
 These commands are only available to premium users. The main reason is because these commands require a lot of resources to run. If you would like to support the bot, please consider becoming a premium user.
 
-- [x] `imagine <prompt>` Generate an image from a prompt.
+*   [x] `imagine <prompt>` Generate an image from a prompt.
 
-- [ ] `code <language> <code>` Generate code completions from text.
+*   [ ] `code <language> <code>` Generate code completions from text.
 
 ## `API`
 

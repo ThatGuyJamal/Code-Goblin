@@ -66,7 +66,7 @@ export class NewCommand extends ExtendedCommand {
 				});
 			}
 
-			const leaderboard = await UserReputationModel.ComputeReputationLeaderboard(this.container.client, rawLb.reputation_leaderboard);
+			const leaderboard = await UserReputationModel.ComputeReputationLeaderboard(this.container.client, rawLb.reputation_leaderboard, true);
 
 			const lb = leaderboard.map((e) => `${e.position}. ${e.tag}\nRank: ${e.reputation_rank}\nRep: ${e.reputation!.toLocaleString()}`);
 

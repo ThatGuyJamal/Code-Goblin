@@ -26,3 +26,5 @@
 - reputation clear command for admins
 
 - chnage welcome and goodbye plugin enable/disable to server config data
+
+- add rank-up role rewards for servers

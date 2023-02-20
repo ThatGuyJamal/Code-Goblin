@@ -96,7 +96,7 @@ export class MainClass {
 					maxSize: 0
 				}, // thread-channel.members
 				UserManager: {
-					maxSize: 100
+					maxSize: 50_000
 				}, // client.users
 				VoiceStateManager: 0 // guild.voiceStates
 			})
