@@ -40,7 +40,10 @@ export const configValues = {
 	},
 	commands: {
 		// If commands should be deleted on startup
-		delete: false,
+		delete: {
+			global: false,
+			guild: false
+		},
 		// If commands should be registered on startup (if they are not already registered)
 		register: true
 	},
