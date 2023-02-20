@@ -160,7 +160,8 @@ export class NewCommand extends ExtendedCommand {
 
 		await ServerConfigModel.UpdateServerConfig({
 			guild_id: interaction.guildId!,
-			reputation_enabled: status !== 'disabled'
+			reputation_enabled: status !== 'disabled',
+			reputation_rank_up_message_enabled: true // this is added because when reputation is enabled, the message should be enabled by default but it does not unless the enabled command is ran? Need to fix later
 		});
 
 		return await interaction.reply({

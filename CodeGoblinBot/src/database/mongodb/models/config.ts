@@ -110,7 +110,7 @@ class ServerConfig {
 					reputation_gains: data.reputation_gains,
 					reputation_rank_up_message_enabled: data.reputation_rank_up_message_enabled,
 					reputation_rank_up_message: data.reputation_rank_up_message,
-					rank_up_channel: data.rank_up_channel
+					rank_up_channel: data.rank_up_channel,
 				}
 			},
 			{
