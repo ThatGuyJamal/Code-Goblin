@@ -32,6 +32,8 @@ export const configValues = {
 		goodbye: true,
 		welcome: true,
 		premium: true,
+		// Bugs with caching as well. Will fix later
+		user_reputation: false,
 		// todo - fix bug in caching where tags cant be searched for correctly
 		// this bug only happens when caching is enabled
 		tag: false

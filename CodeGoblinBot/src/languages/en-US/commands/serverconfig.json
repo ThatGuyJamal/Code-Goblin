@@ -5,6 +5,22 @@
     "failed": "Failed to set the server language to {{language}}!"
   },
   "view": {
-    "success": "**Current Server Configuration**\n\n__Language__: `{{language}}`"
+    "noConfig": "No server configuration found!",
+    "success": "**Current Server Configuration**\n\nLanguage: `{{language}}`\nReputation Plugin: `{{reputation_enabled}}`\nReputation Gains: `{{reputation_gains}}`\nReputation Rank-Up Channel: {{reputation_channel}}\nReputation Rank-Up Message Status: `{{reputation_message_status}}`\nReputation Rank-Up Message: `{{reputation_message_content}}`"
+  },
+  "clear": {
+    "success": "Successfully cleared the server configuration!"
+  },
+  "reputation": {
+    "invalidChannelType": "You can only set the reputation rank-up channel to a text channel!",
+    "statusUpdated": "Server Reputation Status Updated!",
+    "gainsUpdated": "Server Reputation Gains Updated to {{gains}}!",
+    "channelUpdated": "Server Reputation Rank-Up Channel Updated to {{channel}}!",
+    "messageStatusUpdated": "Server Reputation Rank-Up Message Status Updated!",
+    "noReputation": "The user has no reputation!",
+    "messageUpdated": "Server Reputation Rank-Up Message Updated!",
+    "noRepInformation": "The user needs to chat before they can be given reputation manually!",
+    "given": "Successfully given {{amount}} reputation to {{user}}!",
+    "removed": "Successfully removed {{amount}} reputation from {{user}}! They now have `{{newAmount}}` reputation!"
   }
 }

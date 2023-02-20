@@ -12,7 +12,7 @@
  GNU Affero General Public License for more details.
  */
 
-import {Main} from '../index';
+import { Main } from '../index';
 
 /** Returns the guild ids to register commands in. */
 export function getGuildIds(): string[] {

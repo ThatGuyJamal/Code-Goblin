@@ -55,7 +55,7 @@ export class PingCommand extends ExtendedCommand {
 	}
 
 	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
-		registry.registerChatInputCommand((builder) => builder.setName(this.name).setDescription(this.description), {
+		registry.registerChatInputCommand((builder) => builder.setName(this.name).setDescription(this.description).setDMPermission(true), {
 			guildIds: getGuildIds(),
 			registerCommandIfMissing: Main.config.commands.register,
 			behaviorWhenNotIdentical: RegisterBehavior.Overwrite,

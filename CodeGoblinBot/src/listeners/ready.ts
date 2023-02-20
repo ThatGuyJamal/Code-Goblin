@@ -22,6 +22,7 @@ import { PremiumUserModel } from '../database/mongodb/models/premium';
 import { TagModel } from '../database/mongodb/models/tag';
 import { WelcomeModel } from '../database/mongodb/models/welcome';
 import { GoodbyeModel } from '../database/mongodb/models/goodbye';
+import { UserReputationModel } from '../database/mongodb/models/reputation';
 
 const dev = Main.config.IsInDevelopmentMode;
 
@@ -51,6 +52,7 @@ export class UserEvent extends Listener {
 	private async initializeFunctions() {
 		await Main.database.mongodb.init();
 		await ServerConfigModel.initCache();
+		await UserReputationModel.initCache();
 		await PremiumUserModel.initCache();
 		await TagModel.initCache();
 		await WelcomeModel.initCache();

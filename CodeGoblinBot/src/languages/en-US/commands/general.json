@@ -18,6 +18,7 @@
     "author_too_long": "The author name is too long. Must be less than 256 characters.",
     "footer_too_long": "The footer text is too long. Must be less than 2048 characters.",
     "success": "Embed successfully built!",
-    "failed": "Failed to create embed. This is probably due to you have invalid field options."
+    "failed": "Failed to create embed. This is probably due to you have invalid field options.",
+    "contentSuccess": "Message content successfully set!"
   }
 }

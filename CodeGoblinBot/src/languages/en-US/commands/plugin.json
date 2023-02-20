@@ -32,5 +32,11 @@
     "not_content": "No content found for this tag.",
     "mentioned": "__*{{user}} was mentioned in this tag... by {{author}}*__",
     "cleared": "All tags deleted!"
+  },
+  "reputation": {
+    "noData": "No data found for this server!",
+    "noReputation": "No reputation found for `{{user}}` in this server.",
+    "view": "Reputation for `{{user}}` in this server is `{{reputation}}`",
+    "leaderboard": "Reputation Leaderboard for {{server}}"
   }
 }

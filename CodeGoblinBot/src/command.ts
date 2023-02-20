@@ -12,12 +12,12 @@
  GNU Affero General Public License for more details.
  */
 
-import {type Args, Command as SapphireCommand, type Piece, UserError} from '@sapphire/framework';
-import {fetchLanguage, resolveKey, TOptions} from '@sapphire/plugin-i18next';
-import type {PermissionResolvable, TextChannel} from 'discord.js';
-import {Main} from '.';
-import type {SubcommandOptions} from '@sapphire/plugin-subcommands';
-import type {GuildMessage} from './utils/types';
+import { type Args, Command as SapphireCommand, type Piece, UserError } from '@sapphire/framework';
+import { fetchLanguage, resolveKey, TOptions } from '@sapphire/plugin-i18next';
+import type { PermissionResolvable, TextChannel } from 'discord.js';
+import { Main } from '.';
+import type { SubcommandOptions } from '@sapphire/plugin-subcommands';
+import type { GuildMessage } from './utils/types';
 
 /**
  * The base class for all commands. Extends @SapphireCommand to add more functionally for our bot
@@ -117,6 +117,9 @@ export interface ExtendedCommandOptions extends SubcommandOptions {
 	description: string;
 	requiredClientPermissions?: PermissionResolvable;
 	extendedDescription?: ICommandExtendedDescription | undefined;
+
+	// todo - implement premium checks and command functions
+	premiumCommand?: boolean;
 }
 
 type command_type = 'slash' | 'message' | 'both';

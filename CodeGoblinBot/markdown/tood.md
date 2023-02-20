@@ -20,3 +20,11 @@
 
 - Feature were commands can be enabled or disabled by server admins in channels or globally (server). This will need to
   be cached.
+
+- reputation view command for users
+
+- reputation set/remove command for server managers (Have a warning with a button to confirm)
+
+- reputation clear command for admins
+
+- reputation leaderboard command

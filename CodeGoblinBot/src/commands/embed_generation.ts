@@ -29,7 +29,7 @@ import { PermissionsBitField } from 'discord.js';
 	enabled: true,
 	requiredUserPermissions: ['ManageGuild']
 })
-export class NewCommand extends ExtendedCommand {
+export class EmbedGeneratorCommand extends ExtendedCommand {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const titleArgument = interaction.options.getString('title', false);
 		const descriptionArgument = interaction.options.getString('description', false);
@@ -44,9 +44,35 @@ export class NewCommand extends ExtendedCommand {
 		const timestampArgument = interaction.options.getBoolean('timestamp', false);
 		const contentArgument = interaction.options.getString('content', false);
 
+		if (!interaction.inCachedGuild()) return;
+		if (!interaction.guild) return;
+
 		await interaction.deferReply({
 			ephemeral: true
 		});
+
+		if (
+			contentArgument &&
+			!titleArgument &&
+			!descriptionArgument &&
+			!colorArgument &&
+			!thumbnailArgument &&
+			!imageArgument &&
+			!authorNameArgument &&
+			!authorIconArgument &&
+			!authorUrlArgument &&
+			!footerArgument &&
+			!timestampArgument
+		) {
+			//@ts-ignore
+			await interaction.channel?.send({
+				content: contentArgument
+			});
+
+			return await interaction.editReply({
+				content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.contentSuccess')
+			});
+		}
 
 		if (
 			!titleArgument &&
@@ -58,7 +84,8 @@ export class NewCommand extends ExtendedCommand {
 			!authorIconArgument &&
 			!authorUrlArgument &&
 			!footerArgument &&
-			!timestampArgument
+			!timestampArgument &&
+			!contentArgument
 		) {
 			return await interaction.editReply({
 				content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.no_args')
@@ -143,8 +170,11 @@ export class NewCommand extends ExtendedCommand {
 			content: await this.t(interaction.channel as TextChannel, 'commands/general:embed_command.success')
 		});
 
+		// This is a bug with discord-api-types conflicting with discord.js types. This is a temporary fix.
+		//@ts-ignore
 		return await interaction.channel
-			?.send({
+			//@ts-ignore
+			.send({
 				content: contentArgument ?? undefined,
 				embeds: [embed]
 			})
@@ -162,6 +192,7 @@ export class NewCommand extends ExtendedCommand {
 				builder
 					.setName(this.name)
 					.setDescription(this.description)
+					.setDMPermission(false)
 					.addStringOption((builder) => builder.setName('title').setDescription('The title of the embed').setRequired(false))
 					.addStringOption((builder) => builder.setName('description').setDescription('The description of the embed').setRequired(false))
 					.addStringOption((builder) => builder.setName('url').setDescription('The url of the embed').setRequired(false))

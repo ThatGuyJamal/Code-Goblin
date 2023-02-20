@@ -59,7 +59,7 @@ export class MainClass {
 			shardCount: 1,
 			loadDefaultErrorListeners: true,
 			loadMessageCommandListeners: false,
-			intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers],
+			intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent],
 			logger: {
 				level: this.config.IsInDevelopmentMode ? LogLevel.Debug : LogLevel.Info
 			},

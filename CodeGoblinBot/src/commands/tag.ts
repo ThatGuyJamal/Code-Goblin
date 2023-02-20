@@ -486,6 +486,7 @@ export class NewCommand extends ExtendedCommand {
 				builder
 					.setName(this.name)
 					.setDescription(this.description)
+					.setDMPermission(false)
 					.addSubcommand((subcommand) =>
 						subcommand
 							.setName('create')

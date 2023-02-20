@@ -17,9 +17,11 @@ import { Time } from '@sapphire/duration';
 import { ExtendedCommand, ExtendedCommandOptions } from '../command';
 import { ApplyOptions } from '@sapphire/decorators';
 import { getGuildIds } from '../utils/utils';
-import type { APIApplicationCommandOptionChoice } from 'discord-api-types/v9';
+import { type APIApplicationCommandOptionChoice, ChannelType } from 'discord-api-types/v9';
 import type { TextChannel } from 'discord.js';
+import { PermissionsBitField } from 'discord.js';
 import { ServerConfigModel } from '../database/mongodb/models/config';
+import { UserReputationModel } from '../database/mongodb/models/reputation';
 
 const LanguageChoices: APIApplicationCommandOptionChoice<string>[] = [
 	{
@@ -32,11 +34,23 @@ const LanguageChoices: APIApplicationCommandOptionChoice<string>[] = [
 	}
 ];
 
+const ReputationEnabledChoices: APIApplicationCommandOptionChoice<string>[] = [
+	{
+		name: 'Enabled',
+		value: 'enabled'
+	},
+	{
+		name: 'Disabled',
+		value: 'disabled'
+	}
+];
+
 @ApplyOptions<ExtendedCommandOptions>({
 	name: 'configure',
 	description: 'Configure the bot for your server',
 	cooldownDelay: Time.Second * 5,
-	enabled: true
+	enabled: true,
+	requiredUserPermissions: ['ManageGuild']
 })
 export class NewCommand extends ExtendedCommand {
 	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
@@ -49,11 +63,63 @@ export class NewCommand extends ExtendedCommand {
 			case 'view':
 				await this.view(interaction);
 				break;
+			case 'clear':
+				await this.clear(interaction);
+				break;
+			case 'reputation-status':
+				await this.reputationStatus(interaction);
+				break;
+			case 'reputation-gains':
+				await this.reputationGains(interaction);
+				break;
+			case 'reputation-channel':
+				await this.reputationChannel(interaction);
+				break;
+			case 'reputation-message-status':
+				await this.reputationMessageStatus(interaction);
+				break;
+			case 'reputation-message-content':
+				await this.reputationMessageContent(interaction);
+				break;
+			case 'reputation-give':
+				await this.reputationGive(interaction);
+				break;
+			case 'reputation-remove':
+				await this.reputationRemove(interaction);
+				break;
 			default:
 				await interaction.reply({
 					content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:invalid_subcommand')
 				});
 		}
+	}
+
+	private async view(interaction: Command.ChatInputCommandInteraction) {
+		const config = await ServerConfigModel.GetServerConfig(interaction.guildId!);
+
+		if (!config) {
+			return await interaction.reply({
+				content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:view.noConfig'),
+				ephemeral: true
+			});
+		}
+
+		return await interaction.reply({
+			content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:view.success', {
+				replace: {
+					language: config.language ?? 'en-US',
+					reputation_enabled: config.reputation_enabled ? 'Enabled' : 'Disabled',
+					reputation_gains: config.reputation_gains ?? 1,
+					reputation_channel: this.container.utilities.format.channelMention(config.rank_up_channel) ?? 'None set',
+					reputation_message_status: config.reputation_rank_up_message_enabled ? 'Enabled' : 'Disabled',
+					reputation_message_content: config.reputation_rank_up_message ?? 'None set'
+				}
+			}),
+			allowedMentions: {
+				users: [],
+				roles: []
+			}
+		});
 	}
 
 	private async language(interaction: Command.ChatInputCommandInteraction) {
@@ -81,13 +147,144 @@ export class NewCommand extends ExtendedCommand {
 		});
 	}
 
-	private async view(interaction: Command.ChatInputCommandInteraction) {
-		const config = await ServerConfigModel.GetServerConfig(interaction.guildId!);
+	private async clear(interaction: Command.ChatInputCommandInteraction) {
+		await ServerConfigModel.DeleteServerConfig(interaction.guildId!);
 
 		return await interaction.reply({
-			content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:view.success', {
+			content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:clear.success')
+		});
+	}
+
+	private async reputationStatus(interaction: Command.ChatInputCommandInteraction) {
+		const status = interaction.options.getString('status', true);
+
+		await ServerConfigModel.UpdateServerConfig({
+			guild_id: interaction.guildId!,
+			reputation_enabled: status !== 'disabled'
+		});
+
+		return await interaction.reply({
+			content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:reputation.statusUpdated', {
 				replace: {
-					language: config?.language ?? 'en-US'
+					status: status === 'disabled' ? 'disabled' : 'enabled'
+				}
+			})
+		});
+	}
+
+	private async reputationGains(interaction: Command.ChatInputCommandInteraction) {
+		const amount = interaction.options.getInteger('amount', true);
+
+		await ServerConfigModel.UpdateServerConfig({
+			guild_id: interaction.guildId!,
+			reputation_gains: amount
+		});
+
+		return await interaction.reply({
+			content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:reputation.gainsUpdated', {
+				replace: {
+					gains: amount
+				}
+			})
+		});
+	}
+
+	private async reputationChannel(interaction: Command.ChatInputCommandInteraction) {
+		const channel = interaction.options.getChannel('channel', true) as TextChannel;
+
+		if (channel.type !== ChannelType.GuildText) {
+			return await interaction.reply({
+				content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:reputation.invalidChannelType'),
+				ephemeral: true
+			});
+		}
+
+		await ServerConfigModel.UpdateServerConfig({
+			guild_id: interaction.guildId!,
+			rank_up_channel: channel.id
+		});
+
+		return await interaction.reply({
+			content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:reputation.channelUpdated', {
+				replace: {
+					channel: this.container.utilities.format.channelMention(channel.id)
+				}
+			})
+		});
+	}
+
+	private async reputationMessageStatus(interaction: Command.ChatInputCommandInteraction) {
+		const status = interaction.options.getString('message-status', true);
+
+		await ServerConfigModel.UpdateServerConfig({
+			guild_id: interaction.guildId!,
+			reputation_rank_up_message_enabled: status !== 'disabled'
+		});
+
+		return await interaction.reply({
+			content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:reputation.messageStatusUpdated')
+		});
+	}
+
+	private async reputationMessageContent(interaction: Command.ChatInputCommandInteraction) {
+		const message = interaction.options.getString('message-content', true);
+
+		await ServerConfigModel.UpdateServerConfig({
+			guild_id: interaction.guildId!,
+			reputation_rank_up_message: message
+		});
+
+		return await interaction.reply({
+			content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:reputation.messageUpdated')
+		});
+	}
+
+	private async reputationGive(interaction: Command.ChatInputCommandInteraction) {
+		const user = interaction.options.getUser('reputation-user', true);
+		const amount = interaction.options.getInteger('reputation-amount', true);
+
+		const userReputation = await UserReputationModel.GetReputation(interaction.guildId!, user.id);
+
+		if (!userReputation) {
+			return await interaction.reply({
+				content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:reputation.noRepInformation'),
+				ephemeral: true
+			});
+		}
+
+		await UserReputationModel.GiveReputation(interaction.guildId!, user.id, userReputation.reputation! + amount);
+
+		return await interaction.reply({
+			content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:reputation.given', {
+				replace: {
+					user: this.container.utilities.format.userMention(user.id),
+					amount: amount
+				}
+			})
+		});
+	}
+
+	private async reputationRemove(interaction: Command.ChatInputCommandInteraction) {
+		const user = interaction.options.getUser('reputation-user', true);
+		const amount = interaction.options.getInteger('reputation-amount', true);
+
+		const userReputation = await UserReputationModel.GetReputation(interaction.guildId!, user.id);
+
+		if (!userReputation) {
+			return await interaction.reply({
+				content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:reputation.noRepInformation'),
+				ephemeral: true
+			});
+		}
+
+		const result = await UserReputationModel.UnsetReputation(interaction.guildId!, user.id, userReputation.reputation! - amount);
+
+		return await interaction.reply({
+			content: await this.t(interaction.channel as TextChannel, 'commands/serverconfig:reputation.removed', {
+				replace: {
+					user: this.container.utilities.format.userMention(user.id),
+					amount: amount,
+					newAmount: result.reputation
 				}
 			})
 		});
@@ -99,9 +296,15 @@ export class NewCommand extends ExtendedCommand {
 				builder
 					.setName(this.name)
 					.setDescription(this.description)
+					.setDMPermission(false)
 					.addSubcommand((subcommand) => {
 						return subcommand.setName('view').setDescription('View the current server configuration');
 					})
+					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+					.addSubcommand((subcommand) => {
+						return subcommand.setName('clear').setDescription('Clear the current server configuration');
+					})
+					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
 					.addSubcommand((subcommand) => {
 						return subcommand
 							.setName('language')
@@ -113,12 +316,112 @@ export class NewCommand extends ExtendedCommand {
 									.addChoices(...LanguageChoices)
 									.setRequired(true);
 							});
-					}),
+					})
+					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+					.addSubcommand((subcommand) => {
+						return subcommand
+							.setName('reputation-status')
+							.setDescription('Set the reputation status')
+							.addStringOption((option) => {
+								return option
+									.setName('status')
+									.setDescription('Whether reputation is enabled or disabled')
+									.addChoices(...ReputationEnabledChoices)
+									.setRequired(true);
+							});
+					})
+					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+					.addSubcommand((subcommand) => {
+						return subcommand
+							.setName('reputation-gains')
+							.setDescription('Set the amount of reputation gained per message')
+							.addIntegerOption((option) => {
+								return option
+									.setName('amount')
+									.setDescription('The amount of reputation gained per message')
+									.setMinValue(1)
+									.setMaxValue(1000)
+									.setRequired(true);
+							});
+					})
+					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+					.addSubcommand((subcommand) => {
+						return subcommand
+							.setName('reputation-channel')
+							.setDescription('Set the channel where reputation rank-up messages are sent')
+							.addChannelOption((option) => {
+								return option
+									.setName('channel')
+									.setDescription('The channel where reputation rank-up messages are sent')
+									.addChannelTypes(ChannelType.GuildText)
+									.setRequired(true);
+							});
+					})
+					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+					.addSubcommand((subcommand) => {
+						return subcommand
+							.setName('reputation-message-status')
+							.setDescription('Set the reputation rank up message status')
+							.addStringOption((option) => {
+								return option
+									.setName('message-status')
+									.setDescription('Whether reputation rank-up message is enabled or disabled')
+									.addChoices(...ReputationEnabledChoices)
+									.setRequired(true);
+							});
+					})
+					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+					.addSubcommand((subcommand) => {
+						return subcommand
+							.setName('reputation-message-content')
+							.setDescription('Set the reputation rank up message content')
+							.addStringOption((option) => {
+								return option
+									.setName('message-content')
+									.setDescription('The content of the reputation rank-up message')
+									.setRequired(true);
+							});
+					})
+					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+					.addSubcommand((subcommand) => {
+						return subcommand
+							.setName(`reputation-give`)
+							.setDescription(`Give reputation to someone`)
+							.addUserOption((option) => {
+								return option.setName(`reputation-user`).setDescription(`The user to give reputation to`).setRequired(true);
+							})
+							.addIntegerOption((option) => {
+								return option
+									.setName(`reputation-amount`)
+									.setDescription(`The amount of reputation to remove`)
+									.setRequired(true)
+									.setMinValue(1)
+									.setMaxValue(10000);
+							});
+					})
+					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+					.addSubcommand((subcommand) => {
+						return subcommand
+							.setName(`reputation-remove`)
+							.setDescription(`Give reputation to someone`)
+							.addUserOption((option) => {
+								return option.setName(`reputation-user`).setDescription(`The user to remove reputation to`).setRequired(true);
+							})
+							.addIntegerOption((option) => {
+								return option
+									.setName(`reputation-amount`)
+									.setDescription(`The amount of reputation to remove`)
+									.setRequired(true)
+									.setMinValue(1)
+									.setMaxValue(10000);
+							});
+					})
+					.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild),
 			{
 				guildIds: getGuildIds(),
 				registerCommandIfMissing: true,
 				behaviorWhenNotIdentical: RegisterBehavior.Overwrite,
-				idHints: []
+				idHints: ['1076661073689710712']
 			}
 		);
 	}

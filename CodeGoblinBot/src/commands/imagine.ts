@@ -109,6 +109,7 @@ export class ImagineCommand extends ExtendedCommand {
 				builder
 					.setName(this.name)
 					.setDescription(this.description)
+					.setDMPermission(false)
 					.addStringOption((options) => {
 						return options.setName('prompt').setDescription('Imagine something and we will try to create it').setRequired(true);
 					}),
