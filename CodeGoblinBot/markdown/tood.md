@@ -28,3 +28,6 @@
 - chnage welcome and goodbye plugin enable/disable to server config data
 
 - add rank-up role rewards for servers
+
+- add event when forms and threads are created, bot joins if reputation plugin is enabled. This allows us to track the rep messages from these 
+channels as well.
