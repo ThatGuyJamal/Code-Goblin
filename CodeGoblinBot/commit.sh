@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ? A simple bash script for committing files to github without a GUI
-# Im using vscode to do this. Git auth is setup to make this easy.
+# Git auth is setup to make this easy.
 
 GIT_MESSAGE=""  # the commit message for git
 DEFAULT_MSG="Updating Code!"
