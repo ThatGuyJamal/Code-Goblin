@@ -127,5 +127,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-config.ts
-config.js
+# Yarn v3 files
+.yarn/install-state.gz
+.yarn/build-state.yml

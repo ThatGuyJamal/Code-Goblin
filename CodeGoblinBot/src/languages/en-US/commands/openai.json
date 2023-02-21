@@ -1,0 +1,7 @@
+{
+    "imagine_command": {
+        "loading": "Generating imagine...",
+        "success": "Generated image Successful! Loading image into discord...",
+        "failed": "Failed to generate imagine due to a server error!"
+    }
+}

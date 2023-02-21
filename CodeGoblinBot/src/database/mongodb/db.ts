@@ -1,43 +1,53 @@
+/**
+ *  Code Goblin - A discord bot for programmers.
+
+ Copyright (C) 2022, ThatGuyJamal and contributors
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+ */
+
 import mongoose from 'mongoose';
-import config from '../../config/config.js';
-import type { Main } from '../../core/index.js';
-import type { NetworkStatusReturnTypes } from '../../typings/database/types.js';
-import { GoodbyeModel } from './models/goodbye.js';
-import { CodeJamModel } from './models/jam.js';
-import { PremiumUserModel } from './models/premium.js';
-import { GlobalStatsModel } from './models/statistics.js';
-import { TagModel } from './models/tag.js';
-import { WelcomeModel } from './models/welcome.js';
+import { GoodbyeModel } from './models/goodbye';
+import { PremiumUserModel } from './models/premium';
+import { GlobalStatsModel } from './models/statistics';
+import { TagModel } from './models/tag';
+import { WelcomeModel } from './models/welcome';
+import { container } from '@sapphire/framework';
+import { Main } from '../..';
+import { ServerConfigModel } from './models/config';
 
 export class MongodbDatabase {
-	instance: typeof Main;
-
 	/** Access core methods for the database */
 	public schemas;
 
-	public constructor(m: typeof Main) {
-		this.instance = m;
+	public constructor() {
 		this.schemas = {
 			automation: {
 				goodbye: GoodbyeModel,
 				welcome: WelcomeModel
 			},
 			tag: TagModel,
-			jam: CodeJamModel,
 			premiumUser: PremiumUserModel,
-			statistics: GlobalStatsModel
+			statistics: GlobalStatsModel,
+			serverConfig: ServerConfigModel
 		};
 	}
 
 	/** Connects to the mongodb host */
 	public async init(): Promise<void> {
 		await mongoose
-			.connect(config.MongoDbUri)
+			.connect(Main.config.MONGODB_URI)
 			.then(() => {
-				this.instance.logger.info('Connected to Mongodb!');
+				container.logger.info('Connected to Mongodb!');
 			})
 			.catch((err) => {
-				this.instance.logger.error(`Error connecting to the database: ${err}`);
+				container.logger.error(`Error connecting to the database: ${err}`);
 			});
 	}
 
@@ -52,3 +62,8 @@ export class MongodbDatabase {
 		};
 	}
 }
+
+type NetworkStatusReturnTypes = {
+	connected: boolean;
+	status: number;
+};

@@ -1,0 +1,5 @@
+{
+  "reputation": {
+    "rankUpMessage": "Congratulations {{author}}! You have reached rank **{{rank}}** 🎉 Stay active to gain more reputation points and rank up again!"
+  }
+}
