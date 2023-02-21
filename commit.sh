@@ -22,6 +22,7 @@ else
     echo "$DIR"
     echo "-------> $(echo "$CHANGED_ITEMS" | grep "^$DIR" | awk '{print "    " $NF}')"
   done
+  echo "The changes will be committed to the root directory."
   read -p "Do you want to proceed with the commit? [y/n]: " -n 1 -r
   echo
   if [[ $REPLY =~ ^[Nn]$ ]]; then
@@ -76,3 +77,7 @@ else
 
   echo "The changes in directory ${SUB_DIR} have been pushed to GitHub!"
 fi
+
+# This version first checks if changes exist in any subdirectory using git diff, and if changes are found, it proceeds with prompting the user for a commit 
+# message and performing the commit. If no changes are found in any subdirectory, it then checks for changes in the root directory and proceeds with the
+# commit process if changes are found. If no changes are found in any directories or files, it prints a message indicating that there's nothing to commit.
