@@ -84,6 +84,7 @@ export class MainClass {
 				}, // guild.members
 				GuildStickerManager: 0, // guild.stickers
 				GuildScheduledEventManager: 0, // guild.scheduledEvents
+				GuildForumThreadManager: 10_000, // guild.threads
 				MessageManager: {
 					maxSize: 250
 				}, // channel.messages
