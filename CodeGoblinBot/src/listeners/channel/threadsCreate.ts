@@ -23,7 +23,6 @@ export class UserEvent extends Listener {
 		const { logger } = this.container;
 		if (thread.joinable && !thread.joined) {
 			const joined = await thread.join().catch(() => null);
-
 			if (joined) logger.debug(`Joined thread: ${joined.name} (${joined.id})`);
 		} else {
 			logger.debug('Thread is not joinable or already joined');
