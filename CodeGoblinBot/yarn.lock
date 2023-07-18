@@ -1456,7 +1456,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bson@npm:^4.7.0":
+"bson@npm:^4.7.2":
   version: 4.7.2
   resolution: "bson@npm:4.7.2"
   dependencies:
@@ -1591,7 +1591,7 @@ __metadata:
     dotenv: ^16.0.3
     keep-a-changelog: ^2.2.1
     logform: ^2.4.2
-    mongoose: ^6.8.1
+    mongoose: ^6.11.3
     ms: ^2.1.3
     openai: ^3.1.0
     prettier: ^2.8.1
@@ -1998,7 +1998,7 @@ __metadata:
 
 "fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.2
-  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"
+  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=18f3a7"
   dependencies:
     node-gyp: latest
   conditions: os=darwin
@@ -2503,12 +2503,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:4.13.0":
-  version: 4.13.0
-  resolution: "mongodb@npm:4.13.0"
+"mongodb@npm:4.16.0":
+  version: 4.16.0
+  resolution: "mongodb@npm:4.16.0"
   dependencies:
     "@aws-sdk/credential-providers": ^3.186.0
-    bson: ^4.7.0
+    bson: ^4.7.2
     mongodb-connection-string-url: ^2.5.4
     saslprep: ^1.0.3
     socks: ^2.7.1
@@ -2517,22 +2517,22 @@ __metadata:
       optional: true
     saslprep:
       optional: true
-  checksum: 4c30eed40f639ac64069623cf7a4954e98eab81b91d61df90e7813dd2a745259cdc698f3b60bd7f37c123242b7eb0aaae6ee4e29ff2e48f5d13f187931d51f36
+  checksum: f0b1347739cc362b82b3aabc7e7d4d74bc7a344ed1bbafd6f92681bcab440f6cc618ffa0438d41d2789cb34818f3b09d4c78f517b42160ebae55bf2c96f13953
   languageName: node
   linkType: hard
 
-"mongoose@npm:^6.8.1":
-  version: 6.9.2
-  resolution: "mongoose@npm:6.9.2"
+"mongoose@npm:^6.11.3":
+  version: 6.11.4
+  resolution: "mongoose@npm:6.11.4"
   dependencies:
-    bson: ^4.7.0
+    bson: ^4.7.2
     kareem: 2.5.1
-    mongodb: 4.13.0
+    mongodb: 4.16.0
     mpath: 0.9.0
     mquery: 4.0.3
     ms: 2.1.3
     sift: 16.0.1
-  checksum: 79dd1e673d492337b555c904d1b570cb2a4ab854e24f00c854bd916a6ad122bbd03eb6793ffa70944b769c4c6eb5f04d87af39b718a64d6acd8af634ab98200e
+  checksum: f062aa9b368921256e1a22410f532323c57d48959a88d0bd1b8f948e6048399d17aa391638073a1254c8937312e18a9637ea676b9fd92e0c5ae6588f5dbd589e
   languageName: node
   linkType: hard
 
@@ -3226,11 +3226,11 @@ __metadata:
 
 "typescript@patch:typescript@^4.9.4#~builtin<compat/typescript>":
   version: 4.9.5
-  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=23ec76"
+  resolution: "typescript@patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=701156"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: ab417a2f398380c90a6cf5a5f74badd17866adf57f1165617d6a551f059c3ba0a3e4da0d147b3ac5681db9ac76a303c5876394b13b3de75fdd5b1eaa06181c9d
+  checksum: 2eee5c37cad4390385db5db5a8e81470e42e8f1401b0358d7390095d6f681b410f2c4a0c496c6ff9ebd775423c7785cdace7bcdad76c7bee283df3d9718c0f20
   languageName: node
   linkType: hard
 
